@@ -1,0 +1,45 @@
+<launch>
+  <node
+    pkg="depth_imaging_package"
+    type="depth_subscriber.py"
+    name="depth_subscriber" 
+    output="screen"
+  />
+  <node
+    pkg="depth_imaging_package"
+    type="depth_publisher.py"
+    name="depth_publisher"
+    output="screen"
+  />
+  <node
+    pkg="depth_imaging_package"
+    type="contour_subscriber.py"
+    name="contour_subscriber"
+    output="screen"
+  />
+  <node
+    pkg="depth_imaging_package"
+    type="obstacle_localizer.py"
+    name="obstacle_localizer"
+    output="screen"
+  />
+  <node
+    pkg="localization_package"
+    type="image_publisher.py"
+    name="image_publisher"
+    output="screen"
+  />
+  <node
+    pkg="localization_package"
+    type="image_subscriber.py"
+    name="image_subscriber" 
+    output="screen"
+  />
+  <arg name="port" default="/dev/ttyACM0" />
+  <arg name="baud" default="57600" />
+  
+  <node pkg="rosserial_python" type="serial_node.py" name="serial_node" output="screen">
+    <param name="port" value="$(arg port)" />
+    <param name="baud" value="$(arg baud)" />
+  </node>
+</launch> 

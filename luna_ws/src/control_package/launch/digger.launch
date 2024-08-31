@@ -1,0 +1,44 @@
+<launch>
+  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find luna_rviz)/urdf/robot.urdf'"/>
+  <!-- Ian output -->
+  <node
+    pkg="robot_package"
+    type="listener.py"
+    name="listener" 
+    output="screen"
+  />
+  <!-- Keyboard listener -->
+  <!-- <node
+    pkg="control_package"
+    type="keyboard_control.py"
+    name="keyboard_control" 
+    output="screen"
+  /> -->
+  <!-- RVIZ -->
+  <!-- <node 
+    type="rviz" 
+    name="rviz" 
+    pkg="rviz" 
+    args="-d $(find luna_rviz)/rviz/luna_config.rviz" 
+  /> -->
+  <!-- Displays Camera Feed to Laptop Screen -->
+  <!-- <node
+    pkg="localization_package"
+    type="image_subscriber.py"
+    name="image_subscriber" 
+    output="screen"
+  /> -->
+  <!-- Digger Control -->
+  <node 
+    pkg="control_package"
+    type="digger_control.py"
+    name="digger_control" 
+    output="screen"
+  />
+  <!-- <node
+    pkg="depth_imaging_package"
+    type="contour_subscriber.py"
+    name="contour_subscriber"
+    output="screen"
+  /> -->
+</launch> 

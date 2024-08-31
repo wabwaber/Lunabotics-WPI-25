@@ -1,0 +1,64 @@
+<launch>
+  <!-- ROS Serial Python -->
+  <arg name="port" default="/dev/ttyACM0" />
+  <arg name="baud" default="115200" />
+  
+  <node pkg="rosserial_python" type="serial_node.py" name="serial_node" output="screen">
+    <param name="port" value="$(arg port)" />
+    <param name="baud" value="$(arg baud)" />
+  </node>
+  <!-- Watchdog Node for Arduino -->
+  <node 
+    pkg="control_package" 
+    type="watchdog_node.py" 
+    name="watchdog_node" 
+    output="screen">
+  </node>
+  <!-- Publishes Logitech Webcam Images For Display on Laptop -->
+  <!-- <node
+    pkg="localization_package"
+    type="image_publisher.py"
+    name="image_publisher" 
+    output="screen"
+  /> -->
+  <!-- Localizes Robot with Fiducial Tracking and Odometry -->
+  <!-- <node
+    pkg="localization_package"
+    type="localization_filter.py"
+    name="localization_filter" 
+    output="screen"
+  /> -->
+  <!-- Handles math for Localization Transforms -->
+  <!-- <node
+    pkg="localization_package"
+    type="tf_solver.py"
+    name="tf_solver" 
+    output="screen"
+  /> -->
+  <!-- Detects Obstacles using Realsense Depth Camera -->
+  <!-- <node
+    pkg="depth_imaging_package"
+    type="depth_publisher.py"
+    name="depth_publisher" 
+    output="screen"
+  /> -->
+  <!-- Localizes Obstacles that are Detected -->
+  <!-- <node
+    pkg="depth_imaging_package"
+    type="obstacle_localizer.py"
+    name="obstacle_localizer" 
+    output="screen"
+  /> -->
+  <!-- Handles Control of Logitech Camera Sweeper -->
+  <!-- <node
+    pkg="control_package"  <node
+    pkg="localization_package"
+    type="image_publisher.py"
+    name="image_publisher" 
+    output="screen"
+  />
+    type="localizer_sweeper.py"
+    name="localizer_sweeper" 
+    output="screen"
+  /> -->
+</launch>

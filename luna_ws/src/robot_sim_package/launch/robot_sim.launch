@@ -1,0 +1,20 @@
+<launch>
+  <node
+    pkg="localization_package"
+    type="localization_filter.py"
+    name="localization_filter" 
+    output="screen"
+  />
+  <node
+    pkg="localization_package"
+    type="tf_solver.py"
+    name="tf_solver" 
+    output="screen"
+  />
+  <node
+    pkg="robot_sim_package"
+    type="simulator.py"
+    name="simulator"
+    output="screen"
+  />
+</launch> 

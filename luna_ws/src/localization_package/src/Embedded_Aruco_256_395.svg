@@ -1,0 +1,42 @@
+<svg viewBox="0 0 7 7" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" width="1016mm" height="1016mm">
+
+<!-- Original Aruco Marker -->
+<rect x="0" y="0" width="7" height="7" fill="black"></rect>
+<rect width="1" height="1" x="5" y="1" fill="white"></rect>
+<rect width="1" height="1.5" x="5" y="1" fill="white"></rect>
+<rect width="1.5" height="1" x="1" y="2" fill="white"></rect>
+<rect width="1" height="1.5" x="1" y="2" fill="white"></rect>
+<rect width="1.5" height="1" x="2" y="2" fill="white"></rect>
+<rect width="1" height="1.5" x="2" y="2" fill="white"></rect>
+<rect width="1.5" height="1" x="3" y="2" fill="white"></rect>
+<rect width="1.5" height="1" x="4" y="2" fill="white"></rect>
+<rect width="1" height="1.5" x="4" y="2" fill="white"></rect>
+<rect width="1" height="1" x="5" y="2" fill="white"></rect>
+<rect width="1" height="1.5" x="5" y="2" fill="white"></rect>
+<rect width="1.5" height="1" x="1" y="3" fill="white"></rect>
+<rect width="1" height="1.5" x="1" y="3" fill="white"></rect>
+<rect width="1" height="1" x="2" y="3" fill="white"></rect>
+<rect width="1.5" height="1" x="4" y="3" fill="white"></rect>
+<rect width="1" height="1.5" x="4" y="3" fill="white"></rect>
+<rect width="1" height="1" x="5" y="3" fill="white"></rect>
+<rect width="1" height="1.5" x="5" y="3" fill="white"></rect>
+<rect width="1" height="1" x="1" y="4" fill="white"></rect>
+<rect width="1" height="1.5" x="1" y="4" fill="white"></rect>
+<rect width="1.5" height="1" x="3" y="4" fill="white"></rect>
+<rect width="1" height="1.5" x="3" y="4" fill="white"></rect>
+<rect width="1.5" height="1" x="4" y="4" fill="white"></rect>
+<rect width="1" height="1.5" x="4" y="4" fill="white"></rect>
+<rect width="1" height="1" x="5" y="4" fill="white"></rect>
+<rect width="1" height="1" x="1" y="5" fill="white"></rect>
+<rect width="1.5" height="1" x="3" y="5" fill="white"></rect>
+<rect width="1" height="1" x="4" y="5" fill="white"></rect>
+
+<!-- Embedded Aruco Marker -->
+<rect width="0.214" height="0.142" x="3.2857" y="3.1428" fill="white"></rect>
+<rect width="0.142" height="0.142" x="3.4285" y="3.1428" fill="white"></rect>
+<rect width="0.142" height="0.142" x="3.1428" y="3.4285" fill="white"></rect>
+<rect width="0.142" height="0.142" x="3.5714" y="3.5714" fill="white"></rect>
+<rect width="0.1421" height="0.142" x="3.2857" y="3.7142" fill="white"></rect>
+<rect width="0.142" height="0.142" x="3.7142" y="3.7142" fill="white"></rect>
+
+</svg>
