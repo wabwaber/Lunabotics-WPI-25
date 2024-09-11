@@ -1,0 +1,8 @@
+<launch>
+  <node
+    pkg="depth_imaging_package"
+    type="depth_publisher.py"
+    name="depth_publisher" 
+    output="screen"
+  />
+</launch> 
