@@ -1,5 +1,7 @@
 #include <ArdyToMot.h>
 
+static const int LPWM = 10;
+static const int RPWM = 11;
 static const uint8_t CAN_CS = 41; //SPI Chip Select pin
 static const uint8_t CAN_SI = 37; //SPI Data input pin
 static const uint8_t CAN_SO = 39; //SPI Data output pin
@@ -17,6 +19,8 @@ float turnSetAngleLeft;
 float turnSetAngleRight;
 CANConfig config(CAN_BITRATE, CAN_CS, CAN_INT);
 CANController CAN(config);
+Talon PWMLeft;
+Talon PWMRight;
 
 //Making the rather bold assumption that the wheel numbers goes from left front in a counter Clockwise U. This is because I know the first two are left and the last 2 are right but not which one is front or back
 //Function takes in the current for each wheel and tells the motors to work. Returns true if the writing (CAN Message transmission) was successful and false in any other senario
@@ -30,7 +34,7 @@ bool ArdyToMot::setMotors(int LF, int LB, int RB, int RF){
         static_cast<float>(LB) / ConversionFactor, static_cast<float>(LB % ConversionFactor),
         static_cast<float>(RB) / ConversionFactor, static_cast<float>(RB % ConversionFactor), 
         static_cast<float>(RF) / ConversionFactor, static_cast<float>(RF % ConversionFactor)
-        };
+    };
     CANFrame yeet(CAN_ID_Drive, (void*)packet, sizeof(float) * Drive_DLC);
     return CANController::IOResult::OK  == CAN.write(yeet);
 }
@@ -45,8 +49,10 @@ bool ArdyToMot::setMotors(int A){
 }
 
 bool ArdyToMot::setTurn(float L, float R){
-    return false;
-}
+    PWMLeft.setEffort24(L);
+    PWMRight.setEffort24(R);
+    return true;
+} 
 
 bool ArdyToMot::setTurn(float B){
     return setTurn(B, B);
@@ -59,5 +65,7 @@ void ArdyToMot::init(){
     turnErrorRight = 0; 
     setMotors(0); //set ALL motors to 0 once the CAN has begun
     setTurn(0); //zero the turn angles
+    PWMLeft.init(LPWM, false);
+    PWMRight.init(RPWM, false);
     return;
 }
