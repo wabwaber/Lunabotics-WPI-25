@@ -99,7 +99,7 @@ void Drivetrain::loop() {
             break;
         case LEFT_WHEELPOD_RECOVERY:
             can_controller.cutCurrent();
-            leftTurnI = 0;
+            leftTurnI = 0;(current control)
             rightTurnI = 0;
             break;
         case RIGHT_WHEELPOD_RECOVERY:

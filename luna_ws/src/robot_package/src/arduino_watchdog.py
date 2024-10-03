@@ -23,7 +23,7 @@ class ArduinoWatchdog:
         self.last_message_time = time.time()
 
     def run(self):
-        rate = rospy.Rate(1)  # 1 Hz
+        rate = rospy.Rate(1)  # 1 Hz 
         while not rospy.is_shutdown():
             # Check if timeout has occurred
             if time.time() - self.last_message_time > 5:
