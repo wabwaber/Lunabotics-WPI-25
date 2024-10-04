@@ -9,14 +9,26 @@ States currState;
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200); //start serial with BAUD of 115200
-  while(!Serial){}; //Wait for Serial to open
+//  while(!Serial){}; //Wait for Serial to open
+//nah we are gonna assume that its open right now because fuck it
   DriveMotor.init();
   DriveMotor.setMotors(0); //stop all motors
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  float* map = (float *) Serial.read(); //current input mapping
+  char* in = (char*) Serial.read(); //current input mapping
+//FOR THIS ^^^^ : https://stackoverflow.com/questions/57399227/convert-c-byte-array-to-a-c-string
+//incase it doesn't work
+
+  int map[6]; //mapping of the input
+  char* currNum = strtok(in, " "); //tokenize the numbers
+  int i = 0; //index for mapping
+  while(currNum != NULL){ //while we are still iterating
+    map[i] = atof(currNum); //convert the string to an int
+    currNum = strtok(NULL, " "); //get the next number
+    i++; //increment the index
+  }
   int turnEffort;
   //turning efforts go 100 to -100
   if(map[4] < 0){ //if the value for the left turn is negative
@@ -34,4 +46,3 @@ void loop() {
   }
   DriveMotor.setMotors(map[0], map[1], map[2], map[3]);
 }
-

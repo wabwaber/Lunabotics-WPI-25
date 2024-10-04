@@ -49,9 +49,10 @@ bool ArdyToMot::setMotors(int A){
 }
 
 bool ArdyToMot::setTurn(float L, float R){
-    PWMLeft.setEffort24(L);
-    PWMRight.setEffort24(R);
-    return true;
+    //disabled because its not wired
+    // PWMLeft.setEffort24(L);
+    // PWMRight.setEffort24(R);
+    return true; //mhm we 100% for sure set the efforts
 } 
 
 bool ArdyToMot::setTurn(float B){
@@ -64,8 +65,8 @@ void ArdyToMot::init(){
     turnErrorLeft = 0;
     turnErrorRight = 0; 
     setMotors(0); //set ALL motors to 0 once the CAN has begun
-    setTurn(0); //zero the turn angles
-    PWMLeft.init(LPWM, false);
-    PWMRight.init(RPWM, false);
+    //setTurn(0); //zero the turn angles
+    // PWMLeft.init(LPWM, false);
+    // PWMRight.init(RPWM, false);
     return;
 }

@@ -1,10 +1,16 @@
-from inputs import devices
 from inputs import get_gamepad
-import math
 import threading
 import serial
 
+baud = 115200 #baudrate (same as arduino)
+time = 5 #timeout time in seconds
 
+#The convert function takes in a list, and converts it to a string with each element separated by spaces.
+def convert(pack):
+	message = "" #beginning str
+	for x in pack: #loop for each element in the list
+		message += str(x) + " " #append the list with the element and a space after it
+	return message
 
 class Logitech_DUEL_ACTION_CONTROLLER():
 	MAX_JOY_VAL = 255
@@ -102,15 +108,12 @@ if __name__ == '__main__':
 	previous_Joy_Vals = []
 	previous_output = []
 	controller = Logitech_DUEL_ACTION_CONTROLLER()
-	ser = serial.Serial() #open serial port given with a baud rate the same as the arduinos and give 5 seconds to connect.
-	port = input("Give COM port as 'COMX' where X is the COM port number: ")
-	ser.port(port)
-	ser.baudrate(115200)
-	ser.timeout(5) #5 second time out
-	ser.open()
-	if(not ser.is_open()): #if the serial did not open
-		exit #exit
-	packet = [] #packet to send to serial, formatted like LF LB RB RF LT RT, will be the same as it was previously each loop
+
+	#get the port using python -m serial.tools.list_ports
+	ser = serial.Serial(port='/dev/ttyACM0', baudrate=baud, timeout=time) #open serial port given with a baud rate the same as the arduinos and give 5 seconds to connect.
+	
+	print(ser.name) #DEBUG
+	packet = [0,0,0,0,0,0] #packet to send to serial, formatted like LF LB RB RF LT RT, will be the same as it was previously each loop, init to 0s
 	#loop over and over
 	while True: #this code is scruffed AF but it will work for now, at least to get a video of the robot moving
 		joy =  controller.readImportantStuff()
@@ -132,9 +135,8 @@ if __name__ == '__main__':
 			else: #If we are doing a point turn
 				packet = [-speed, -speed, speed, speed, SideMovement, -SideMovement]
 			previous_Joy_Vals = joy #set the previous joy vals to the curr ones
-			serial.write(packet) #write the packet to serial
-			serial.flush() #wait until packet is sent
-			continue #next loop
-		else: #the values are the same
-			serial.write(packet) #write the same packet
-			serial.flush() #wait for packet to be written
+		#send the packet (will be the same if the joy values are the same)
+		packe = convert(packet) #convert the packet to a string to hopefully get around the BS 0-255 limit
+		ser.write(packe) #write the packet
+		ser.flush() #wait for packet to be written
+	#NEXT LOOP
