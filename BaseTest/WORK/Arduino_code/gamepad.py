@@ -1,6 +1,7 @@
 from inputs import get_gamepad
 import threading
 import serial
+import time
 
 baud = 115200 #baudrate (same as arduino)
 time = 5 #timeout time in seconds
@@ -9,7 +10,8 @@ time = 5 #timeout time in seconds
 def convert(pack):
 	message = "" #beginning str
 	for x in pack: #loop for each element in the list
-		message += str(x) + " " #append the list with the element and a space after it
+		message += str(round(x, 4)) + " " #append the list with the element and a space after it
+	message += "\0" #terminating byte (yum)
 	return message
 
 class Logitech_DUEL_ACTION_CONTROLLER():
@@ -105,25 +107,32 @@ class Logitech_DUEL_ACTION_CONTROLLER():
 #main funciton here
 if __name__ == '__main__':
 	#stuff thats called once at boot
-	previous_Joy_Vals = []
+	previous_Joy_Vals = [0,0,0,0]
 	previous_output = []
 	controller = Logitech_DUEL_ACTION_CONTROLLER()
 
 	#get the port using python -m serial.tools.list_ports
 	ser = serial.Serial(port='/dev/ttyACM0', baudrate=baud, timeout=time) #open serial port given with a baud rate the same as the arduinos and give 5 seconds to connect.
-	
-	print(ser.name) #DEBUG
+	ser.close()
+	ser.open()
 	packet = [0,0,0,0,0,0] #packet to send to serial, formatted like LF LB RB RF LT RT, will be the same as it was previously each loop, init to 0s
 	#loop over and over
 	while True: #this code is scruffed AF but it will work for now, at least to get a video of the robot moving
 		joy =  controller.readImportantStuff()
+		#print(joy) #DEBUG
 		if(joy != previous_Joy_Vals): #if the current joy values are different from last time
-			ForwardMovement =  joy.atIndex(0) #get the current Y percentage of the left joystick
-			SideMovement = joy.atIndex(1)
-			doWeirdTurn = joy.atIndex(2)
-			speed = ForwardMovement - 0.5 if(ForwardMovement > 0.55 and ForwardMovement < 0.45) else 0 #motor speed is this as if we are in the middle, +- 0.05 on both sides for a dead zone
+			ForwardMovement =  joy[0] #get the current Y percentage of the left joystick
+			SideMovement = joy[1]
+			doWeirdTurn = joy[2]
+			speed = 0
+			if(ForwardMovement > 0.55):
+				speed = 0-(ForwardMovement - 0.5)
+			elif(ForwardMovement < 0.45):
+				speed =(0.5 - ForwardMovement)
+			else:
+				speed = 0
 			turnFactor = SideMovement - 0.5 if(SideMovement > 0.55 and SideMovement < 0.45) else 0
-			if(joy.atIndex(3) == 1): #if A is pressed
+			if(joy[3] == 1): #if A is pressed
 				packet = [0, 0, 0, 0, 0, 0] #ALL STOP
 			elif(doWeirdTurn == 0): #strafe
 				if(SideMovement > 0.55): #If we are going to the right
@@ -134,9 +143,12 @@ if __name__ == '__main__':
 					packet = [speed, speed, speed, speed, 0, 0] #going forward
 			else: #If we are doing a point turn
 				packet = [-speed, -speed, speed, speed, SideMovement, -SideMovement]
-			previous_Joy_Vals = joy #set the previous joy vals to the curr ones
-		#send the packet (will be the same if the joy values are the same)
-		packe = convert(packet) #convert the packet to a string to hopefully get around the BS 0-255 limit
+		previous_Joy_Vals = joy #set the previous joy vals to the curr ones
+		packe = convert(packet).encode() #convert the packet to a string to hopefully get around the BS 0-255 limit
+		#print(packe)
 		ser.write(packe) #write the packet
 		ser.flush() #wait for packet to be written
+		print(packe)
+		#send the packet (will be the same if the joy values are the same)
+
 	#NEXT LOOP

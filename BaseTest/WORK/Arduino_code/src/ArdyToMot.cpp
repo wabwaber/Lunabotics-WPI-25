@@ -1,5 +1,6 @@
 #include <ArdyToMot.h>
 
+
 static const int LPWM = 10;
 static const int RPWM = 11;
 static const uint8_t CAN_CS = 41; //SPI Chip Select pin
@@ -11,7 +12,7 @@ int CAN_ID_Drive = 0x200; //512, Drivetrain CAN system ID
 int CAN_ID_Conveyor = 0x1FF; //511, Conveyor CAN system ID
 int Drive_DLC = 8; //Length of CAN message for drivetrain motors
 int Conveyor_DLC = 8; //Length of CAN message for conveyor motors
-int ConversionFactor = 256;
+int ConversionFactor = 128;
 const CANBitrate::Config CAN_BITRATE = CANBitrate::Config_8MHz_1000kbps;
 float turnErrorLeft;
 float turnErrorRight;
@@ -35,8 +36,15 @@ bool ArdyToMot::setMotors(int LF, int LB, int RB, int RF){
         static_cast<float>(RB) / ConversionFactor, static_cast<float>(RB % ConversionFactor), 
         static_cast<float>(RF) / ConversionFactor, static_cast<float>(RF % ConversionFactor)
     };
-    CANFrame yeet(CAN_ID_Drive, (void*)packet, sizeof(float) * Drive_DLC);
-    return CANController::IOResult::OK  == CAN.write(yeet);
+    CANFrame yeet(CAN_ID_Drive, packet, sizeof(packet));
+    CANController::IOResult res = CAN.write(yeet);
+    String set = "";
+    for(int i = 0; i < 8; i++){
+        set += packet[i];
+        set += " ";
+    }
+    Serial.println(set);
+    return CANController::IOResult::OK  == res;
 }
 
 //Function takes in current for the left side and the right side. And like the one above returns true if OK and false in any other senario
@@ -62,8 +70,9 @@ bool ArdyToMot::setTurn(float B){
 //Initializer function for the arduino to motor communication.
 //Just starts CAN communication.
 void ArdyToMot::init(){
-    turnErrorLeft = 0;
-    turnErrorRight = 0; 
+    CAN.begin();
+    //turnErrorLeft = 0;
+    //turnErrorRight = 0; 
     setMotors(0); //set ALL motors to 0 once the CAN has begun
     //setTurn(0); //zero the turn angles
     // PWMLeft.init(LPWM, false);
