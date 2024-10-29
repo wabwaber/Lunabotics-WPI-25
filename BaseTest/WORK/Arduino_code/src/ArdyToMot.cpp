@@ -30,13 +30,13 @@ bool ArdyToMot::setMotors(int LF, int LB, int RB, int RF){
     LB = constrain(LB, -MAX_MOTOR_CURRENT_DRIVE, MAX_MOTOR_CURRENT_DRIVE);
     RF = constrain(RF, -MAX_MOTOR_CURRENT_DRIVE, MAX_MOTOR_CURRENT_DRIVE);
     RB = constrain(RB, -MAX_MOTOR_CURRENT_DRIVE, MAX_MOTOR_CURRENT_DRIVE);
-    const float packet[] = {
-        static_cast<float>(LF) / ConversionFactor, static_cast<float>(LF % ConversionFactor),
-        static_cast<float>(LB) / ConversionFactor, static_cast<float>(LB % ConversionFactor),
-        static_cast<float>(RB) / ConversionFactor, static_cast<float>(RB % ConversionFactor), 
-        static_cast<float>(RF) / ConversionFactor, static_cast<float>(RF % ConversionFactor)
+    const int packet[] = {
+        (char)(LF / ConversionFactor), (char)(LF % ConversionFactor),
+        (char)(LB / ConversionFactor), (char)(LB % ConversionFactor),
+        (char)(RB / ConversionFactor), (char)(RB % ConversionFactor), 
+        (char)(RF / ConversionFactor), (char)(RF % ConversionFactor)
     };
-    CANFrame yeet(CAN_ID_Drive, packet, sizeof(packet));
+    CANFrame yeet(CAN_ID_Drive, packet, Drive_DLC);
     CANController::IOResult res = CAN.write(yeet);
     String set = "";
     for(int i = 0; i < 8; i++){
