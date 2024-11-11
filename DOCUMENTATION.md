@@ -1,6 +1,5 @@
 # WPI Lunabotics MQP Code Documentation
-Hello and welcome to this document where myself and hopefully others on the team will be updating the documentation as we go along.
-This document is structured with a table of contents that should have links to jump to the appropriate section making searching easy!
+Hello and welcome to this document where the team will be updating the documentation as we go along. This document is structured with a table of contents that should have links to jump to the appropriate section making searching easy!
 
 [psst hey you,  markdown by default doesn't support tabs so you have to use 4 non-blank special characters (&nbsp; or use %20 as that is the unicode character) to get around it. also for the table of contents use lists for each section]: #
 
@@ -33,10 +32,12 @@ The Hardware referenced in this section is **ONLY** used for software related th
 
 - Jetson Nano rev B01 [Manual](https://developer.download.nvidia.com/assets/embedded/secure/jetson/Nano/docs/NV_Jetson_Nano_Developer_Kit_User_Guide.pdf?IFNW4ZTb-H-qYxZfoi7MTdCb20kbF8c9X2fca6M_PHDMt3bN4nDS0O5v_YtL6nXPZ7so32MXn9XYN_yw6IorOUe1wHIc4w2p8Bj2606b13DIBbh9X-bvaFndv4VpX0S1I2eYV-A5hXi5UoYGkO1nUn-79RYcBsnZylgshBB9uHjuoHZCgeuOyjN7uXG6h7McgNw=&t=eyJscyI6IndlYnNpdGUiLCJsc2QiOiJkZXZlbG9wZXIubnZpZGlhLmNvbS9lbWJlZGRlZC1jb21wdXRpbmcifQ==)
 - Arduino Mega 2560 Rev3 [Manual](https://docs.arduino.cc/resources/datasheets/A000067-datasheet.pdf)
+- Intel Realsense D455 [Manual](https://www.intel.com/content/dam/support/us/en/documents/emerging-technologies/intel-realsense-technology/Intel-RealSense-D400-Series-Datasheet.pdf)
+
 
 <a id="libs-used"></a>
 ### Libraries Used
-- ROS2 Humble maybe jazzy it really depends on how the jetson gets setup
+- ROS2 Galactic (Ubuntu 20.04)
 - OpenVINS [Home Page](https://docs.openvins.com/)
 - inputs python lib [git](https://github.com/zeth/inputs)- ROS2 Humble maybe jazzy it really depends on how the jetson gets setup
 
