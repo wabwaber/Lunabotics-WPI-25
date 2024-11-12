@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<robot xmlns="http://www.ros.org" name="mini urdf">
+    <link name="wheelpod_4">
+        <inertial>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 -3.141592653589793"/>
+            <mass value="1.0"/>
+            <inertia ixx="1.0" ixy="1.0" ixz="1.0" iyy="1.0" iyz="1.0" izz="1.0"/>
+        </inertial>
+        <visual>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 0.0"/>
+            <geometry>
+                <mesh filename="package://mini_urdf/meshes/wheelpod_4.stl"/>
+            </geometry>
+            <material name="material">
+                <color rgba="0.611764705882353 0.611764705882353 0.611764705882353 1.0"/>
+            </material>
+        </visual>
+        <collision name="collision">
+            <origin xyz="0 0 0" rpy="0.0 -0.0 0.0"/>
+            <geometry>
+                <mesh filename="package://mini_urdf/meshes/wheelpod_4.stl"/>
+            </geometry>
+        </collision>
+    </link>
+    <link name="wheelpod_5">
+        <inertial>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 3.141592653589793"/>
+            <mass value="1.0"/>
+            <inertia ixx="1.0" ixy="1.0" ixz="1.0" iyy="1.0" iyz="1.0" izz="1.0"/>
+        </inertial>
+        <visual>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 0.0"/>
+            <geometry>
+                <mesh filename="package://mini_urdf/meshes/wheelpod_5.stl"/>
+            </geometry>
+            <material name="material">
+                <color rgba="0.611764705882353 0.611764705882353 0.611764705882353 1.0"/>
+            </material>
+        </visual>
+        <collision name="collision">
+            <origin xyz="0 0 0" rpy="0.0 -0.0 0.0"/>
+            <geometry>
+                <mesh filename="package://mini_urdf/meshes/wheelpod_5.stl"/>
+            </geometry>
+        </collision>
+    </link>
+    <link name="wheel_3">
+        <inertial>
+            <origin xyz="0.0 0.0 -0.06" rpy="-1.5707963267948966 -1.5707963267948966 0.0"/>
+            <mass value="1.0"/>
+            <inertia ixx="1.0" ixy="1.0" ixz="1.0" iyy="1.0" iyz="1.0" izz="1.0"/>
+        </inertial>
+        <visual>
+            <origin xyz="0.0 0.0 -0.06" rpy="-1.5707963267948966 -1.5707963267948966 0.0"/>
+            <geometry>
+                <mesh filename="package://mini_urdf/meshes/Part_1_3.stl"/>
+            </geometry>
+            <material name="material">
+                <color rgba="0.615686274509804 0.615686274509804 0.615686274509804 1.0"/>
+            </material>
+        </visual>
+        <collision name="collision">
+            <origin xyz="0 0 0" rpy="0.0 -0.0 0.0"/>
+            <geometry>
+                <mesh filename="package://mini_urdf/meshes/Part_1_3.stl"/>
+            </geometry>
+        </collision>
+    </link>
+    <link name="wheel_2">
+        <inertial>
+            <origin xyz="0.0 0.0 0.0" rpy="1.5707963267948966 1.5707963267948966 0.0"/>
+            <mass value="1.0"/>
+            <inertia ixx="1.0" ixy="1.0" ixz="1.0" iyy="1.0" iyz="1.0" izz="1.0"/>
+        </inertial>
+        <visual>
+            <origin xyz="0.0 0.0 0.0" rpy="1.5707963267948966 1.5707963267948966 0.0"/>
+            <geometry>
+                <mesh filename="package://mini_urdf/meshes/Part_1_2.stl"/>
+            </geometry>
+            <material name="material">
+                <color rgba="0.615686274509804 0.615686274509804 0.615686274509804 1.0"/>
+            </material>
+        </visual>
+        <collision name="collision">
+            <origin xyz="0 0 0" rpy="0.0 -0.0 0.0"/>
+            <geometry>
+                <mesh filename="package://mini_urdf/meshes/Part_1_2.stl"/>
+            </geometry>
+        </collision>
+    </link>
+    <link name="wheel_4">
+        <inertial>
+            <origin xyz="0.0 0.0 -0.06" rpy="-1.5707963267948966 -1.5707963267948966 0.0"/>
+            <mass value="1.0"/>
+            <inertia ixx="1.0" ixy="1.0" ixz="1.0" iyy="1.0" iyz="1.0" izz="1.0"/>
+        </inertial>
+        <visual>
+            <origin xyz="0.0 0.0 -0.06" rpy="-1.5707963267948966 -1.5707963267948966 0.0"/>
+            <geometry>
+                <mesh filename="package://mini_urdf/meshes/Part_1_4.stl"/>
+            </geometry>
+            <material name="material">
+                <color rgba="0.615686274509804 0.615686274509804 0.615686274509804 1.0"/>
+            </material>
+        </visual>
+        <collision name="collision">
+            <origin xyz="0 0 0" rpy="0.0 -0.0 0.0"/>
+            <geometry>
+                <mesh filename="package://mini_urdf/meshes/Part_1_4.stl"/>
+            </geometry>
+        </collision>
+    </link>
+    <link name="base_link">
+    </link>
+    <link name="body_1">
+        <inertial>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 0.0"/>
+            <mass value="1.0"/>
+            <inertia ixx="1.0" ixy="1.0" ixz="1.0" iyy="1.0" iyz="1.0" izz="1.0"/>
+        </inertial>
+        <visual>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 0.0"/>
+            <geometry>
+                <mesh filename="package://mini_urdf/meshes/body_1.stl"/>
+            </geometry>
+            <material name="material">
+                <color rgba="0.615686274509804 0.615686274509804 0.615686274509804 1.0"/>
+            </material>
+        </visual>
+        <collision name="collision">
+            <origin xyz="0 0 0" rpy="0.0 -0.0 0.0"/>
+            <geometry>
+                <mesh filename="package://mini_urdf/meshes/body_1.stl"/>
+            </geometry>
+        </collision>
+    </link>
+    <link name="wheelpod_2">
+        <inertial>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 0.0"/>
+            <mass value="1.0"/>
+            <inertia ixx="1.0" ixy="1.0" ixz="1.0" iyy="1.0" iyz="1.0" izz="1.0"/>
+        </inertial>
+        <visual>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 0.0"/>
+            <geometry>
+                <mesh filename="package://mini_urdf/meshes/wheelpod_2.stl"/>
+            </geometry>
+            <material name="material">
+                <color rgba="0.611764705882353 0.611764705882353 0.611764705882353 1.0"/>
+            </material>
+        </visual>
+        <collision name="collision">
+            <origin xyz="0 0 0" rpy="0.0 -0.0 0.0"/>
+            <geometry>
+                <mesh filename="package://mini_urdf/meshes/wheelpod_2.stl"/>
+            </geometry>
+        </collision>
+    </link>
+    <link name="wheelpod_3">
+        <inertial>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 0.0"/>
+            <mass value="1.0"/>
+            <inertia ixx="1.0" ixy="1.0" ixz="1.0" iyy="1.0" iyz="1.0" izz="1.0"/>
+        </inertial>
+        <visual>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 0.0"/>
+            <geometry>
+                <mesh filename="package://mini_urdf/meshes/wheelpod_3.stl"/>
+            </geometry>
+            <material name="material">
+                <color rgba="0.611764705882353 0.611764705882353 0.611764705882353 1.0"/>
+            </material>
+        </visual>
+        <collision name="collision">
+            <origin xyz="0 0 0" rpy="0.0 -0.0 0.0"/>
+            <geometry>
+                <mesh filename="package://mini_urdf/meshes/wheelpod_3.stl"/>
+            </geometry>
+        </collision>
+    </link>
+    <link name="wheel_1">
+        <inertial>
+            <origin xyz="0.0 0.0 0.0" rpy="1.5707963267948966 1.5707963267948966 0.0"/>
+            <mass value="1.0"/>
+            <inertia ixx="1.0" ixy="1.0" ixz="1.0" iyy="1.0" iyz="1.0" izz="1.0"/>
+        </inertial>
+        <visual>
+            <origin xyz="0.0 0.0 0.0" rpy="1.5707963267948966 1.5707963267948966 0.0"/>
+            <geometry>
+                <mesh filename="package://mini_urdf/meshes/Part_1_1.stl"/>
+            </geometry>
+            <material name="material">
+                <color rgba="0.615686274509804 0.615686274509804 0.615686274509804 1.0"/>
+            </material>
+        </visual>
+        <collision name="collision">
+            <origin xyz="0 0 0" rpy="0.0 -0.0 0.0"/>
+            <geometry>
+                <mesh filename="package://mini_urdf/meshes/Part_1_1.stl"/>
+            </geometry>
+        </collision>
+    </link>
+    <joint name="base_joint" type="fixed">
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <parent link="base_link"/>
+        <child link="body_1"/>
+    </joint>
+    <joint name="steer_br" type="revolute">
+        <origin xyz="-0.26550000000000007 0.2539125000000001 0.08939999999999998" rpy="0.0 -0.0 0.0"/>
+        <parent link="body_1"/>
+        <child link="wheelpod_2"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-1.7976931348623157E308" upper="1.7976931348623157E308" effort="10.0" velocity="1.0"/>
+    </joint>
+    <joint name="steer_fr" type="revolute">
+        <origin xyz="-0.26550000000000007 -0.2539125 0.08939999999999998" rpy="0.0 -0.0 0.0"/>
+        <parent link="body_1"/>
+        <child link="wheelpod_3"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-1.7976931348623157E308" upper="1.7976931348623157E308" effort="10.0" velocity="1.0"/>
+    </joint>
+    <joint name="steer_fl" type="revolute">
+        <origin xyz="0.26549999999999996 -0.2539125 0.08939999999999998" rpy="0.0 -0.0 3.141592653589793"/>
+        <parent link="body_1"/>
+        <child link="wheelpod_4"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-1.7976931348623157E308" upper="1.7976931348623157E308" effort="10.0" velocity="1.0"/>
+    </joint>
+    <joint name="steer_bl" type="revolute">
+        <origin xyz="0.26549999999999996 0.2539125000000001 0.08939999999999998" rpy="0.0 -0.0 3.141592653589793"/>
+        <parent link="body_1"/>
+        <child link="wheelpod_5"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-1.7976931348623157E308" upper="1.7976931348623157E308" effort="10.0" velocity="1.0"/>
+    </joint>
+    <joint name="drive_fr" type="revolute">
+        <origin xyz="0.03350000000000003 0.0 -0.13335" rpy="1.5707963267948966 -0.0 1.5707963267948966"/>
+        <parent link="wheelpod_3"/>
+        <child link="wheel_3"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-1.7976931348623157E308" upper="1.7976931348623157E308" effort="10.0" velocity="1.0"/>
+    </joint>
+    <joint name="drive_fl" type="revolute">
+        <origin xyz="0.0335 0.0 -0.13335" rpy="-1.5707963267948966 -0.0 -1.5707963267948966"/>
+        <parent link="wheelpod_4"/>
+        <child link="wheel_1"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-1.7976931348623157E308" upper="1.7976931348623157E308" effort="10.0" velocity="1.0"/>
+    </joint>
+    <joint name="drive_bl" type="revolute">
+        <origin xyz="0.0335 0.0 -0.13335" rpy="-1.5707963267948966 -0.0 -1.5707963267948966"/>
+        <parent link="wheelpod_5"/>
+        <child link="wheel_2"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-1.7976931348623157E308" upper="1.7976931348623157E308" effort="10.0" velocity="1.0"/>
+    </joint>
+    <joint name="drive_br" type="revolute">
+        <origin xyz="0.03350000000000003 0.0 -0.13335" rpy="1.5707963267948966 -0.0 1.5707963267948966"/>
+        <parent link="wheelpod_2"/>
+        <child link="wheel_4"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-1.7976931348623157E308" upper="1.7976931348623157E308" effort="10.0" velocity="1.0"/>
+    </joint>
+</robot>

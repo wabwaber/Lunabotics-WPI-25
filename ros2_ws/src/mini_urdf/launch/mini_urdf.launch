@@ -1,0 +1,27 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <!-- Load the robot description -->
+  <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher">
+    <param name="robot_description" value="$(command 'cat $(find mini_urdf)/urdf/mini_urdf.urdf')" />
+  </node>
+
+  <!-- Start the joint state publisher -->
+  <node pkg="joint_state_publisher" exec="joint_state_publisher" name="joint_state_publisher" />
+
+  <!-- Define the rviz config file argument -->
+  <arg name="rviz" default="$(find mini_urdf)/launch/mini_urdf.rviz" />
+
+  <!-- Launch rviz2 -->
+  <node pkg="rviz2" exec="rviz2" name="rviz2" args="-d $(arg rviz)" />
+</launch>
+
+
+<!-- <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<launch>
+    <param name="robot_description" textfile="$(find mini_urdf)/urdf/mini_urdf.urdf"/>
+    <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher"/>
+    <node pkg="joint_state_publisher" exec="joint_state_publisher" name="joint_state_publisher"/>
+    <arg name="rviz" default="$(find mini_urdf)/launch/mini_urdf.rviz"/>
+    <node pkg="rviz" exec="rviz" name="rviz" args="-d $(arg rviz)"/>
+</launch> -->
