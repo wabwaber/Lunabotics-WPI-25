@@ -22,12 +22,18 @@ class StatePublisher(Node):
         loop_rate = self.create_rate(30)
 
         # robot state
-        tilt = 0.
-        tinc = degree
-        swivel = 0.
-        angle = 0.
-        height = 0.
-        hinc = 0.005
+        axis_angle = 0.0
+
+        joints = [
+            "steer_fl",
+            "steer_fr",
+            "steer_bl",
+            "steer_br",
+            "drive_fl",
+            "drive_fr",
+            "drive_bl",
+            "drive_br"
+        ]
 
         # message declarations
         odom_trans = TransformStamped()
@@ -42,31 +48,26 @@ class StatePublisher(Node):
                 # update joint_state
                 now = self.get_clock().now()
                 joint_state.header.stamp = now.to_msg()
-                joint_state.name = ['swivel', 'tilt', 'periscope']
-                joint_state.position = [swivel, tilt, height]
+                joint_state.name = joints
+                joint_state.position = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
                 # update transform
                 # (moving in a circle with radius=2)
                 odom_trans.header.stamp = now.to_msg()
-                odom_trans.transform.translation.x = math.cos(angle)*2
-                odom_trans.transform.translation.y = math.sin(angle)*2
+                odom_trans.transform.translation.x = math.cos(axis_angle)*2
+                odom_trans.transform.translation.y = math.sin(axis_angle)*2
                 odom_trans.transform.translation.z = 0.0
                 odom_trans.transform.rotation = \
-                    euler_to_quaternion(0, 0, angle + math.pi/2) # roll,pitch,yaw
+                    euler_to_quaternion(0, 0, axis_angle) # roll,pitch,yaw
 
                 # send the joint state and transform
                 self.joint_pub.publish(joint_state)
                 self.broadcaster.sendTransform(odom_trans)
 
                 # Create new robot state
-                tilt += tinc
-                if tilt < -0.5 or tilt > 0.0:
-                    tinc *= -1
-                height += hinc
-                if height > 0.2 or height < 0.0:
-                    hinc *= -1
-                swivel += degree
-                angle += degree/4
+                
+                
+                axis_angle += degree/4
 
                 # This will adjust as needed per iteration
                 loop_rate.sleep()

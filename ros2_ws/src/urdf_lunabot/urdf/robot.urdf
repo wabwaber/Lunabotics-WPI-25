@@ -8,9 +8,10 @@
       <origin rpy="0 0 1.5706" xyz="0 0 .2286"/>
        <geometry>
          <mesh 
-          filename="file:///home/lunabot/ros2_ws/src/urdf_lunabot/meshes/prototype_drivetrain.stl"
+          filename="file://$(find urdf_lunabot)/meshes/prototype_drivetrain.stl"
           scale=" 0.001 0.001 0.001"
          />
+         <!-- /home/lunabot/ros2_ws/src/urdf_lunabot -->
        </geometry>
        <material name="white"/>
      </visual>
