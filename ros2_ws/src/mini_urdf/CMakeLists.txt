@@ -10,7 +10,3 @@ install(DIRECTORY meshes
 
 install(DIRECTORY urdf
   DESTINATION share/${PROJECT_NAME})
-
-install(DIRECTORY launch
-  DESTINATION share/${PROJECT_NAME})
-
