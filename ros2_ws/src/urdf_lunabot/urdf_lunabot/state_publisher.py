@@ -49,7 +49,7 @@ class StatePublisher(Node):
                 now = self.get_clock().now()
                 joint_state.header.stamp = now.to_msg()
                 joint_state.name = joints
-                joint_state.position = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+                joint_state.position = [0.8, -0.8, 1.2, 0.5, 0.0, 0.0, 0.0, 0.0]
 
                 # update transform
                 # (moving in a circle with radius=2)
@@ -58,7 +58,7 @@ class StatePublisher(Node):
                 odom_trans.transform.translation.y = math.sin(axis_angle)*2
                 odom_trans.transform.translation.z = 0.0
                 odom_trans.transform.rotation = \
-                    euler_to_quaternion(0, 0, axis_angle) # roll,pitch,yaw
+                    euler_to_quaternion(0, 0, axis_angle + math.pi) # roll,pitch,yaw
 
                 # send the joint state and transform
                 self.joint_pub.publish(joint_state)
