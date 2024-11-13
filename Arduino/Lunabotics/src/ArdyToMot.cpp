@@ -18,10 +18,9 @@ float turnErrorLeft;
 float turnErrorRight;
 float turnSetAngleLeft;
 float turnSetAngleRight;
-CANConfig config(CAN_BITRATE, CAN_CS, CAN_INT);
-CANController CAN(config);
 Talon PWMLeft;
 Talon PWMRight;
+MCP2515 mcp2515;
 
 //Making the rather bold assumption that the wheel numbers goes from left front in a counter Clockwise U. This is because I know the first two are left and the last 2 are right but not which one is front or back
 //Function takes in the current for each wheel and tells the motors to work. Returns true if the writing (CAN Message transmission) was successful and false in any other senario
