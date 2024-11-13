@@ -53,7 +53,7 @@
         <visual>
             <origin xyz="0.0 0.0 -0.06" rpy="-1.5707963267948966 -1.5707963267948966 0.0"/>
             <geometry>
-                <mesh filename="package://mini_urdf/meshes/Part_1_3.stl" scale="1 1 1"/>
+                <mesh filename="package://mini_urdf/meshes/wheel_3.stl" scale="1 1 1"/>
             </geometry>
             <material name="material">
                 <color rgba="0.615686274509804 0.615686274509804 0.615686274509804 1.0"/>
@@ -62,7 +62,7 @@
         <collision name="collision">
             <origin xyz="0 0 0" rpy="0.0 -0.0 0.0"/>
             <geometry>
-                <mesh filename="package://mini_urdf/meshes/Part_1_3.stl" scale="1 1 1"/>
+                <mesh filename="package://mini_urdf/meshes/wheel_3.stl" scale="1 1 1"/>
             </geometry>
         </collision>
     </link>
@@ -75,7 +75,7 @@
         <visual>
             <origin xyz="0.0 0.0 0.0" rpy="1.5707963267948966 1.5707963267948966 0.0"/>
             <geometry>
-                <mesh filename="package://mini_urdf/meshes/Part_1_2.stl" scale="1 1 1"/>
+                <mesh filename="package://mini_urdf/meshes/wheel_2.stl" scale="1 1 1"/>
             </geometry>
             <material name="material">
                 <color rgba="0.615686274509804 0.615686274509804 0.615686274509804 1.0"/>
@@ -84,7 +84,7 @@
         <collision name="collision">
             <origin xyz="0 0 0" rpy="0.0 -0.0 0.0"/>
             <geometry>
-                <mesh filename="package://mini_urdf/meshes/Part_1_2.stl" scale="1 1 1"/>
+                <mesh filename="package://mini_urdf/meshes/wheel_2.stl" scale="1 1 1"/>
             </geometry>
         </collision>
     </link>
@@ -97,7 +97,7 @@
         <visual>
             <origin xyz="0.0 0.0 -0.06" rpy="-1.5707963267948966 -1.5707963267948966 0.0"/>
             <geometry>
-                <mesh filename="package://mini_urdf/meshes/Part_1_4.stl" scale="1 1 1"/>
+                <mesh filename="package://mini_urdf/meshes/wheel_4.stl" scale="1 1 1"/>
             </geometry>
             <material name="material">
                 <color rgba="0.615686274509804 0.615686274509804 0.615686274509804 1.0"/>
@@ -106,7 +106,7 @@
         <collision name="collision">
             <origin xyz="0 0 0" rpy="0.0 -0.0 0.0"/>
             <geometry>
-                <mesh filename="package://mini_urdf/meshes/Part_1_4.stl" scale="1 1 1"/>
+                <mesh filename="package://mini_urdf/meshes/wheel_4.stl" scale="1 1 1"/>
             </geometry>
         </collision>
     </link>
@@ -187,7 +187,7 @@
         <visual>
             <origin xyz="0.0 0.0 0.0" rpy="1.5707963267948966 1.5707963267948966 0.0"/>
             <geometry>
-                <mesh filename="package://mini_urdf/meshes/Part_1_1.stl" scale="1 1 1"/>
+                <mesh filename="package://mini_urdf/meshes/wheel_1.stl" scale="1 1 1"/>
             </geometry>
             <material name="material">
                 <color rgba="0.615686274509804 0.615686274509804 0.615686274509804 1.0"/>
@@ -196,7 +196,7 @@
         <collision name="collision">
             <origin xyz="0 0 0" rpy="0.0 -0.0 0.0"/>
             <geometry>
-                <mesh filename="package://mini_urdf/meshes/Part_1_1.stl" scale="1 1 1"/>
+                <mesh filename="package://mini_urdf/meshes/wheel_1.stl" scale="1 1 1"/>
             </geometry>
         </collision>
     </link>
