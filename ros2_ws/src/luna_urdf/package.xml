@@ -3,8 +3,8 @@
 <package format="3">
   <name>luna_urdf</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="the.sam.rooney@gmail.com">lunabot</maintainer>
+  <description>Container package for the Lunabot URDF and SDF files, to be used in ROS and Gazebo.</description>
+  <maintainer email="the.sam.rooney@gmail.com">Sam Rooney</maintainer>
   <license>TODO: License declaration</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
