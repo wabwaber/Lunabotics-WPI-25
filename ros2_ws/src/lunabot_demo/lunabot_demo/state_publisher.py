@@ -1,10 +1,12 @@
 import math
+
+from geometry_msgs.msg import Quaternion
 import rclpy
 from rclpy.node import Node
 from rclpy.qos import QoSProfile
-from geometry_msgs.msg import Quaternion
 from sensor_msgs.msg import JointState
 from tf2_ros import TransformBroadcaster, TransformStamped
+
 
 class StatePublisher(Node):
 
@@ -16,7 +18,7 @@ class StatePublisher(Node):
         self.joint_pub = self.create_publisher(JointState, 'joint_states', qos_profile)
         self.broadcaster = TransformBroadcaster(self, qos=qos_profile)
         self.nodeName = self.get_name()
-        self.get_logger().info("{0} started".format(self.nodeName))
+        self.get_logger().info('{0} started'.format(self.nodeName))
 
         degree = math.pi / 180.0
         loop_rate = self.create_rate(30)
@@ -25,14 +27,14 @@ class StatePublisher(Node):
         axis_angle = 0.0
 
         joints = [
-            "steer_fl",
-            "steer_fr",
-            "steer_bl",
-            "steer_br",
-            "drive_fl",
-            "drive_fr",
-            "drive_bl",
-            "drive_br"
+            'steer_fl',
+            'steer_fr',
+            'steer_bl',
+            'steer_br',
+            'drive_fl',
+            'drive_fr',
+            'drive_bl',
+            'drive_br'
         ]
 
         # message declarations
@@ -58,15 +60,14 @@ class StatePublisher(Node):
                 odom_trans.transform.translation.y = math.sin(axis_angle)*2
                 odom_trans.transform.translation.z = 0.0
                 odom_trans.transform.rotation = \
-                    euler_to_quaternion(0, 0, axis_angle + math.pi) # roll,pitch,yaw
+                    euler_to_quaternion(0, 0, axis_angle + math.pi)  # roll,pitch,yaw
 
                 # send the joint state and transform
                 self.joint_pub.publish(joint_state)
                 self.broadcaster.sendTransform(odom_trans)
 
                 # Create new robot state
-                
-                
+
                 axis_angle += degree/4
 
                 # This will adjust as needed per iteration
@@ -75,15 +76,22 @@ class StatePublisher(Node):
         except KeyboardInterrupt:
             pass
 
+
 def euler_to_quaternion(roll, pitch, yaw):
-    qx = math.sin(roll/2) * math.cos(pitch/2) * math.cos(yaw/2) - math.cos(roll/2) * math.sin(pitch/2) * math.sin(yaw/2)
-    qy = math.cos(roll/2) * math.sin(pitch/2) * math.cos(yaw/2) + math.sin(roll/2) * math.cos(pitch/2) * math.sin(yaw/2)
-    qz = math.cos(roll/2) * math.cos(pitch/2) * math.sin(yaw/2) - math.sin(roll/2) * math.sin(pitch/2) * math.cos(yaw/2)
-    qw = math.cos(roll/2) * math.cos(pitch/2) * math.cos(yaw/2) + math.sin(roll/2) * math.sin(pitch/2) * math.sin(yaw/2)
+    qx = math.sin(roll/2) * math.cos(pitch/2) * math.cos(yaw/2) - ...
+    math.cos(roll/2) * math.sin(pitch/2) * math.sin(yaw/2)
+    qy = math.cos(roll/2) * math.sin(pitch/2) * math.cos(yaw/2) + ...
+    math.sin(roll/2) * math.cos(pitch/2) * math.sin(yaw/2)
+    qz = math.cos(roll/2) * math.cos(pitch/2) * math.sin(yaw/2) - ...
+    math.sin(roll/2) * math.sin(pitch/2) * math.cos(yaw/2)
+    qw = math.cos(roll/2) * math.cos(pitch/2) * math.cos(yaw/2) + ...
+    math.sin(roll/2) * math.sin(pitch/2) * math.sin(yaw/2)
     return Quaternion(x=qx, y=qy, z=qz, w=qw)
 
+
 def main():
-    node = StatePublisher()
+    node = StatePublisher()  # noqa: F841
+
 
 if __name__ == '__main__':
     main()
