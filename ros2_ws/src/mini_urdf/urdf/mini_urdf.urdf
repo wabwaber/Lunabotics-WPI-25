@@ -4,7 +4,7 @@
         <inertial>
             <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 -3.141592653589793"/>
             <mass value="1.0"/>
-            <inertia ixx="1.0" ixy="1.0" ixz="1.0" iyy="1.0" iyz="1.0" izz="1.0"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
         </inertial>
         <visual>
             <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 0.0"/>
@@ -26,7 +26,7 @@
         <inertial>
             <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 3.141592653589793"/>
             <mass value="1.0"/>
-            <inertia ixx="1.0" ixy="1.0" ixz="1.0" iyy="1.0" iyz="1.0" izz="1.0"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
         </inertial>
         <visual>
             <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 0.0"/>
@@ -48,7 +48,7 @@
         <inertial>
             <origin xyz="0.0 0.0 -0.06" rpy="-1.5707963267948966 -1.5707963267948966 0.0"/>
             <mass value="1.0"/>
-            <inertia ixx="1.0" ixy="1.0" ixz="1.0" iyy="1.0" iyz="1.0" izz="1.0"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
         </inertial>
         <visual>
             <origin xyz="0.0 0.0 -0.06" rpy="-1.5707963267948966 -1.5707963267948966 0.0"/>
@@ -70,7 +70,7 @@
         <inertial>
             <origin xyz="0.0 0.0 0.0" rpy="1.5707963267948966 1.5707963267948966 0.0"/>
             <mass value="1.0"/>
-            <inertia ixx="1.0" ixy="1.0" ixz="1.0" iyy="1.0" iyz="1.0" izz="1.0"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
         </inertial>
         <visual>
             <origin xyz="0.0 0.0 0.0" rpy="1.5707963267948966 1.5707963267948966 0.0"/>
@@ -92,7 +92,7 @@
         <inertial>
             <origin xyz="0.0 0.0 -0.06" rpy="-1.5707963267948966 -1.5707963267948966 0.0"/>
             <mass value="1.0"/>
-            <inertia ixx="1.0" ixy="1.0" ixz="1.0" iyy="1.0" iyz="1.0" izz="1.0"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
         </inertial>
         <visual>
             <origin xyz="0.0 0.0 -0.06" rpy="-1.5707963267948966 -1.5707963267948966 0.0"/>
@@ -111,12 +111,29 @@
         </collision>
     </link>
     <link name="base_link">
+        <inertial>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <mass value="0.0001"/>
+            <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0"/>
+        </inertial>
     </link>
     <link name="body_1">
         <inertial>
-            <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 0.0"/>
-            <mass value="1.0"/>
-            <inertia ixx="1.0" ixy="1.0" ixz="1.0" iyy="1.0" iyz="1.0" izz="1.0"/>
+            <!-- Volume:  3.6428722656e-02 -->
+            <mass> 25.0 </mass>
+
+            <!-- Center of mass:  4.6354000000e-04  2.2451670000e-02  1.3069042000e-01 -->
+            <pose>  4.6354000000e-04  2.2451670000e-02  1.3069042000e-01 0 0 0 </pose>
+
+            <!-- Inertia matrix -->
+            <inertia>
+                <ixx>  3.6108913629e-02 </ixx>
+                <ixy>  1.3625930260e-04 </ixy>
+                <ixz> -2.9753138433e-04 </ixz>
+                <iyy>  1.6098887286e-02 </iyy>
+                <iyz> -2.7519793844e-03 </iyz>
+                <izz>  3.6389348935e-02 </izz>
+            </inertia>
         </inertial>
         <visual>
             <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 0.0"/>
@@ -138,7 +155,7 @@
         <inertial>
             <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 0.0"/>
             <mass value="1.0"/>
-            <inertia ixx="1.0" ixy="1.0" ixz="1.0" iyy="1.0" iyz="1.0" izz="1.0"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
         </inertial>
         <visual>
             <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 0.0"/>
@@ -160,7 +177,7 @@
         <inertial>
             <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 0.0"/>
             <mass value="1.0"/>
-            <inertia ixx="1.0" ixy="1.0" ixz="1.0" iyy="1.0" iyz="1.0" izz="1.0"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
         </inertial>
         <visual>
             <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 0.0"/>
@@ -182,7 +199,7 @@
         <inertial>
             <origin xyz="0.0 0.0 0.0" rpy="1.5707963267948966 1.5707963267948966 0.0"/>
             <mass value="1.0"/>
-            <inertia ixx="1.0" ixy="1.0" ixz="1.0" iyy="1.0" iyz="1.0" izz="1.0"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
         </inertial>
         <visual>
             <origin xyz="0.0 0.0 0.0" rpy="1.5707963267948966 1.5707963267948966 0.0"/>
@@ -210,55 +227,55 @@
         <parent link="body_1"/>
         <child link="wheelpod_2"/>
         <axis xyz="0 0 1"/>
-        <limit lower="-1.7976931348623157E308" upper="1.7976931348623157E308" effort="10.0" velocity="1.0"/>
+        <limit effort="10.0" velocity="1.0"/>
     </joint>
     <joint name="steer_fr" type="revolute">
         <origin xyz="-0.26550000000000007 -0.2539125 0.08939999999999998" rpy="0.0 -0.0 0.0"/>
         <parent link="body_1"/>
         <child link="wheelpod_3"/>
         <axis xyz="0 0 1"/>
-        <limit lower="-1.7976931348623157E308" upper="1.7976931348623157E308" effort="10.0" velocity="1.0"/>
+        <limit effort="10.0" velocity="1.0"/>
     </joint>
     <joint name="steer_fl" type="revolute">
         <origin xyz="0.26549999999999996 -0.2539125 0.08939999999999998" rpy="0.0 -0.0 3.141592653589793"/>
         <parent link="body_1"/>
         <child link="wheelpod_4"/>
         <axis xyz="0 0 1"/>
-        <limit lower="-1.7976931348623157E308" upper="1.7976931348623157E308" effort="10.0" velocity="1.0"/>
+        <limit effort="10.0" velocity="1.0"/>
     </joint>
     <joint name="steer_bl" type="revolute">
         <origin xyz="0.26549999999999996 0.2539125000000001 0.08939999999999998" rpy="0.0 -0.0 3.141592653589793"/>
         <parent link="body_1"/>
         <child link="wheelpod_5"/>
         <axis xyz="0 0 1"/>
-        <limit lower="-1.7976931348623157E308" upper="1.7976931348623157E308" effort="10.0" velocity="1.0"/>
+        <limit effort="10.0" velocity="1.0"/>
     </joint>
     <joint name="drive_fr" type="revolute">
         <origin xyz="0.03350000000000003 0.0 -0.13335" rpy="1.5707963267948966 -0.0 1.5707963267948966"/>
         <parent link="wheelpod_3"/>
         <child link="wheel_3"/>
         <axis xyz="0 0 1"/>
-        <limit lower="-1.7976931348623157E308" upper="1.7976931348623157E308" effort="10.0" velocity="1.0"/>
+        <limit effort="10.0" velocity="1.0"/>
     </joint>
     <joint name="drive_fl" type="revolute">
         <origin xyz="0.0335 0.0 -0.13335" rpy="-1.5707963267948966 -0.0 -1.5707963267948966"/>
         <parent link="wheelpod_4"/>
         <child link="wheel_1"/>
         <axis xyz="0 0 1"/>
-        <limit lower="-1.7976931348623157E308" upper="1.7976931348623157E308" effort="10.0" velocity="1.0"/>
+        <limit effort="10.0" velocity="1.0"/>
     </joint>
     <joint name="drive_bl" type="revolute">
         <origin xyz="0.0335 0.0 -0.13335" rpy="-1.5707963267948966 -0.0 -1.5707963267948966"/>
         <parent link="wheelpod_5"/>
         <child link="wheel_2"/>
         <axis xyz="0 0 1"/>
-        <limit lower="-1.7976931348623157E308" upper="1.7976931348623157E308" effort="10.0" velocity="1.0"/>
+        <limit effort="10.0" velocity="1.0"/>
     </joint>
     <joint name="drive_br" type="revolute">
         <origin xyz="0.03350000000000003 0.0 -0.13335" rpy="1.5707963267948966 -0.0 1.5707963267948966"/>
         <parent link="wheelpod_2"/>
         <child link="wheel_4"/>
         <axis xyz="0 0 1"/>
-        <limit lower="-1.7976931348623157E308" upper="1.7976931348623157E308" effort="10.0" velocity="1.0"/>
+        <limit effort="10.0" velocity="1.0"/>
     </joint>
 </robot>

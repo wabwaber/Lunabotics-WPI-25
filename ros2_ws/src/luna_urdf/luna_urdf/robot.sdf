@@ -1,0 +1,283 @@
+<sdf version="1.6">
+<model name="luna_urdf">
+<link name="body">
+<frame name="body_frame"><pose>0 0 0 0 -0 0</pose></frame>
+<visual name="body_0_body_visual">
+<pose>0 0 0 0 -0 0</pose>
+<geometry>
+<mesh><uri>file://body.stl</uri></mesh>
+</geometry>
+<material><ambient>0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1</ambient><diffuse>0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1</diffuse><specular>0.1 0.1 0.1 1</specular><emissive>0 0 0 0</emissive></material>
+</visual>
+<collision name="body_0_body_visual">
+<pose>0 0 0 0 -0 0</pose>
+<geometry>
+<mesh><uri>file://luna_urdf//body.stl</uri></mesh>
+</geometry>
+</collision>
+<inertial>
+<pose frame="body_frame">0.00047255856824676874262 0.022364859697872972039 0.1307688602995654148 0 0 0</pose>
+<mass>25</mass>
+<inertia><ixx>0.90389242187733476186</ixx><ixy>0.003471708933921862153</ixy><ixz>-0.0076346994671779074698</ixz><iyy>0.40577362837262304085</iyy><iyz>-0.068059613649223027476</iyz><izz>0.91216152137567629854</izz></inertia>
+</inertial>
+</link>
+
+<link name="wheelpod">
+<frame name="wheelpod_frame"><pose>0 0 0 0 -0 0</pose></frame>
+<visual name="wheelpod_0_wheelpod_visual">
+<pose>-0.26550000000000006928 0.25391250000000009646 0.089399999999999979483 0 -0 0</pose>
+<geometry>
+<mesh><uri>file://wheelpod.stl</uri></mesh>
+</geometry>
+<material><ambient>0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1</ambient><diffuse>0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1</diffuse><specular>0.1 0.1 0.1 1</specular><emissive>0 0 0 0</emissive></material>
+</visual>
+<collision name="wheelpod_0_wheelpod_visual">
+<pose>-0.26550000000000006928 0.25391250000000009646 0.089399999999999979483 0 -0 0</pose>
+<geometry>
+<mesh><uri>file://luna_urdf//wheelpod.stl</uri></mesh>
+</geometry>
+</collision>
+<inertial>
+<pose frame="wheelpod_frame">-0.23545175117490640959 0.25391250000000009646 0.034819937273665335642 0 0 0</pose>
+<mass>0.49999999999999983347</mass>
+<inertia><ixx>0.0013087489021583556016</ixx><ixy>0</ixy><ixz>0.00026671164402675698801</ixz><iyy>0.0013673630909145262531</iyy><iyz>0</iyz><izz>0.00042583920876048422756</izz></inertia>
+</inertial>
+</link>
+
+<link name="wheel">
+<frame name="wheel_frame"><pose>0 0 0 0 -0 0</pose></frame>
+<visual name="wheel_0_wheel_visual">
+<pose>-0.2920000000000000373 0.25391250000000009646 -0.043950000000000016831 0 -0 0</pose>
+<geometry>
+<mesh><uri>file://wheel.stl</uri></mesh>
+</geometry>
+<material><ambient>0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1</ambient><diffuse>0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1</diffuse><specular>0.1 0.1 0.1 1</specular><emissive>0 0 0 0</emissive></material>
+</visual>
+<collision name="wheel_0_wheel_visual">
+<pose>-0.2920000000000000373 0.25391250000000009646 -0.043950000000000016831 0 -0 0</pose>
+<geometry>
+<mesh><uri>file://luna_urdf//wheel.stl</uri></mesh>
+</geometry>
+</collision>
+<inertial>
+<pose frame="wheel_frame">-0.26200000000000001066 0.25391250000000009646 -0.043950000000000009892 0 0 0</pose>
+<mass>1</mass>
+<inertia><ixx>0.0052000000000000006287</ixx><ixy>0</ixy><ixz>0</ixz><iyy>0.0029000000000000002338</iyy><iyz>0</iyz><izz>0.0028999999999999993665</izz></inertia>
+</inertial>
+</link>
+
+<joint name="drive_br" type="revolute">
+<pose>-0.23200000000000003952 0.25391250000000009646 -0.043950000000000016831 1.570796326794896558 -0 1.570796326794896558</pose>
+<parent>wheelpod</parent>
+<child>wheel</child>
+<axis>
+<xyz>0 0 1</xyz>
+<limit><effort>1</effort><velocity>20</velocity></limit>
+</axis>
+</joint>
+
+<joint name="steer_br" type="revolute">
+<pose>-0.26550000000000006928 0.25391250000000009646 0.089399999999999979483 0 -0 0</pose>
+<parent>body</parent>
+<child>wheelpod</child>
+<axis>
+<xyz>0 0 1</xyz>
+<limit><effort>1</effort><velocity>20</velocity></limit>
+</axis>
+</joint>
+
+<link name="wheelpod_2">
+<frame name="wheelpod_2_frame"><pose>0 0 0 0 -0 0</pose></frame>
+<visual name="wheelpod_2_0_wheelpod_visual">
+<pose>-0.26550000000000006928 -0.25391249999999998543 0.089399999999999979483 0 -0 0</pose>
+<geometry>
+<mesh><uri>file://wheelpod.stl</uri></mesh>
+</geometry>
+<material><ambient>0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1</ambient><diffuse>0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1</diffuse><specular>0.1 0.1 0.1 1</specular><emissive>0 0 0 0</emissive></material>
+</visual>
+<collision name="wheelpod_2_0_wheelpod_visual">
+<pose>-0.26550000000000006928 -0.25391249999999998543 0.089399999999999979483 0 -0 0</pose>
+<geometry>
+<mesh><uri>file://luna_urdf//wheelpod.stl</uri></mesh>
+</geometry>
+</collision>
+<inertial>
+<pose frame="wheelpod_2_frame">-0.23545175117490640959 -0.25391249999999998543 0.034819937273665335642 0 0 0</pose>
+<mass>0.49999999999999983347</mass>
+<inertia><ixx>0.0013087489021583556016</ixx><ixy>0</ixy><ixz>0.00026671164402675698801</ixz><iyy>0.0013673630909145262531</iyy><iyz>0</iyz><izz>0.00042583920876048422756</izz></inertia>
+</inertial>
+</link>
+
+<link name="wheel_2">
+<frame name="wheel_2_frame"><pose>0 0 0 0 -0 0</pose></frame>
+<visual name="wheel_2_0_wheel_visual">
+<pose>-0.2920000000000000373 -0.25391249999999998543 -0.043950000000000016831 0 -0 0</pose>
+<geometry>
+<mesh><uri>file://wheel.stl</uri></mesh>
+</geometry>
+<material><ambient>0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1</ambient><diffuse>0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1</diffuse><specular>0.1 0.1 0.1 1</specular><emissive>0 0 0 0</emissive></material>
+</visual>
+<collision name="wheel_2_0_wheel_visual">
+<pose>-0.2920000000000000373 -0.25391249999999998543 -0.043950000000000016831 0 -0 0</pose>
+<geometry>
+<mesh><uri>file://luna_urdf//wheel.stl</uri></mesh>
+</geometry>
+</collision>
+<inertial>
+<pose frame="wheel_2_frame">-0.26200000000000001066 -0.25391249999999998543 -0.043950000000000009892 0 0 0</pose>
+<mass>1</mass>
+<inertia><ixx>0.0052000000000000006287</ixx><ixy>0</ixy><ixz>0</ixz><iyy>0.0029000000000000002338</iyy><iyz>0</iyz><izz>0.0028999999999999993665</izz></inertia>
+</inertial>
+</link>
+
+<joint name="drive_fr" type="revolute">
+<pose>-0.23200000000000003952 -0.25391249999999998543 -0.043950000000000016831 1.570796326794896558 -0 1.570796326794896558</pose>
+<parent>wheelpod_2</parent>
+<child>wheel_2</child>
+<axis>
+<xyz>0 0 1</xyz>
+<limit><effort>1</effort><velocity>20</velocity></limit>
+</axis>
+</joint>
+
+<joint name="steer_fr" type="revolute">
+<pose>-0.26550000000000006928 -0.25391249999999998543 0.089399999999999979483 0 -0 0</pose>
+<parent>body</parent>
+<child>wheelpod_2</child>
+<axis>
+<xyz>0 0 1</xyz>
+<limit><effort>1</effort><velocity>20</velocity></limit>
+</axis>
+</joint>
+
+<link name="wheelpod_3">
+<frame name="wheelpod_3_frame"><pose>0 0 0 0 -0 0</pose></frame>
+<visual name="wheelpod_3_0_wheelpod_visual">
+<pose>0.26549999999999995826 -0.25391249999999998543 0.089399999999999979483 0 -0 3.141592653589793116</pose>
+<geometry>
+<mesh><uri>file://wheelpod.stl</uri></mesh>
+</geometry>
+<material><ambient>0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1</ambient><diffuse>0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1</diffuse><specular>0.1 0.1 0.1 1</specular><emissive>0 0 0 0</emissive></material>
+</visual>
+<collision name="wheelpod_3_0_wheelpod_visual">
+<pose>0.26549999999999995826 -0.25391249999999998543 0.089399999999999979483 0 -0 3.141592653589793116</pose>
+<geometry>
+<mesh><uri>file://luna_urdf//wheelpod.stl</uri></mesh>
+</geometry>
+</collision>
+<inertial>
+<pose frame="wheelpod_3_frame">0.23545175117490629857 -0.25391249999999998543 0.034819937273665335642 0 0 0</pose>
+<mass>0.49999999999999983347</mass>
+<inertia><ixx>0.0013087489021583556016</ixx><ixy>0</ixy><ixz>-0.00026671164402675698801</ixz><iyy>0.0013673630909145262531</iyy><iyz>0</iyz><izz>0.00042583920876048422756</izz></inertia>
+</inertial>
+</link>
+
+<link name="wheel_3">
+<frame name="wheel_3_frame"><pose>0 0 0 0 -0 0</pose></frame>
+<visual name="wheel_3_0_wheel_visual">
+<pose>0.23199999999999995626 -0.25391249999999998543 -0.043950000000000016831 0 -0 0</pose>
+<geometry>
+<mesh><uri>file://wheel.stl</uri></mesh>
+</geometry>
+<material><ambient>0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1</ambient><diffuse>0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1</diffuse><specular>0.1 0.1 0.1 1</specular><emissive>0 0 0 0</emissive></material>
+</visual>
+<collision name="wheel_3_0_wheel_visual">
+<pose>0.23199999999999995626 -0.25391249999999998543 -0.043950000000000016831 0 -0 0</pose>
+<geometry>
+<mesh><uri>file://luna_urdf//wheel.stl</uri></mesh>
+</geometry>
+</collision>
+<inertial>
+<pose frame="wheel_3_frame">0.26199999999999995515 -0.25391249999999998543 -0.043950000000000009892 0 0 0</pose>
+<mass>1</mass>
+<inertia><ixx>0.0052000000000000006287</ixx><ixy>0</ixy><ixz>0</ixz><iyy>0.0029000000000000002338</iyy><iyz>0</iyz><izz>0.0028999999999999993665</izz></inertia>
+</inertial>
+</link>
+
+<joint name="drive_fl" type="revolute">
+<pose>0.23199999999999995626 -0.25391249999999998543 -0.043950000000000016831 -1.570796326794896558 -0 1.570796326794896558</pose>
+<parent>wheelpod_3</parent>
+<child>wheel_3</child>
+<axis>
+<xyz>0 0 1</xyz>
+<limit><effort>1</effort><velocity>20</velocity></limit>
+</axis>
+</joint>
+
+<joint name="steer_fl" type="revolute">
+<pose>0.26549999999999995826 -0.25391249999999998543 0.089399999999999979483 0 -0 3.141592653589793116</pose>
+<parent>body</parent>
+<child>wheelpod_3</child>
+<axis>
+<xyz>0 0 1</xyz>
+<limit><effort>1</effort><velocity>20</velocity></limit>
+</axis>
+</joint>
+
+<link name="wheelpod_4">
+<frame name="wheelpod_4_frame"><pose>0 0 0 0 -0 0</pose></frame>
+<visual name="wheelpod_4_0_wheelpod_visual">
+<pose>0.26549999999999995826 0.25391250000000009646 0.089399999999999979483 0 -0 3.141592653589793116</pose>
+<geometry>
+<mesh><uri>file://wheelpod.stl</uri></mesh>
+</geometry>
+<material><ambient>0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1</ambient><diffuse>0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1</diffuse><specular>0.1 0.1 0.1 1</specular><emissive>0 0 0 0</emissive></material>
+</visual>
+<collision name="wheelpod_4_0_wheelpod_visual">
+<pose>0.26549999999999995826 0.25391250000000009646 0.089399999999999979483 0 -0 3.141592653589793116</pose>
+<geometry>
+<mesh><uri>file://luna_urdf//wheelpod.stl</uri></mesh>
+</geometry>
+</collision>
+<inertial>
+<pose frame="wheelpod_4_frame">0.23545175117490629857 0.25391250000000009646 0.034819937273665335642 0 0 0</pose>
+<mass>0.49999999999999983347</mass>
+<inertia><ixx>0.0013087489021583556016</ixx><ixy>0</ixy><ixz>-0.00026671164402675698801</ixz><iyy>0.0013673630909145262531</iyy><iyz>0</iyz><izz>0.00042583920876048422756</izz></inertia>
+</inertial>
+</link>
+
+<link name="wheel_4">
+<frame name="wheel_4_frame"><pose>0 0 0 0 -0 0</pose></frame>
+<visual name="wheel_4_0_wheel_visual">
+<pose>0.23199999999999995626 0.25391250000000009646 -0.043950000000000016831 0 -0 0</pose>
+<geometry>
+<mesh><uri>file://wheel.stl</uri></mesh>
+</geometry>
+<material><ambient>0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1</ambient><diffuse>0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1</diffuse><specular>0.1 0.1 0.1 1</specular><emissive>0 0 0 0</emissive></material>
+</visual>
+<collision name="wheel_4_0_wheel_visual">
+<pose>0.23199999999999995626 0.25391250000000009646 -0.043950000000000016831 0 -0 0</pose>
+<geometry>
+<mesh><uri>file://luna_urdf//wheel.stl</uri></mesh>
+</geometry>
+</collision>
+<inertial>
+<pose frame="wheel_4_frame">0.26199999999999995515 0.25391250000000009646 -0.043950000000000009892 0 0 0</pose>
+<mass>1</mass>
+<inertia><ixx>0.0052000000000000006287</ixx><ixy>0</ixy><ixz>0</ixz><iyy>0.0029000000000000002338</iyy><iyz>0</iyz><izz>0.0028999999999999993665</izz></inertia>
+</inertial>
+</link>
+
+<joint name="drive_bl" type="revolute">
+<pose>0.23199999999999995626 0.25391250000000009646 -0.043950000000000016831 -1.570796326794896558 -0 1.570796326794896558</pose>
+<parent>wheelpod_4</parent>
+<child>wheel_4</child>
+<axis>
+<xyz>0 0 1</xyz>
+<limit><effort>1</effort><velocity>20</velocity></limit>
+</axis>
+</joint>
+
+<joint name="steer_bl" type="revolute">
+<pose>0.26549999999999995826 0.25391250000000009646 0.089399999999999979483 0 -0 3.141592653589793116</pose>
+<parent>body</parent>
+<child>wheelpod_4</child>
+<axis>
+<xyz>0 0 1</xyz>
+<limit><effort>1</effort><velocity>20</velocity></limit>
+</axis>
+</joint>
+
+
+</model>
+</sdf>
