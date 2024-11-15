@@ -1,5 +1,5 @@
 <sdf version="1.6">
-<model name="luna_urdf">
+<model name="lunabot">
 <link name="body">
 <frame name="body_frame"><pose>0 0 0 0 -0 0</pose></frame>
 <visual name="body_0_body_visual">
@@ -12,13 +12,13 @@
 <collision name="body_0_body_visual">
 <pose>0 0 0 0 -0 0</pose>
 <geometry>
-<mesh><uri>file://luna_urdf//body.stl</uri></mesh>
+<mesh><uri>file://luna_sdf//body.stl</uri></mesh>
 </geometry>
 </collision>
 <inertial>
-<pose frame="body_frame">0.00047255856824676874262 0.022364859697872972039 0.1307688602995654148 0 0 0</pose>
-<mass>25</mass>
-<inertia><ixx>0.90389242187733476186</ixx><ixy>0.003471708933921862153</ixy><ixz>-0.0076346994671779074698</ixz><iyy>0.40577362837262304085</iyy><iyz>-0.068059613649223027476</iyz><izz>0.91216152137567629854</izz></inertia>
+<pose frame="body_frame">0.00047255856824676841735 0.0223648596978729651 0.13076886029956547031 0 0 0</pose>
+<mass>25.000000000000007105</mass>
+<inertia><ixx>0.90389242187733576106</ixx><ixy>0.0034717089339218617193</ixy><ixz>-0.0076346994671778805816</ixz><iyy>0.40577362837262359596</iyy><iyz>-0.068059613649222985843</iyz><izz>0.9121615213756760765</izz></inertia>
 </inertial>
 </link>
 
@@ -34,13 +34,13 @@
 <collision name="wheelpod_0_wheelpod_visual">
 <pose>-0.26550000000000006928 0.25391250000000009646 0.089399999999999979483 0 -0 0</pose>
 <geometry>
-<mesh><uri>file://luna_urdf//wheelpod.stl</uri></mesh>
+<mesh><uri>file://luna_sdf//wheelpod.stl</uri></mesh>
 </geometry>
 </collision>
 <inertial>
 <pose frame="wheelpod_frame">-0.23545175117490640959 0.25391250000000009646 0.034819937273665335642 0 0 0</pose>
-<mass>0.49999999999999983347</mass>
-<inertia><ixx>0.0013087489021583556016</ixx><ixy>0</ixy><ixz>0.00026671164402675698801</ixz><iyy>0.0013673630909145262531</iyy><iyz>0</iyz><izz>0.00042583920876048422756</izz></inertia>
+<mass>0.5</mass>
+<inertia><ixx>0.0013087489021583560353</ixx><ixy>0</ixy><ixz>0.00026671164402675704222</ixz><iyy>0.0013673630909145266868</iyy><iyz>0</iyz><izz>0.00042583920876048439019</izz></inertia>
 </inertial>
 </link>
 
@@ -56,13 +56,13 @@
 <collision name="wheel_0_wheel_visual">
 <pose>-0.2920000000000000373 0.25391250000000009646 -0.043950000000000016831 0 -0 0</pose>
 <geometry>
-<mesh><uri>file://luna_urdf//wheel.stl</uri></mesh>
+<mesh><uri>file://luna_sdf//wheel.stl</uri></mesh>
 </geometry>
 </collision>
 <inertial>
 <pose frame="wheel_frame">-0.26200000000000001066 0.25391250000000009646 -0.043950000000000009892 0 0 0</pose>
 <mass>1</mass>
-<inertia><ixx>0.0052000000000000006287</ixx><ixy>0</ixy><ixz>0</ixz><iyy>0.0029000000000000002338</iyy><iyz>0</iyz><izz>0.0028999999999999993665</izz></inertia>
+<inertia><ixx>0.005200000000000001496</ixx><ixy>0</ixy><ixz>0</ixz><iyy>0.0029000000000000002338</iyy><iyz>0</iyz><izz>0.0028999999999999993665</izz></inertia>
 </inertial>
 </link>
 
@@ -82,7 +82,7 @@
 <child>wheelpod</child>
 <axis>
 <xyz>0 0 1</xyz>
-<limit><effort>1</effort><velocity>20</velocity></limit>
+<limit><effort>1</effort><velocity>20</velocity><lower>-1.6580627893946131568</lower><upper>1.6580627893946131568</upper></limit>
 </axis>
 </joint>
 
@@ -98,13 +98,13 @@
 <collision name="wheelpod_2_0_wheelpod_visual">
 <pose>-0.26550000000000006928 -0.25391249999999998543 0.089399999999999979483 0 -0 0</pose>
 <geometry>
-<mesh><uri>file://luna_urdf//wheelpod.stl</uri></mesh>
+<mesh><uri>file://luna_sdf//wheelpod.stl</uri></mesh>
 </geometry>
 </collision>
 <inertial>
 <pose frame="wheelpod_2_frame">-0.23545175117490640959 -0.25391249999999998543 0.034819937273665335642 0 0 0</pose>
-<mass>0.49999999999999983347</mass>
-<inertia><ixx>0.0013087489021583556016</ixx><ixy>0</ixy><ixz>0.00026671164402675698801</ixz><iyy>0.0013673630909145262531</iyy><iyz>0</iyz><izz>0.00042583920876048422756</izz></inertia>
+<mass>0.5</mass>
+<inertia><ixx>0.0013087489021583560353</ixx><ixy>0</ixy><ixz>0.00026671164402675704222</ixz><iyy>0.0013673630909145266868</iyy><iyz>0</iyz><izz>0.00042583920876048439019</izz></inertia>
 </inertial>
 </link>
 
@@ -120,13 +120,13 @@
 <collision name="wheel_2_0_wheel_visual">
 <pose>-0.2920000000000000373 -0.25391249999999998543 -0.043950000000000016831 0 -0 0</pose>
 <geometry>
-<mesh><uri>file://luna_urdf//wheel.stl</uri></mesh>
+<mesh><uri>file://luna_sdf//wheel.stl</uri></mesh>
 </geometry>
 </collision>
 <inertial>
 <pose frame="wheel_2_frame">-0.26200000000000001066 -0.25391249999999998543 -0.043950000000000009892 0 0 0</pose>
 <mass>1</mass>
-<inertia><ixx>0.0052000000000000006287</ixx><ixy>0</ixy><ixz>0</ixz><iyy>0.0029000000000000002338</iyy><iyz>0</iyz><izz>0.0028999999999999993665</izz></inertia>
+<inertia><ixx>0.005200000000000001496</ixx><ixy>0</ixy><ixz>0</ixz><iyy>0.0029000000000000002338</iyy><iyz>0</iyz><izz>0.0028999999999999993665</izz></inertia>
 </inertial>
 </link>
 
@@ -146,7 +146,7 @@
 <child>wheelpod_2</child>
 <axis>
 <xyz>0 0 1</xyz>
-<limit><effort>1</effort><velocity>20</velocity></limit>
+<limit><effort>1</effort><velocity>20</velocity><lower>-1.6580627893946131568</lower><upper>1.6580627893946131568</upper></limit>
 </axis>
 </joint>
 
@@ -162,13 +162,13 @@
 <collision name="wheelpod_3_0_wheelpod_visual">
 <pose>0.26549999999999995826 -0.25391249999999998543 0.089399999999999979483 0 -0 3.141592653589793116</pose>
 <geometry>
-<mesh><uri>file://luna_urdf//wheelpod.stl</uri></mesh>
+<mesh><uri>file://luna_sdf//wheelpod.stl</uri></mesh>
 </geometry>
 </collision>
 <inertial>
 <pose frame="wheelpod_3_frame">0.23545175117490629857 -0.25391249999999998543 0.034819937273665335642 0 0 0</pose>
-<mass>0.49999999999999983347</mass>
-<inertia><ixx>0.0013087489021583556016</ixx><ixy>0</ixy><ixz>-0.00026671164402675698801</ixz><iyy>0.0013673630909145262531</iyy><iyz>0</iyz><izz>0.00042583920876048422756</izz></inertia>
+<mass>0.5</mass>
+<inertia><ixx>0.0013087489021583560353</ixx><ixy>0</ixy><ixz>-0.00026671164402675704222</ixz><iyy>0.0013673630909145266868</iyy><iyz>0</iyz><izz>0.00042583920876048439019</izz></inertia>
 </inertial>
 </link>
 
@@ -184,13 +184,13 @@
 <collision name="wheel_3_0_wheel_visual">
 <pose>0.23199999999999995626 -0.25391249999999998543 -0.043950000000000016831 0 -0 0</pose>
 <geometry>
-<mesh><uri>file://luna_urdf//wheel.stl</uri></mesh>
+<mesh><uri>file://luna_sdf//wheel.stl</uri></mesh>
 </geometry>
 </collision>
 <inertial>
 <pose frame="wheel_3_frame">0.26199999999999995515 -0.25391249999999998543 -0.043950000000000009892 0 0 0</pose>
 <mass>1</mass>
-<inertia><ixx>0.0052000000000000006287</ixx><ixy>0</ixy><ixz>0</ixz><iyy>0.0029000000000000002338</iyy><iyz>0</iyz><izz>0.0028999999999999993665</izz></inertia>
+<inertia><ixx>0.005200000000000001496</ixx><ixy>0</ixy><ixz>0</ixz><iyy>0.0029000000000000002338</iyy><iyz>0</iyz><izz>0.0028999999999999993665</izz></inertia>
 </inertial>
 </link>
 
@@ -210,7 +210,7 @@
 <child>wheelpod_3</child>
 <axis>
 <xyz>0 0 1</xyz>
-<limit><effort>1</effort><velocity>20</velocity></limit>
+<limit><effort>1</effort><velocity>20</velocity><lower>-1.6580627893946131568</lower><upper>1.6580627893946131568</upper></limit>
 </axis>
 </joint>
 
@@ -226,13 +226,13 @@
 <collision name="wheelpod_4_0_wheelpod_visual">
 <pose>0.26549999999999995826 0.25391250000000009646 0.089399999999999979483 0 -0 3.141592653589793116</pose>
 <geometry>
-<mesh><uri>file://luna_urdf//wheelpod.stl</uri></mesh>
+<mesh><uri>file://luna_sdf//wheelpod.stl</uri></mesh>
 </geometry>
 </collision>
 <inertial>
 <pose frame="wheelpod_4_frame">0.23545175117490629857 0.25391250000000009646 0.034819937273665335642 0 0 0</pose>
-<mass>0.49999999999999983347</mass>
-<inertia><ixx>0.0013087489021583556016</ixx><ixy>0</ixy><ixz>-0.00026671164402675698801</ixz><iyy>0.0013673630909145262531</iyy><iyz>0</iyz><izz>0.00042583920876048422756</izz></inertia>
+<mass>0.5</mass>
+<inertia><ixx>0.0013087489021583560353</ixx><ixy>0</ixy><ixz>-0.00026671164402675704222</ixz><iyy>0.0013673630909145266868</iyy><iyz>0</iyz><izz>0.00042583920876048439019</izz></inertia>
 </inertial>
 </link>
 
@@ -248,13 +248,13 @@
 <collision name="wheel_4_0_wheel_visual">
 <pose>0.23199999999999995626 0.25391250000000009646 -0.043950000000000016831 0 -0 0</pose>
 <geometry>
-<mesh><uri>file://luna_urdf//wheel.stl</uri></mesh>
+<mesh><uri>file://luna_sdf//wheel.stl</uri></mesh>
 </geometry>
 </collision>
 <inertial>
 <pose frame="wheel_4_frame">0.26199999999999995515 0.25391250000000009646 -0.043950000000000009892 0 0 0</pose>
 <mass>1</mass>
-<inertia><ixx>0.0052000000000000006287</ixx><ixy>0</ixy><ixz>0</ixz><iyy>0.0029000000000000002338</iyy><iyz>0</iyz><izz>0.0028999999999999993665</izz></inertia>
+<inertia><ixx>0.005200000000000001496</ixx><ixy>0</ixy><ixz>0</ixz><iyy>0.0029000000000000002338</iyy><iyz>0</iyz><izz>0.0028999999999999993665</izz></inertia>
 </inertial>
 </link>
 
@@ -274,7 +274,7 @@
 <child>wheelpod_4</child>
 <axis>
 <xyz>0 0 1</xyz>
-<limit><effort>1</effort><velocity>20</velocity></limit>
+<limit><effort>1</effort><velocity>20</velocity><lower>-1.6580627893946131568</lower><upper>1.6580627893946131568</upper></limit>
 </axis>
 </joint>
 
