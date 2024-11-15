@@ -18,6 +18,7 @@ endif()
 install(
   DIRECTORY
     luna_urdf
+    luna_sdf
   DESTINATION
     share/${PROJECT_NAME}/
 )
