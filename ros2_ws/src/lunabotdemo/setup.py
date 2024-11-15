@@ -2,7 +2,7 @@ from glob import glob
 
 from setuptools import setup
 
-package_name = 'lunabot_demo'
+package_name = 'lunabotdemo'
 
 setup(
     name=package_name,
@@ -25,7 +25,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'state_publisher = lunabot_demo.state_publisher:main'
+            'state_publisher = lunabotdemo.state_publisher:main'
         ],
     },
 )
