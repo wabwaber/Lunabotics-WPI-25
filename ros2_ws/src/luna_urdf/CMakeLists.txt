@@ -17,9 +17,7 @@ endif()
 
 install(
   DIRECTORY
-    rviz
-    launch
-        luna_urdf
+    luna_urdf
   DESTINATION
     share/${PROJECT_NAME}/
 )
