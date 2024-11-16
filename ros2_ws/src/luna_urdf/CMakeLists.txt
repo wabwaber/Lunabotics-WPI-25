@@ -19,6 +19,7 @@ install(
   DIRECTORY
     luna_urdf
     luna_sdf
+    luna_control
   DESTINATION
     share/${PROJECT_NAME}/
 )

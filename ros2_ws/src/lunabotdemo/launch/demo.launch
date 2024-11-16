@@ -5,10 +5,11 @@
     </include>
     <include file="$(find-pkg-share ros_gz_sim)/launch/gz_spawn_model.launch.py">
         <arg name="world" value="empty" />
-        <arg name="file" value="$(find-pkg-share luna_urdf)/luna_sdf/robot.sdf" />
+        <arg name="file" value="$(find-pkg-share luna_urdf)/luna_urdf/robot.urdf" />
         <arg name="entity_name" value="lunabot" />
-        <arg name="z" value="1.0" />
+        <arg name="z" value="0.5" />
     </include>
+    <!-- <node pkg="ros_gz_bridge" exec="parameter_bridge" -->
     <node pkg="tf2_ros" exec="static_transform_publisher" name="robot_odom_tf" args="--frame-id axis --child-frame-id robot" />
     <node pkg="tf2_ros" exec="static_transform_publisher" name="robot_baselink_tf" args="--frame-id robot --child-frame-id base_link" />
     <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher">

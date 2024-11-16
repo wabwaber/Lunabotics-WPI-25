@@ -1,0 +1,10 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 20
+    use_sim_time: true
+
+    drive_ctrl:
+      type: xyzabc
+
+    joint_broadcast:
+      type: joint_state_broadcaster/JointStateBroadcaster
