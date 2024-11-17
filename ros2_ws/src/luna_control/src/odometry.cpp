@@ -66,31 +66,54 @@ bool Odometry::update(double left_back_pod_pos, double left_front_pod_pos, doubl
     return false;  // Interval too small to integrate with
   }
 
-  const double avg_left_vel = (left_back_wheel_vel + left_front_wheel_vel) / 2.0;
-  const double avg_right_vel = (right_back_wheel_vel + right_front_wheel_vel) / 2.0;
+  // use Jacobian math to get an estimate of the robot's velocity
+  // TODO: check this math is actually correct, because it's probably got some signs wrong at least
+  
+  const double fl_linear_component = left_back_wheel_vel * cos(left_back_pod_pos) / 4;
+  const double bl_linear_component = left_front_wheel_vel * cos(left_front_pod_pos) / 4;
+  const double fr_linear_component = right_back_wheel_vel * cos(right_back_pod_pos) / 4;
+  const double br_linear_component = right_front_wheel_vel * cos(right_front_pod_pos) / 4;
 
-  const double dt = time.seconds() - timestamp_.seconds();
+  const double fl_strafe_component = left_back_wheel_vel * sin(left_back_pod_pos) / 4;
+  const double bl_strafe_component = left_front_wheel_vel * sin(left_front_pod_pos) / 4;
+  const double fr_strafe_component = right_back_wheel_vel * sin(right_back_pod_pos) / 4;
+  const double br_strafe_component = right_front_wheel_vel * sin(right_front_pod_pos) / 4;
+
+  const double theta_kin_offset_1q = atan2(wheel_base_/2, wheel_track_/2); // first quadrant version (we'll use all four via offsets)
+  const double wheel_kin_radius = sqrt(pow(wheel_base_/2,2) + pow(wheel_track_/2,2));
+
+  const double fl_angular_component = left_back_wheel_vel * cos(left_back_pod_pos - theta_kin_offset_1q - M_PI_2) / (wheel_kin_radius * 4);
+  const double bl_angular_component = left_front_wheel_vel * cos(left_front_pod_pos - theta_kin_offset_1q + 0.0) / (wheel_kin_radius * 4);
+  const double fr_angular_component = right_back_wheel_vel * cos(right_back_pod_pos - theta_kin_offset_1q + M_PI_2) / (wheel_kin_radius * 4);
+  const double br_angular_component = right_front_wheel_vel * cos(right_front_pod_pos - theta_kin_offset_1q - M_PI) / (wheel_kin_radius * 4);
 
   // Compute linear and angular diff:
-  const double linear = (avg_left_vel + avg_right_vel) * 0.5;
-  // Now there is a bug about scout angular velocity
-  const double angular = (right_vel - left_vel) / wheel_separation_;
-
-
-  // Update old position with current:
-  left_wheel_old_pos_ = left_wheel_cur_pos;
-  right_wheel_old_pos_ = right_wheel_cur_pos;
+  const double linear = (fl_linear_component + bl_linear_component + fr_linear_component + br_linear_component) * dt;
+  const double strafe = (fl_strafe_component + bl_strafe_component + fr_strafe_component + br_strafe_component) * dt;
+  const double angular = (fl_angular_component + bl_angular_component + fr_angular_component + br_angular_component) * dt;
 
   // Integrate odometry:
-  integrateExact(linear, angular);
+  integrateExact(linear, angular, strafe);
+
+  // Update old position with current:
+  left_back_wheel_old_pos_ = left_back_wheel_vel;
+  left_front_wheel_old_pos_ = left_front_wheel_vel;
+  right_back_wheel_old_pos_ = right_back_wheel_vel;
+  right_front_wheel_old_pos_ = right_front_wheel_vel;
+  left_back_pod_old_pos_ = left_back_pod_pos;
+  left_front_pod_old_pos_ = left_front_pod_pos;
+  right_back_pod_old_pos_ = right_back_pod_pos;
+  right_front_pod_old_pos_ = right_front_pod_pos;
 
   timestamp_ = time;
 
   // Estimate speeds using a rolling mean to filter them out:
   linear_accumulator_.accumulate(linear / dt);
+  strafe_accumulator_.accumulate(strafe / dt);
   angular_accumulator_.accumulate(angular / dt);
 
   linear_ = linear_accumulator_.getRollingMean();
+  strafe_ = strafe_accumulator_.getRollingMean();
   angular_ = angular_accumulator_.getRollingMean();
 
   return true;
