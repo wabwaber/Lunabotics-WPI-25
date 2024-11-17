@@ -5,7 +5,7 @@
     </include>
     <include file="$(find-pkg-share ros_gz_sim)/launch/gz_spawn_model.launch.py">
         <arg name="world" value="empty" />
-        <arg name="file" value="$(find-pkg-share luna_urdf)/luna_urdf/robot.urdf" />
+        <arg name="file" value="$(find-pkg-share luna_urdf)/luna_sdf/robot.sdf" />
         <arg name="entity_name" value="lunabot" />
         <arg name="z" value="0.5" />
     </include>
