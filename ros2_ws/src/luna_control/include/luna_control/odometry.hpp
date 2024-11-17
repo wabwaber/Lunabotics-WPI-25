@@ -45,9 +45,8 @@ public:
   explicit Odometry(size_t velocity_rolling_window_size = 10);
 
   void init(const rclcpp::Time & time);
-  bool update(double left_pos, double right_pos, const rclcpp::Time & time);
-  bool updateFromVelocity(double left_vel, double right_vel, const rclcpp::Time & time);
-  void updateOpenLoop(double linear, double angular, const rclcpp::Time & time);
+  bool update(double left_back_pod_pos, double left_front_pod_pos, double right_back_pod_pos, double right_front_pod_pos, double left_back_wheel_vel, double left_front_wheel_vel, double right_back_wheel_vel, double right_front_wheel_vel, const rclcpp::Time & time);
+  void updateOpenLoop(double linear, double angular, double strafe, const rclcpp::Time & time);
   void resetOdometry();
 
   double getX() const { return x_; }
@@ -56,7 +55,7 @@ public:
   double getLinear() const { return linear_; }
   double getAngular() const { return angular_; }
 
-  void setWheelParams(double wheel_separation, double left_wheel_radius, double right_wheel_radius);
+  void setWheelParams(double wheel_track, double wheel_base, double wheel_radius);
   void setVelocityRollingWindowSize(size_t velocity_rolling_window_size);
 
 private:
@@ -67,8 +66,8 @@ private:
   using RollingMeanAccumulator = rcppmath::RollingMeanAccumulator<double>;
 #endif
 
-  void integrateRungeKutta2(double linear, double angular);
-  void integrateExact(double linear, double angular);
+  void integrateRungeKutta2(double linear, double angular, double strafe);
+  void integrateExact(double linear, double angular, double strafe);
   void resetAccumulators();
 
   // Current timestamp:
@@ -81,20 +80,28 @@ private:
 
   // Current velocity:
   double linear_;   //   [m/s]
+  double strafe_;   //   [m/s]
   double angular_;  // [rad/s]
 
   // Wheel kinematic parameters [m]:
-  double wheel_separation_;
-  double left_wheel_radius_;
-  double right_wheel_radius_;
+  double wheel_track_;
+  double wheel_base_;
+  double wheel_radius_;
 
   // Previous wheel position/state [rad]:
-  double left_wheel_old_pos_;
-  double right_wheel_old_pos_;
+  double left_back_wheel_old_pos_;
+  double left_front_wheel_old_pos_;
+  double right_back_wheel_old_pos_;
+  double right_front_wheel_old_pos_;
+  double left_back_pod_old_pos_;
+  double left_front_pod_old_pos_;
+  double right_back_pod_old_pos_;
+  double right_front_pod_old_pos_;
 
   // Rolling mean accumulators for the linear and angular velocities:
   size_t velocity_rolling_window_size_;
   RollingMeanAccumulator linear_accumulator_;
+  RollingMeanAccumulator strafe_accumulator_;
   RollingMeanAccumulator angular_accumulator_;
 };
 

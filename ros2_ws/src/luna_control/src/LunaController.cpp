@@ -198,7 +198,7 @@ controller_interface::return_type LunaController::update(
 
   if (params_.open_loop)
   {
-    odometry_.updateOpenLoop(linear_command, angular_command, time);
+    odometry_.updateOpenLoop(linear_command, angular_command, strafe_command, time);
   }
   else
   {
@@ -259,17 +259,8 @@ controller_interface::return_type LunaController::update(
     right_back_pod_feedback_mean /= static_cast<double>(wheels_per_side_);
     right_front_pod_feedback_mean /= static_cast<double>(wheels_per_side_);
 
-    // TODO: update odometry functions when I update the odometry class
-    if (params_.position_feedback)
-    {
-      odometry_.update(left_feedback_mean, right_feedback_mean, time);
-    }
-    else
-    {
-      odometry_.updateFromVelocity(
-        left_feedback_mean * wheel_radius * period.seconds(),
-        right_feedback_mean * wheel_radius * period.seconds(), time);
-    }
+    odometry_.update(left_back_pod_feedback_mean, left_front_pod_feedback_mean, right_back_pod_feedback_mean, right_front_pod_feedback_mean,
+      left_back_wheel_feedback_mean, left_front_wheel_feedback_mean, right_back_wheel_feedback_mean, right_front_wheel_feedback_mean, time);
   }
 
   tf2::Quaternion orientation;
@@ -357,10 +348,10 @@ controller_interface::return_type LunaController::update(
   // TODO: check all of this, i guarantee i screwed up signs
   if (angular_command == 0.0)
   {
-    left_back_wheel_velocity = linear_command;
-    left_front_wheel_velocity = linear_command;
-    right_back_wheel_velocity = linear_command;
-    right_front_wheel_velocity = linear_command;
+    left_back_wheel_velocity = linear_command / wheel_radius;
+    left_front_wheel_velocity = linear_command / wheel_radius;
+    right_back_wheel_velocity = linear_command / wheel_radius;
+    right_front_wheel_velocity = linear_command / wheel_radius;
     left_back_pod_position = 0.0;
     left_front_pod_position = 0.0;
     right_back_pod_position = 0.0;
@@ -371,7 +362,7 @@ controller_interface::return_type LunaController::update(
     const double theta_L = (M_PI / 2.0) - atan(wheel_track / wheel_base);
     const double theta_R = (M_PI / 2.0) + atan(wheel_track / wheel_base);
     const double R = sqrt(pow(wheel_track/2, 2) + pow(wheel_base/2, 2));
-    const double v = angular_command * R;
+    const double v = angular_command * R / wheel_radius;
     left_back_wheel_velocity = -v;
     left_front_wheel_velocity = -v;
     right_back_wheel_velocity = v;
@@ -388,8 +379,8 @@ controller_interface::return_type LunaController::update(
     const double theta_R = (M_PI / 2.0) - atan(((2*icc) - wheel_track) / wheel_base);
     const double R_L = wheel_base / (2 * cos((M_PI/2) - theta_L));
     const double R_R = wheel_base / (2 * cos((M_PI/2) - theta_R));
-    const double v_L = linear_command * (R_L / icc);
-    const double v_R = linear_command * (R_L / icc);
+    const double v_L = linear_command * (R_L / icc) / wheel_radius;
+    const double v_R = linear_command * (R_L / icc) / wheel_radius;
 
     left_back_wheel_velocity = v_L;
     left_front_wheel_velocity = v_L;
@@ -403,6 +394,7 @@ controller_interface::return_type LunaController::update(
 
   // Set wheels velocities
   // TODO: set wheel velocities to zero unless pod position is close enough to target
+  // requires some review of feedback, but those variables are already set in this context
   for (size_t index = 0; index < static_cast<size_t>(wheels_per_side_); ++index)
   {
     registered_left_back_wheel_handles_[index].velocity.get().set_value(left_back_wheel_velocity);
@@ -444,7 +436,7 @@ controller_interface::CallbackReturn LunaController::on_configure(
   const double wheel_radius = params_.wheel_radius;
 
   // TODO: update odometry functions when i update the odometry class
-  odometry_.setWheelParams(wheel_separation, left_wheel_radius, right_wheel_radius);
+  odometry_.setWheelParams(wheel_track, wheel_base, wheel_radius);
   odometry_.setVelocityRollingWindowSize(params_.velocity_rolling_window_size);
 
   cmd_vel_timeout_ = std::chrono::milliseconds{static_cast<int>(params_.cmd_vel_timeout * 1000.0)};
