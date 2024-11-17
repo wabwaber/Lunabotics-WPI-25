@@ -37,7 +37,7 @@
 #include "rcppmath/rolling_mean_accumulator.hpp"
 #endif
 
-namespace luna_control
+namespace luna_controller
 {
 class Odometry
 {

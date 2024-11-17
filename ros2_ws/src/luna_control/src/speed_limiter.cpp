@@ -26,7 +26,7 @@
 
 #include "luna_control/speed_limiter.hpp"
 
-namespace luna_control
+namespace luna_controller
 {
 SpeedLimiter::SpeedLimiter(
   bool has_velocity_limits, bool has_acceleration_limits, bool has_jerk_limits, double min_velocity,

@@ -26,7 +26,7 @@
 
 #include <cmath>
 
-namespace luna_control
+namespace luna_controller
 {
 class SpeedLimiter
 {

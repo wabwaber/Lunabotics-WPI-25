@@ -26,6 +26,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <cmath>
 
 #include "luna_control/LunaController.hpp"
 #include "hardware_interface/types/hardware_interface_type_values.hpp"
@@ -41,7 +42,7 @@ constexpr auto DEFAULT_ODOMETRY_TOPIC = "~/odom";
 constexpr auto DEFAULT_TRANSFORM_TOPIC = "/tf";
 }  // namespace
 
-namespace luna_control
+namespace luna_controller
 {
 using namespace std::chrono_literals;
 using controller_interface::interface_configuration_type;
@@ -50,12 +51,7 @@ using hardware_interface::HW_IF_POSITION;
 using hardware_interface::HW_IF_VELOCITY;
 using lifecycle_msgs::msg::State;
 
-luna_control::LunaController() : controller_interface::ControllerInterface() {}
-
-const char * LunaController::feedback_type() const
-{
-  return params_.position_feedback ? HW_IF_POSITION : HW_IF_VELOCITY;
-}
+LunaController::LunaController() : controller_interface::ControllerInterface() {}
 
 controller_interface::CallbackReturn LunaController::on_init()
 {
@@ -74,35 +70,88 @@ controller_interface::CallbackReturn LunaController::on_init()
   return controller_interface::CallbackReturn::SUCCESS;
 }
 
-InterfaceConfiguration luna_control::command_interface_configuration() const
+InterfaceConfiguration LunaController::command_interface_configuration() const
 {
   std::vector<std::string> conf_names;
-  for (const auto & joint_name : params_.left_wheel_names)
+  for (const auto & joint_name : params_.left_back_wheel_names)
   {
     conf_names.push_back(joint_name + "/" + HW_IF_VELOCITY);
   }
-  for (const auto & joint_name : params_.right_wheel_names)
+  for (const auto & joint_name : params_.left_front_wheel_names)
   {
     conf_names.push_back(joint_name + "/" + HW_IF_VELOCITY);
   }
+  for (const auto & joint_name : params_.right_back_wheel_names)
+  {
+    conf_names.push_back(joint_name + "/" + HW_IF_VELOCITY);
+  }
+  for (const auto & joint_name : params_.right_front_wheel_names)
+  {
+    conf_names.push_back(joint_name + "/" + HW_IF_VELOCITY);
+  }
+  
+  for (const auto & joint_name : params_.left_back_pod_names)
+  {
+    conf_names.push_back(joint_name + "/" + HW_IF_POSITION);
+  }
+  for (const auto & joint_name : params_.left_front_pod_names)
+  {
+    conf_names.push_back(joint_name + "/" + HW_IF_POSITION);
+  }
+  for (const auto & joint_name : params_.right_back_pod_names)
+  {
+    conf_names.push_back(joint_name + "/" + HW_IF_POSITION);
+  }
+  for (const auto & joint_name : params_.right_front_pod_names)
+  {
+    conf_names.push_back(joint_name + "/" + HW_IF_POSITION);
+  }
+
   return {interface_configuration_type::INDIVIDUAL, conf_names};
 }
 
-InterfaceConfiguration luna_control::state_interface_configuration() const
+InterfaceConfiguration LunaController::state_interface_configuration() const
 {
   std::vector<std::string> conf_names;
-  for (const auto & joint_name : params_.left_wheel_names)
+  
+  for (const auto & joint_name : params_.left_back_wheel_names)
   {
-    conf_names.push_back(joint_name + "/" + feedback_type());
+    conf_names.push_back(joint_name + "/" + HW_IF_VELOCITY);
   }
-  for (const auto & joint_name : params_.right_wheel_names)
+  for (const auto & joint_name : params_.left_front_wheel_names)
   {
-    conf_names.push_back(joint_name + "/" + feedback_type());
+    conf_names.push_back(joint_name + "/" + HW_IF_VELOCITY);
   }
+  for (const auto & joint_name : params_.right_back_wheel_names)
+  {
+    conf_names.push_back(joint_name + "/" + HW_IF_VELOCITY);
+  }
+  for (const auto & joint_name : params_.right_front_wheel_names)
+  {
+    conf_names.push_back(joint_name + "/" + HW_IF_VELOCITY);
+  }
+  
+  for (const auto & joint_name : params_.left_back_pod_names)
+  {
+    conf_names.push_back(joint_name + "/" + HW_IF_POSITION);
+  }
+  for (const auto & joint_name : params_.left_front_pod_names)
+  {
+    conf_names.push_back(joint_name + "/" + HW_IF_POSITION);
+  }
+  for (const auto & joint_name : params_.right_back_pod_names)
+  {
+    conf_names.push_back(joint_name + "/" + HW_IF_POSITION);
+  }
+  for (const auto & joint_name : params_.right_front_pod_names)
+  {
+    conf_names.push_back(joint_name + "/" + HW_IF_POSITION);
+  }
+  
   return {interface_configuration_type::INDIVIDUAL, conf_names};
 }
 
-controller_interface::return_type luna_control::update(
+controller_interface::return_type LunaController::update(
   const rclcpp::Time & time, const rclcpp::Duration & period)
 {
   auto logger = get_node()->get_logger();
@@ -136,15 +185,16 @@ controller_interface::return_type luna_control::update(
   // command may be limited further by SpeedLimit,
   // without affecting the stored twist command
   Twist command = *last_command_msg;
+  double & strafe_command = command.twist.linear.y;
   double & linear_command = command.twist.linear.x;
   double & angular_command = command.twist.angular.z;
 
   previous_update_timestamp_ = time;
 
   // Apply (possibly new) multipliers:
-  const double wheel_separation = params_.wheel_separation_multiplier * params_.wheel_separation;
-  const double left_wheel_radius = params_.left_wheel_radius_multiplier * params_.wheel_radius;
-  const double right_wheel_radius = params_.right_wheel_radius_multiplier * params_.wheel_radius;
+  const double wheel_track = params_.wheel_track;
+  const double wheel_radius = params_.wheel_radius;
+  const double wheel_base = params_.wheel_base;
 
   if (params_.open_loop)
   {
@@ -152,28 +202,64 @@ controller_interface::return_type luna_control::update(
   }
   else
   {
-    double left_feedback_mean = 0.0;
-    double right_feedback_mean = 0.0;
+    double left_back_wheel_feedback_mean = 0.0;
+    double left_front_wheel_feedback_mean = 0.0;
+    double right_back_wheel_feedback_mean = 0.0;
+    double right_front_wheel_feedback_mean = 0.0;
+
+    double left_back_pod_feedback_mean = 0.0;
+    double left_front_pod_feedback_mean = 0.0;
+    double right_back_pod_feedback_mean = 0.0;
+    double right_front_pod_feedback_mean = 0.0;
     for (size_t index = 0; index < static_cast<size_t>(wheels_per_side_); ++index)
     {
-      const double left_feedback = registered_left_wheel_handles_[index].feedback.get().get_value();
-      const double right_feedback =
-        registered_right_wheel_handles_[index].feedback.get().get_value();
+      const double left_back_wheel_feedback = registered_left_back_wheel_handles_[index].feedback.get().get_value();
+      const double left_front_wheel_feedback = registered_left_front_wheel_handles_[index].feedback.get().get_value();
+      const double right_back_wheel_feedback = registered_right_back_wheel_handles_[index].feedback.get().get_value();
+      const double right_front_wheel_feedback = registered_right_front_wheel_handles_[index].feedback.get().get_value();
 
-      if (std::isnan(left_feedback) || std::isnan(right_feedback))
+      if (std::isnan(left_back_wheel_feedback) || std::isnan(left_front_wheel_feedback) || std::isnan(right_back_wheel_feedback) || std::isnan(right_front_wheel_feedback))
       {
         RCLCPP_ERROR(
-          logger, "Either the left or right wheel %s is invalid for index [%zu]", feedback_type(),
+          logger, "Either the left or right wheel %s is invalid for index [%zu]", HW_IF_VELOCITY,
           index);
         return controller_interface::return_type::ERROR;
       }
 
-      left_feedback_mean += left_feedback;
-      right_feedback_mean += right_feedback;
-    }
-    left_feedback_mean /= static_cast<double>(wheels_per_side_);
-    right_feedback_mean /= static_cast<double>(wheels_per_side_);
+      const double left_back_pod_feedback = registered_left_back_pod_handles_[index].feedback.get().get_value();
+      const double left_front_pod_feedback = registered_left_front_pod_handles_[index].feedback.get().get_value();
+      const double right_back_pod_feedback = registered_right_back_pod_handles_[index].feedback.get().get_value();
+      const double right_front_pod_feedback = registered_right_front_pod_handles_[index].feedback.get().get_value();
 
+      if (std::isnan(left_back_pod_feedback) || std::isnan(left_front_pod_feedback) || std::isnan(right_back_pod_feedback) || std::isnan(right_front_pod_feedback))
+      {
+        RCLCPP_ERROR(
+          logger, "Either the left or right pod %s is invalid for index [%zu]", HW_IF_POSITION,
+          index);
+        return controller_interface::return_type::ERROR;
+      }
+
+      left_back_wheel_feedback_mean += left_back_wheel_feedback;
+      left_front_wheel_feedback_mean += left_front_wheel_feedback;
+      right_back_wheel_feedback_mean += right_back_wheel_feedback;
+      right_front_wheel_feedback_mean += right_front_wheel_feedback;
+      
+      left_back_pod_feedback_mean += left_back_pod_feedback;
+      left_front_pod_feedback_mean += left_front_pod_feedback;
+      right_back_pod_feedback_mean += right_back_pod_feedback;
+      right_front_pod_feedback_mean += right_front_pod_feedback;
+    }
+
+    left_back_wheel_feedback_mean /= static_cast<double>(wheels_per_side_);
+    left_front_wheel_feedback_mean /= static_cast<double>(wheels_per_side_);
+    right_back_wheel_feedback_mean /= static_cast<double>(wheels_per_side_);
+    right_front_wheel_feedback_mean /= static_cast<double>(wheels_per_side_);
+    left_back_pod_feedback_mean /= static_cast<double>(wheels_per_side_);
+    left_front_pod_feedback_mean /= static_cast<double>(wheels_per_side_);
+    right_back_pod_feedback_mean /= static_cast<double>(wheels_per_side_);
+    right_front_pod_feedback_mean /= static_cast<double>(wheels_per_side_);
+
+    // TODO: update odometry functions when I update the odometry class
     if (params_.position_feedback)
     {
       odometry_.update(left_feedback_mean, right_feedback_mean, time);
@@ -181,8 +267,8 @@ controller_interface::return_type luna_control::update(
     else
     {
       odometry_.updateFromVelocity(
-        left_feedback_mean * left_wheel_radius * period.seconds(),
-        right_feedback_mean * right_wheel_radius * period.seconds(), time);
+        left_feedback_mean * wheel_radius * period.seconds(),
+        right_feedback_mean * wheel_radius * period.seconds(), time);
     }
   }
 
@@ -240,6 +326,8 @@ controller_interface::return_type luna_control::update(
   auto & second_to_last_command = previous_commands_.front().twist;
   limiter_linear_.limit(
     linear_command, last_command.linear.x, second_to_last_command.linear.x, period.seconds());
+  limiter_strafe_.limit(
+    strafe_command, last_command.linear.y, second_to_last_command.linear.y, period.seconds());
   limiter_angular_.limit(
     angular_command, last_command.angular.z, second_to_last_command.angular.z, period.seconds());
 
@@ -255,23 +343,83 @@ controller_interface::return_type luna_control::update(
     realtime_limited_velocity_publisher_->unlockAndPublish();
   }
 
-  // Compute wheels velocities:
-  const double velocity_left =
-    (linear_command - angular_command * wheel_separation / 2.0) / left_wheel_radius;
-  const double velocity_right =
-    (linear_command + angular_command * wheel_separation / 2.0) / right_wheel_radius;
+  // compute target wheel velocities, pod positions
+  double left_back_wheel_velocity = 0.0;
+  double left_front_wheel_velocity = 0.0;
+  double right_back_wheel_velocity = 0.0;
+  double right_front_wheel_velocity = 0.0;
 
-  // Set wheels velocities:
+  double left_back_pod_position = 0.0;
+  double left_front_pod_position = 0.0;
+  double right_back_pod_position = 0.0;
+  double right_front_pod_position = 0.0;
+
+  // TODO: check all of this, i guarantee i screwed up signs
+  if (angular_command == 0.0)
+  {
+    left_back_wheel_velocity = linear_command;
+    left_front_wheel_velocity = linear_command;
+    right_back_wheel_velocity = linear_command;
+    right_front_wheel_velocity = linear_command;
+    left_back_pod_position = 0.0;
+    left_front_pod_position = 0.0;
+    right_back_pod_position = 0.0;
+    right_front_pod_position = 0.0;
+  }
+  else if (linear_command == 0.0)
+  {
+    const double theta_L = (M_PI / 2.0) - atan(wheel_track / wheel_base);
+    const double theta_R = (M_PI / 2.0) + atan(wheel_track / wheel_base);
+    const double R = sqrt(pow(wheel_track/2, 2) + pow(wheel_base/2, 2));
+    const double v = angular_command * R;
+    left_back_wheel_velocity = -v;
+    left_front_wheel_velocity = -v;
+    right_back_wheel_velocity = v;
+    right_front_wheel_velocity = v;
+    left_back_pod_position = -theta_L;
+    left_front_pod_position = theta_L;
+    right_back_pod_position = -theta_R;
+    right_front_pod_position = theta_R;
+  }
+  else
+  {
+    const double icc = linear_command / angular_command; // y component?
+    const double theta_L = (M_PI / 2.0) - atan(((2*icc) + wheel_track) / wheel_base);
+    const double theta_R = (M_PI / 2.0) - atan(((2*icc) - wheel_track) / wheel_base);
+    const double R_L = wheel_base / (2 * cos((M_PI/2) - theta_L));
+    const double R_R = wheel_base / (2 * cos((M_PI/2) - theta_R));
+    const double v_L = linear_command * (R_L / icc);
+    const double v_R = linear_command * (R_L / icc);
+
+    left_back_wheel_velocity = v_L;
+    left_front_wheel_velocity = v_L;
+    right_back_wheel_velocity = v_R;
+    right_front_wheel_velocity = v_R;
+    left_back_pod_position = -theta_L;
+    left_front_pod_position = theta_L;
+    right_back_pod_position = -theta_R;
+    right_front_pod_position = theta_R;
+  }
+
+  // Set wheels velocities
+  // TODO: set wheel velocities to zero unless pod position is close enough to target
   for (size_t index = 0; index < static_cast<size_t>(wheels_per_side_); ++index)
   {
-    registered_left_wheel_handles_[index].velocity.get().set_value(velocity_left);
-    registered_right_wheel_handles_[index].velocity.get().set_value(velocity_right);
+    registered_left_back_wheel_handles_[index].velocity.get().set_value(left_back_wheel_velocity);
+    registered_left_front_wheel_handles_[index].velocity.get().set_value(left_front_wheel_velocity);
+    registered_right_back_wheel_handles_[index].velocity.get().set_value(right_back_wheel_velocity);
+    registered_right_front_wheel_handles_[index].velocity.get().set_value(right_front_wheel_velocity);
+
+    registered_left_back_pod_handles_[index].position.get().set_value(left_back_pod_position);
+    registered_left_front_pod_handles_[index].position.get().set_value(left_front_pod_position);
+    registered_right_back_pod_handles_[index].position.get().set_value(right_back_pod_position);
+    registered_right_front_pod_handles_[index].position.get().set_value(right_front_pod_position);
   }
 
   return controller_interface::return_type::OK;
 }
 
-controller_interface::CallbackReturn luna_control::on_configure(
+controller_interface::CallbackReturn LunaController::on_configure(
   const rclcpp_lifecycle::State &)
 {
   auto logger = get_node()->get_logger();
@@ -283,18 +431,19 @@ controller_interface::CallbackReturn luna_control::on_configure(
     RCLCPP_INFO(logger, "Parameters were updated");
   }
 
-  if (params_.left_wheel_names.size() != params_.right_wheel_names.size())
+  if (params_.left_back_wheel_names.size() != params_.right_back_wheel_names.size() || params_.left_front_wheel_names.size() != params_.right_front_wheel_names.size() || params_.left_back_wheel_names.size() != params_.right_front_wheel_names.size())
   {
     RCLCPP_ERROR(
-      logger, "The number of left wheels [%zu] and the number of right wheels [%zu] are different",
-      params_.left_wheel_names.size(), params_.right_wheel_names.size());
+      logger, "The number of wheels lb [%zu], lf [%zu], rb [%zu], and rf [%zu] are different",
+      params_.left_back_wheel_names.size(), params_.left_front_wheel_names.size(), params_.right_back_wheel_names.size(), params_.right_front_wheel_names.size());
     return controller_interface::CallbackReturn::ERROR;
   }
 
-  const double wheel_separation = params_.wheel_separation_multiplier * params_.wheel_separation;
-  const double left_wheel_radius = params_.left_wheel_radius_multiplier * params_.wheel_radius;
-  const double right_wheel_radius = params_.right_wheel_radius_multiplier * params_.wheel_radius;
+  const double wheel_track = params_.wheel_track;
+  const double wheel_base = params_.wheel_base;
+  const double wheel_radius = params_.wheel_radius;
 
+  // TODO: update odometry functions when i update the odometry class
   odometry_.setWheelParams(wheel_separation, left_wheel_radius, right_wheel_radius);
   odometry_.setVelocityRollingWindowSize(params_.velocity_rolling_window_size);
 
@@ -306,6 +455,12 @@ controller_interface::CallbackReturn luna_control::on_configure(
     params_.linear.x.has_jerk_limits, params_.linear.x.min_velocity, params_.linear.x.max_velocity,
     params_.linear.x.min_acceleration, params_.linear.x.max_acceleration, params_.linear.x.min_jerk,
     params_.linear.x.max_jerk);
+
+  limiter_strafe_ = SpeedLimiter(
+    params_.linear.y.has_velocity_limits, params_.linear.y.has_acceleration_limits,
+    params_.linear.y.has_jerk_limits, params_.linear.y.min_velocity, params_.linear.y.max_velocity,
+    params_.linear.y.min_acceleration, params_.linear.y.max_acceleration, params_.linear.y.min_jerk,
+    params_.linear.y.max_jerk);
 
   limiter_angular_ = SpeedLimiter(
     params_.angular.z.has_velocity_limits, params_.angular.z.has_acceleration_limits,
@@ -319,7 +474,7 @@ controller_interface::CallbackReturn luna_control::on_configure(
   }
 
   // left and right sides are both equal at this point
-  wheels_per_side_ = static_cast<int>(params_.left_wheel_names.size());
+  wheels_per_side_ = static_cast<int>(params_.left_back_wheel_names.size());
 
   if (publish_limited_velocity_)
   {
@@ -428,37 +583,71 @@ controller_interface::CallbackReturn luna_control::on_configure(
   return controller_interface::CallbackReturn::SUCCESS;
 }
 
-controller_interface::CallbackReturn luna_control::on_activate(
+controller_interface::CallbackReturn LunaController::on_activate(
   const rclcpp_lifecycle::State &)
 {
-  const auto left_result =
-    configure_side("left", params_.left_wheel_names, registered_left_wheel_handles_);
-  const auto right_result =
-    configure_side("right", params_.right_wheel_names, registered_right_wheel_handles_);
+  const auto left_back_wheel_result =
+    configure_wheel_segment("left_back", params_.left_back_wheel_names, registered_left_back_wheel_handles_);
+  const auto left_front_wheel_result =
+    configure_wheel_segment("left_front", params_.left_front_wheel_names, registered_left_front_wheel_handles_);
+  const auto right_back_wheel_result =
+    configure_wheel_segment("right_back", params_.right_back_wheel_names, registered_right_back_wheel_handles_);
+  const auto right_front_wheel_result =
+    configure_wheel_segment("right_front", params_.right_front_wheel_names, registered_right_front_wheel_handles_);
 
   if (
-    left_result == controller_interface::CallbackReturn::ERROR ||
-    right_result == controller_interface::CallbackReturn::ERROR)
+    left_back_wheel_result == controller_interface::CallbackReturn::ERROR ||
+    left_front_wheel_result == controller_interface::CallbackReturn::ERROR ||
+    right_back_wheel_result == controller_interface::CallbackReturn::ERROR ||
+    right_front_wheel_result == controller_interface::CallbackReturn::ERROR)
+
   {
     return controller_interface::CallbackReturn::ERROR;
   }
 
-  if (registered_left_wheel_handles_.empty() || registered_right_wheel_handles_.empty())
+  if (registered_left_back_wheel_handles_.empty() || registered_left_front_wheel_handles_.empty() || registered_right_back_wheel_handles_.empty() || registered_right_front_wheel_handles_.empty())
   {
     RCLCPP_ERROR(
       get_node()->get_logger(),
-      "Either left wheel interfaces, right wheel interfaces are non existent");
+      "One or more of the wheel interfaces are non existent");
+    return controller_interface::CallbackReturn::ERROR;
+  }
+
+  const auto left_back_pod_result =
+    configure_pod_segment("left_back", params_.left_back_pod_names, registered_left_back_pod_handles_);
+  const auto left_front_pod_result =
+    configure_pod_segment("left_front", params_.left_front_pod_names, registered_left_front_pod_handles_);
+  const auto right_back_pod_result =
+    configure_pod_segment("right_back", params_.right_back_pod_names, registered_right_back_pod_handles_);
+  const auto right_front_pod_result =
+    configure_pod_segment("right_front", params_.right_front_pod_names, registered_right_front_pod_handles_);
+
+  if (
+    left_back_wheel_result == controller_interface::CallbackReturn::ERROR ||
+    left_front_wheel_result == controller_interface::CallbackReturn::ERROR ||
+    right_back_wheel_result == controller_interface::CallbackReturn::ERROR ||
+    right_front_wheel_result == controller_interface::CallbackReturn::ERROR)
+
+  {
+    return controller_interface::CallbackReturn::ERROR;
+  }
+
+  if (registered_left_back_pod_handles_.empty() || registered_left_front_pod_handles_.empty() || registered_right_back_pod_handles_.empty() || registered_right_front_pod_handles_.empty())
+  {
+    RCLCPP_ERROR(
+      get_node()->get_logger(),
+      "One or more of the pod interfaces are non existent");
     return controller_interface::CallbackReturn::ERROR;
   }
 
   is_halted = false;
   subscriber_is_active_ = true;
 
-  RCLCPP_DEBUG(get_node()->get_logger(), "Subscriber and publisher are now active.");
+  RCLCPP_DEBUG(get_node()->get_logger(), "Subscribers and publishers are now active.");
   return controller_interface::CallbackReturn::SUCCESS;
 }
 
-controller_interface::CallbackReturn luna_control::on_deactivate(
+controller_interface::CallbackReturn LunaController::on_deactivate(
   const rclcpp_lifecycle::State &)
 {
   subscriber_is_active_ = false;
@@ -467,12 +656,18 @@ controller_interface::CallbackReturn luna_control::on_deactivate(
     halt();
     is_halted = true;
   }
-  registered_left_wheel_handles_.clear();
-  registered_right_wheel_handles_.clear();
+  registered_left_back_wheel_handles_.clear();
+  registered_left_front_wheel_handles_.clear();
+  registered_right_back_wheel_handles_.clear();
+  registered_right_front_wheel_handles_.clear();
+  registered_left_back_pod_handles_.clear();
+  registered_left_front_pod_handles_.clear();
+  registered_right_back_pod_handles_.clear();
+  registered_right_front_pod_handles_.clear();
   return controller_interface::CallbackReturn::SUCCESS;
 }
 
-controller_interface::CallbackReturn luna_control::on_cleanup(
+controller_interface::CallbackReturn LunaController::on_cleanup(
   const rclcpp_lifecycle::State &)
 {
   if (!reset())
@@ -484,7 +679,7 @@ controller_interface::CallbackReturn luna_control::on_cleanup(
   return controller_interface::CallbackReturn::SUCCESS;
 }
 
-controller_interface::CallbackReturn luna_control::on_error(const rclcpp_lifecycle::State &)
+controller_interface::CallbackReturn LunaController::on_error(const rclcpp_lifecycle::State &)
 {
   if (!reset())
   {
@@ -493,7 +688,7 @@ controller_interface::CallbackReturn luna_control::on_error(const rclcpp_lifecyc
   return controller_interface::CallbackReturn::SUCCESS;
 }
 
-bool luna_control::reset()
+bool LunaController::reset()
 {
   odometry_.resetOdometry();
 
@@ -501,8 +696,14 @@ bool luna_control::reset()
   std::queue<Twist> empty;
   std::swap(previous_commands_, empty);
 
-  registered_left_wheel_handles_.clear();
-  registered_right_wheel_handles_.clear();
+  registered_left_back_wheel_handles_.clear();
+  registered_left_front_wheel_handles_.clear();
+  registered_right_back_wheel_handles_.clear();
+  registered_right_front_wheel_handles_.clear();
+  registered_left_back_pod_handles_.clear();
+  registered_left_front_pod_handles_.clear();
+  registered_right_back_pod_handles_.clear();
+  registered_right_front_pod_handles_.clear();
 
   subscriber_is_active_ = false;
   velocity_command_subscriber_.reset();
@@ -512,13 +713,13 @@ bool luna_control::reset()
   return true;
 }
 
-controller_interface::CallbackReturn luna_control::on_shutdown(
+controller_interface::CallbackReturn LunaController::on_shutdown(
   const rclcpp_lifecycle::State &)
 {
   return controller_interface::CallbackReturn::SUCCESS;
 }
 
-void luna_control::halt()
+void LunaController::halt()
 {
   const auto halt_wheels = [](auto & wheel_handles)
   {
@@ -527,12 +728,25 @@ void luna_control::halt()
       wheel_handle.velocity.get().set_value(0.0);
     }
   };
+  const auto halt_pods = [](auto & pod_handles)
+  {
+    for (const auto & pod_handle : pod_handles)
+    {
+      pod_handle.position.get().set_value(0.0);
+    }
+  };
 
-  halt_wheels(registered_left_wheel_handles_);
-  halt_wheels(registered_right_wheel_handles_);
+  halt_wheels(registered_left_back_wheel_handles_);
+  halt_wheels(registered_left_front_wheel_handles_);
+  halt_wheels(registered_right_back_wheel_handles_);
+  halt_wheels(registered_right_front_wheel_handles_);
+  halt_pods(registered_left_back_pod_handles_);
+  halt_pods(registered_left_front_pod_handles_);
+  halt_pods(registered_right_back_pod_handles_);
+  halt_pods(registered_right_front_pod_handles_);
 }
 
-controller_interface::CallbackReturn luna_control::configure_side(
+controller_interface::CallbackReturn LunaController::configure_wheel_segment(
   const std::string & side, const std::vector<std::string> & wheel_names,
   std::vector<WheelHandle> & registered_handles)
 {
@@ -548,7 +762,7 @@ controller_interface::CallbackReturn luna_control::configure_side(
   registered_handles.reserve(wheel_names.size());
   for (const auto & wheel_name : wheel_names)
   {
-    const auto interface_name = feedback_type();
+    const auto interface_name = HW_IF_VELOCITY;
     const auto state_handle = std::find_if(
       state_interfaces_.cbegin(), state_interfaces_.cend(),
       [&wheel_name, &interface_name](const auto & interface)
@@ -583,9 +797,61 @@ controller_interface::CallbackReturn luna_control::configure_side(
 
   return controller_interface::CallbackReturn::SUCCESS;
 }
+
+controller_interface::CallbackReturn LunaController::configure_pod_segment(
+  const std::string & segment, const std::vector<std::string> & pod_names,
+  std::vector<PodHandle> & registered_handles)
+{
+  auto logger = get_node()->get_logger();
+
+  if (pod_names.empty())
+  {
+    RCLCPP_ERROR(logger, "No '%s' pod names specified", segment.c_str());
+    return controller_interface::CallbackReturn::ERROR;
+  }
+
+  // register handles
+  registered_handles.reserve(pod_names.size());
+  for (const auto & pod_name : pod_names)
+  {
+    const auto interface_name = HW_IF_POSITION;
+    const auto state_handle = std::find_if(
+      state_interfaces_.cbegin(), state_interfaces_.cend(),
+      [&pod_name, &interface_name](const auto & interface)
+      {
+        return interface.get_prefix_name() == pod_name &&
+               interface.get_interface_name() == interface_name;
+      });
+
+    if (state_handle == state_interfaces_.cend())
+    {
+      RCLCPP_ERROR(logger, "Unable to obtain joint state handle for %s", pod_name.c_str());
+      return controller_interface::CallbackReturn::ERROR;
+    }
+
+    const auto command_handle = std::find_if(
+      command_interfaces_.begin(), command_interfaces_.end(),
+      [&pod_name](const auto & interface)
+      {
+        return interface.get_prefix_name() == pod_name &&
+               interface.get_interface_name() == HW_IF_VELOCITY;
+      });
+
+    if (command_handle == command_interfaces_.end())
+    {
+      RCLCPP_ERROR(logger, "Unable to obtain joint command handle for %s", pod_name.c_str());
+      return controller_interface::CallbackReturn::ERROR;
+    }
+
+    registered_handles.emplace_back(
+      PodHandle{std::ref(*state_handle), std::ref(*command_handle)});
+  }
+  return controller_interface::CallbackReturn::SUCCESS;
+}
+
 }  // namespace luna_control
 
 #include "class_loader/register_macro.hpp"
 
 CLASS_LOADER_REGISTER_CLASS(
-  luna_control::LunaController, controller_interface::ControllerInterface)
+  luna_controller::LunaController, controller_interface::ControllerInterface)

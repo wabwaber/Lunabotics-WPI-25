@@ -23,7 +23,7 @@
 
 #include "luna_control/odometry.hpp"
 
-namespace luna_control
+namespace luna_controller
 {
 Odometry::Odometry(size_t velocity_rolling_window_size)
 : timestamp_(0.0),
