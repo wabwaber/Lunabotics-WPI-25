@@ -826,7 +826,7 @@ controller_interface::CallbackReturn LunaController::configure_pod_segment(
       [&pod_name](const auto & interface)
       {
         return interface.get_prefix_name() == pod_name &&
-               interface.get_interface_name() == HW_IF_VELOCITY;
+               interface.get_interface_name() == HW_IF_POSITION;
       });
 
     if (command_handle == command_interfaces_.end())
