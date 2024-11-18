@@ -11,7 +11,7 @@ controller_manager:
 
 drive_ctrl:
   ros__parameters:
-    publish_rate: 20
+    publish_rate: 20.0
     base_frame_id: base_link
 
     left_back_wheel_names: ['drive_bl']
