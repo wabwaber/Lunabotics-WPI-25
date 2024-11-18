@@ -1,100 +1,111 @@
-import os
 
-from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, SetEnvironmentVariable
-from launch.actions import SetLaunchConfiguration, Shutdown
-from launch.launch_description_source import LaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, TextSubstitution
+from launch.actions import DeclareLaunchArgument, RegisterEventHandler
+from launch.conditions import IfCondition
+from launch.event_handlers import OnProcessExit
+from launch.substitutions import Command, FindExecutable, PathJoinSubstitution, LaunchConfiguration
+
 from launch_ros.actions import Node
+from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
-    pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
-    pkg_lunabot_demo = get_package_share_directory('lunabotdemo')
-    # pkg_luna_gz = get_package_share_directory('luna_gz')
-    pkg_luna_urdf = get_package_share_directory('luna_urdf')
-    gz_launch_path = PathJoinSubstitution([pkg_ros_gz_sim, 'launch', 'gz_spawn_model.launch.py'])
-    lunabot_spawn_path = PathJoinSubstitution([pkg_lunabot_demo, 'spawn_robot.launch'])
-    gz_model_path = PathJoinSubstitution([pkg_luna_urdf, 'luna_urdf'])
-
-    use_sim_time = LaunchConfiguration('use_sim_time', default='false')
-
-    urdf_file_name = 'robot.urdf'
-    urdf = os.path.join(
-        get_package_share_directory('luna_urdf'),
-        'luna_urdf',
-        urdf_file_name)
-    sdf_file_name = 'robot.sdf'
-    sdf = os.path.join(
-        get_package_share_directory('luna_urdf'),
-        'luna_sdf',
-        sdf_file_name)
-    rviz_file_name = 'demo.rviz'
-    rviz = os.path.join(
-        get_package_share_directory('lunabotdemo'),
-        rviz_file_name)
-    with open(urdf, 'r') as infp:
-        robot_desc = infp.read()
-
-    return LaunchDescription([
+    # Declare arguments
+    declared_arguments = []
+    declared_arguments.append(
         DeclareLaunchArgument(
-            'use_sim_time',
-            default_value='false',
-            description='Use simulation (Gazebo) clock if true'
-        ),
-        Node(
-            package='robot_state_publisher',
-            executable='robot_state_publisher',
-            name='robot_state_publisher',
-            output='screen',
-            parameters=[{'use_sim_time': use_sim_time, 'robot_description': robot_desc}],
-            arguments=[urdf]),
-        Node(
-            package='lunabotdemo',
-            executable='state_publisher',
-            name='state_publisher',
-            output='screen'),
-        Node(
-            package='tf2_ros',
-            executable='static_transform_publisher',
-            name='robot_odom_tf',
-            output='screen',
-            arguments=['0', '0', '0', '0', '0', '0', '/axis', '/robot']
-        ),
-        Node(
-            package='tf2_ros',
-            executable='static_transform_publisher',
-            name='robot_baselink_tf',
-            output='screen',
-            arguments=['0', '0', '0', '0', '0', '0', '/robot', '/base_link']
-        ),
-        Node(
-            package='rviz2',
-            executable='rviz2',
-            name='rviz2',
-            output='screen',
-            arguments=['-d', [rviz]],
-            on_exit=Shutdown()
-        ),
-        DeclareLaunchArgument(
-            'world',
-            default_value='empty',
-            choices=['empty', 'moon', 'mars', 'enceladus'],
-            description='World to load into Gazebo'
-        ),
-        # SetLaunchConfiguration(name='world_file',
-        #                        value=[LaunchConfiguration('world'),
-        #                               TextSubstitution(text='.sdf')]),
-        # SetEnvironmentVariable('GZ_SIM_RESOURCE_PATH', gz_model_path),
-        IncludeLaunchDescription(
-            LaunchDescriptionSource(lunabot_spawn_path),
-        ),
-        Node(
-            package='ros_gz_bridge',
-            executable='parameter_bridge',
-            arguments=[],
-            remappings=[],
-            output='screen'
-        ),
-    ])
+            "gui",
+            default_value="true",
+            description="Start RViz2 automatically with this launch file.",
+        )
+    )
+
+    # Initialize Arguments
+    gui = LaunchConfiguration("gui")
+
+    # get content of URDF
+    robot_description_content = Command(
+        [
+            PathJoinSubstitution([FindExecutable(name="cat")]),
+            " ",
+            PathJoinSubstitution(
+                [FindPackageShare("luna_urdf"), "luna_urdf", "robot.urdf"]
+            )
+        ]
+    )
+    robot_description = {"robot_description": robot_description_content}
+
+    robot_controllers = PathJoinSubstitution(
+        [
+            FindPackageShare("luna_urdf"),
+            "luna_control",
+            "controllers.yaml",
+        ]
+    )
+
+    rviz_config_file = PathJoinSubstitution(
+        [FindPackageShare("lunabotdemo"), "rviz", "demo.rviz"]
+    )
+
+    control_node = Node(
+        package="controller_manager",
+        executable="ros2_control_node",
+        parameters=[robot_controllers],
+        output="both",
+        # remappings=[
+        #     ("/diffbot_base_controller/cmd_vel", "/cmd_vel"),
+        # ],
+    )
+    robot_state_pub_node = Node(
+        package="robot_state_publisher",
+        executable="robot_state_publisher",
+        output="both",
+        parameters=[robot_description],
+    )
+    rviz_node = Node(
+        package="rviz2",
+        executable="rviz2",
+        name="rviz2",
+        output="log",
+        arguments=["-d", rviz_config_file],
+        condition=IfCondition(gui),
+    )
+
+    joint_state_broadcaster_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["joint_broadcast"],
+    )
+
+    robot_controller_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["drive_ctrl", "--param-file", robot_controllers],
+    )
+
+    # Delay rviz start after `joint_state_broadcaster`
+    delay_rviz_after_joint_state_broadcaster_spawner = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=joint_state_broadcaster_spawner,
+            on_exit=[rviz_node],
+        )
+    )
+
+    # Delay start of joint_state_broadcaster after `robot_controller`
+    # TODO(anyone): This is a workaround for flaky tests. Remove when fixed.
+    delay_joint_state_broadcaster_after_robot_controller_spawner = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=robot_controller_spawner,
+            on_exit=[joint_state_broadcaster_spawner],
+        )
+    )
+
+    nodes = [
+        control_node,
+        robot_state_pub_node,
+        robot_controller_spawner,
+        delay_rviz_after_joint_state_broadcaster_spawner,
+        delay_joint_state_broadcaster_after_robot_controller_spawner,
+    ]
+
+    return LaunchDescription(declared_arguments + nodes)

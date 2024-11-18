@@ -83,7 +83,7 @@ install(
   DESTINATION include/luna_control
 )
 install(TARGETS luna_control luna_controller_parameters
-  EXPORT luna_control
+  EXPORT export_luna_control
   RUNTIME DESTINATION bin
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
