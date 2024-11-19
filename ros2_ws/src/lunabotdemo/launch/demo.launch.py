@@ -1,8 +1,9 @@
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, RegisterEventHandler
+from launch.actions import DeclareLaunchArgument, RegisterEventHandler, IncludeLaunchDescription, SetEnvironmentVariable
 from launch.conditions import IfCondition
 from launch.event_handlers import OnProcessExit
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import Command, FindExecutable, PathJoinSubstitution, LaunchConfiguration
 
 from launch_ros.actions import Node
@@ -33,36 +34,73 @@ def generate_launch_description():
             )
         ]
     )
-    robot_description = {"robot_description": robot_description_content}
+    urdf_robot_desc = {"robot_description": robot_description_content}
 
-    robot_controllers = PathJoinSubstitution(
-        [
-            FindPackageShare("luna_urdf"),
-            "luna_control",
-            "controllers.yaml",
-        ]
+    # sdf_file = PathJoinSubstitution([FindPackageShare('luna_urdf'), 'luna_sdf', 'robot.sdf'])
+    sdf_file = PathJoinSubstitution([FindPackageShare('luna_urdf'), 'luna_urdf', 'robot.urdf'])
+    # with open(sdf_file, 'r') as infp:
+    #     sdf_robot_desc = infp.read()
+
+    robot_controllers = PathJoinSubstitution([FindPackageShare("luna_urdf"), "luna_control", "controllers.yaml",])
+    rviz_config_file = PathJoinSubstitution([FindPackageShare("lunabotdemo"), "demo.rviz"])
+
+    # control_manager_node = Node(
+    #     package="controller_manager",
+    #     executable="ros2_control_node",
+    #     parameters=[robot_controllers],
+    #     output="both",
+    #     remappings=[],
+    # )
+
+    gazebo_launch = IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([PathJoinSubstitution(
+                    [FindPackageShare('ros_gz_sim'), 'launch', 'gz_sim.launch.py'])]),
+                launch_arguments={
+                    'gz_args': [PathJoinSubstitution([FindPackageShare("luna_gz"), 'worlds',
+                                                    "boxes.sdf"])],
+                    'on_exit_shutdown': 'True'
+                }.items(),
+             )
+
+    # gazebo_spawn_lunabot = IncludeLaunchDescription(
+    #         PythonLaunchDescriptionSource([PathJoinSubstitution(
+    #             [FindPackageShare('ros_gz_sim'), 'launch', "gz_spawn_model.launch.py"])]),
+    #         launch_arguments={
+    #             'gz_args': ["world:=boxes"]
+    #             'world': 'boxes',
+    #             'file': [PathJoinSubstitution([FindPackageShare('luna_urdf'), 'luna_sdf', 'robot.sdf'])],
+    #             'name': 'lunabot',
+    #         }.items(),
+    #     )
+    gazebo_spawn_lunabot = Node(
+        package='ros_gz_sim',
+        executable='create',
+        arguments=["-r -z 0.5", "-file", sdf_file],
+        output="screen",
     )
+    
+    # gazebo_set_model_path = SetEnvironmentVariable(name='GZ_SIM_RESOURCE_PATH', value=PathJoinSubstitution([FindPackageShare('luna_urdf'), 'luna_sdf']))
 
-    rviz_config_file = PathJoinSubstitution(
-        [FindPackageShare("lunabotdemo"), "rviz", "demo.rviz"]
-    )
-
-    control_node = Node(
-        package="controller_manager",
-        executable="ros2_control_node",
-        parameters=[robot_controllers],
-        output="both",
-        remappings=[
-            ("/drive_ctrl/cmd_vel", "/cmd_vel"),
-            ("/drive_ctrl/odom", "/odom"),
+    gazebo_bridge = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        parameters=[
+            {"config_file": PathJoinSubstitution([FindPackageShare("lunabotdemo"), "gz_bridge.config.yaml"])},
         ],
+        # remappings=[],
+        output='screen'
     )
-    robot_state_pub_node = Node(
+
+    rsp_node = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
         output="both",
-        parameters=[robot_description],
+        parameters=[
+            {'use_sim_time': True},
+            {'robot_description': robot_description_content},
+        ],
     )
+
     rviz_node = Node(
         package="rviz2",
         executable="rviz2",
@@ -72,22 +110,22 @@ def generate_launch_description():
         condition=IfCondition(gui),
     )
 
-    joint_state_broadcaster_spawner = Node(
+    joint_broadcast_spawner_node = Node(
         package="controller_manager",
         executable="spawner",
         arguments=["joint_broadcast"],
     )
 
-    robot_controller_spawner = Node(
+    drive_ctrl_spawner_node = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["drive_ctrl", "--param-file", robot_controllers],
+        arguments=["drive_ctrl"],
     )
 
     # Delay rviz start after `joint_state_broadcaster`
     delay_rviz_after_joint_state_broadcaster_spawner = RegisterEventHandler(
         event_handler=OnProcessExit(
-            target_action=joint_state_broadcaster_spawner,
+            target_action=joint_broadcast_spawner_node,
             on_exit=[rviz_node],
         )
     )
@@ -96,17 +134,22 @@ def generate_launch_description():
     # TODO(anyone): This is a workaround for flaky tests. Remove when fixed.
     delay_joint_state_broadcaster_after_robot_controller_spawner = RegisterEventHandler(
         event_handler=OnProcessExit(
-            target_action=robot_controller_spawner,
-            on_exit=[joint_state_broadcaster_spawner],
+            target_action=drive_ctrl_spawner_node,
+            on_exit=[joint_broadcast_spawner_node],
         )
     )
 
     nodes = [
-        control_node,
-        robot_state_pub_node,
-        robot_controller_spawner,
-        delay_rviz_after_joint_state_broadcaster_spawner,
-        delay_joint_state_broadcaster_after_robot_controller_spawner,
+        rsp_node,
+        gazebo_launch,
+        # control_manager_node,
+        gazebo_spawn_lunabot,
+        gazebo_bridge,
+        # drive_ctrl_spawner_node,
+        rviz_node,
+        joint_broadcast_spawner_node,
+        drive_ctrl_spawner_node,
+        # delay_joint_state_broadcaster_after_robot_controller_spawner,
     ]
 
     return LaunchDescription(declared_arguments + nodes)

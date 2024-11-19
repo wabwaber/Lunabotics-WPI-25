@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
 <robot>
     <ros2_control name="GazeboSimSystem" type="system">
-        <hardware>
-            <plugin>gz_ros2_control/GazeboSimSystem</plugin>
-        </hardware>
+    <hardware>
+        <!-- gz_ros2_control/GazeboSimSystem -->
+        <plugin>mock_components/GenericSystem</plugin>
+    </hardware>
 
         <joint name="steer_fl">
             <command_interface name="position">
@@ -72,8 +73,9 @@
         </joint>
     </ros2_control>
     <gazebo>
-        <plugin name="gazebo_ros2_control" filename="lib_gazebo_ros2_control.so">
+        <plugin name="gz_ros2_control::GazeboSimROS2ControlPlugin" filename="libgz_ros2_control-system">
             <parameters>$(find luna_urdf)/luna_control/controllers.yaml</parameters>
+            <controller_manager_prefix_node_name>controller_manager</controller_manager_prefix_node_name>
         </plugin>
     </gazebo>
 </robot>

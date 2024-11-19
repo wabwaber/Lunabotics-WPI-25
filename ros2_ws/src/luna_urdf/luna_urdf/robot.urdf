@@ -1,10 +1,11 @@
 <?xml version="1.0"?>
 <robot name="lunabot">
+
 <link name="base_link"></link>
 <joint name="base_link_to_base" type="fixed">
 <parent link="base_link"/>
 <child link="body" />
-<origin rpy="0.0 0 0" xyz="0 0 0"/>
+<origin rpy="0.0 0 0" xyz="0 0.5 0"/>
 </joint>
 <link name="body">
 <visual>
@@ -80,7 +81,7 @@
 <parent link="wheelpod" />
 <child link="wheel" />
 <axis xyz="0 0 1"/>
-<limit effort="1" velocity="20" />
+<limit effort="10" velocity="20" />
 <joint_properties friction="0.0"/>
 </joint>
 
@@ -89,7 +90,7 @@
 <parent link="body" />
 <child link="wheelpod" />
 <axis xyz="0 0 1"/>
-<limit effort="1" velocity="20" lower="-1.6580627893946131568" upper="1.6580627893946131568"/>
+<limit effort="10" velocity="20" lower="-1.6580627893946131568" upper="1.6580627893946131568"/>
 <joint_properties friction="0.0"/>
 </joint>
 
@@ -144,7 +145,7 @@
 <parent link="wheelpod_2" />
 <child link="wheel_2" />
 <axis xyz="0 0 1"/>
-<limit effort="1" velocity="20" />
+<limit effort="10" velocity="20" />
 <joint_properties friction="0.0"/>
 </joint>
 
@@ -153,7 +154,7 @@
 <parent link="body" />
 <child link="wheelpod_2" />
 <axis xyz="0 0 1"/>
-<limit effort="1" velocity="20" lower="-1.6580627893946131568" upper="1.6580627893946131568"/>
+<limit effort="10" velocity="20" lower="-1.6580627893946131568" upper="1.6580627893946131568"/>
 <joint_properties friction="0.0"/>
 </joint>
 
@@ -208,7 +209,7 @@
 <parent link="wheelpod_3" />
 <child link="wheel_3" />
 <axis xyz="0 0 1"/>
-<limit effort="1" velocity="20" />
+<limit effort="10" velocity="20" />
 <joint_properties friction="0.0"/>
 </joint>
 
@@ -217,7 +218,7 @@
 <parent link="body" />
 <child link="wheelpod_3" />
 <axis xyz="0 0 1"/>
-<limit effort="1" velocity="20" lower="-1.6580627893946131568" upper="1.6580627893946131568"/>
+<limit effort="10" velocity="20" lower="-1.6580627893946131568" upper="1.6580627893946131568"/>
 <joint_properties friction="0.0"/>
 </joint>
 
@@ -272,7 +273,7 @@
 <parent link="wheelpod_4" />
 <child link="wheel_4" />
 <axis xyz="0 0 1"/>
-<limit effort="1" velocity="20" />
+<limit effort="10" velocity="20" />
 <joint_properties friction="0.0"/>
 </joint>
 
@@ -281,14 +282,14 @@
 <parent link="body" />
 <child link="wheelpod_4" />
 <axis xyz="0 0 1"/>
-<limit effort="1" velocity="20" lower="-1.6580627893946131568" upper="1.6580627893946131568"/>
+<limit effort="10" velocity="20" lower="-1.6580627893946131568" upper="1.6580627893946131568"/>
 <joint_properties friction="0.0"/>
 </joint>
 
 <ros2_control name="GazeboSimSystem" type="system">
     <hardware>
-        <!-- gz_ros2_control/GazeboSimSystem -->
-        <plugin>mock_components/GenericSystem</plugin>
+        <!-- <plugin>mock_components/GenericSystem</plugin> -->
+        <plugin>gz_ros2_control/GazeboSimSystem</plugin>
     </hardware>
 
     <joint name="steer_fl">
@@ -298,6 +299,7 @@
         </command_interface>
         <state_interface name="velocity" />
         <state_interface name="position" />
+        <state_interface name="effort" />
     </joint>
     <joint name="steer_fr">
         <command_interface name="position">
@@ -306,6 +308,7 @@
         </command_interface>
         <state_interface name="velocity" />
         <state_interface name="position" />
+        <state_interface name="effort" />
     </joint>
     <joint name="steer_bl">
         <command_interface name="position">
@@ -314,6 +317,7 @@
         </command_interface>
         <state_interface name="velocity" />
         <state_interface name="position" />
+        <state_interface name="effort" />
     </joint>
     <joint name="steer_br">
         <command_interface name="position">
@@ -322,6 +326,7 @@
         </command_interface>
         <state_interface name="velocity" />
         <state_interface name="position" />
+        <state_interface name="effort" />
     </joint>
 
     <joint name="drive_fl">
@@ -331,6 +336,7 @@
         </command_interface>
         <state_interface name="velocity" />
         <state_interface name="position" />
+        <state_interface name="effort" />
     </joint>
     <joint name="drive_fr">
         <command_interface name="velocity">
@@ -339,6 +345,7 @@
         </command_interface>
         <state_interface name="velocity" />
         <state_interface name="position" />
+        <state_interface name="effort" />
     </joint>
     <joint name="drive_bl">
         <command_interface name="velocity">
@@ -347,6 +354,7 @@
         </command_interface>
         <state_interface name="velocity" />
         <state_interface name="position" />
+        <state_interface name="effort" />
     </joint>
     <joint name="drive_br">
         <command_interface name="velocity">
@@ -355,11 +363,13 @@
         </command_interface>
         <state_interface name="velocity" />
         <state_interface name="position" />
+        <state_interface name="effort" />
     </joint>
 </ros2_control>
 <gazebo>
     <plugin name="gz_ros2_control::GazeboSimROS2ControlPlugin" filename="libgz_ros2_control-system">
-        <parameters>$(find luna_urdf)/luna_control/controllers.yaml</parameters>
+        <!-- <parameters>$(find luna_urdf)/luna_control/controllers.yaml</parameters> -->
+        <parameters>/home/lunabot/git/Lunabotics-WPI-25/ros2_ws/src/luna_urdf/luna_control/controllers.yaml</parameters>
         <controller_manager_prefix_node_name>controller_manager</controller_manager_prefix_node_name>
     </plugin>
 </gazebo>
