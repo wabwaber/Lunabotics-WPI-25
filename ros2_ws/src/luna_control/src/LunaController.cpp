@@ -185,9 +185,8 @@ controller_interface::return_type LunaController::update(
   // command may be limited further by SpeedLimit,
   // without affecting the stored twist command
   Twist command = *last_command_msg;
+  double & linear_command = command.twist.linear.x;
   double & strafe_command = command.twist.linear.y;
-  // double & linear_command = command.twist.linear.x;
-  double linear_command = 0.5;
   double & angular_command = command.twist.angular.z;
 
   previous_update_timestamp_ = time;
