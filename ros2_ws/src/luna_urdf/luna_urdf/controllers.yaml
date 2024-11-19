@@ -3,14 +3,12 @@ controller_manager:
     update_rate: 20
     use_sim_time: true
 
-    drive_ctrl:
-      type: luna_control/LunaController
-
     joint_broadcast:
       type: joint_state_broadcaster/JointStateBroadcaster
 
 drive_ctrl:
   ros__parameters:
+    type: luna_control/LunaController
     publish_rate: 20.0
     base_frame_id: base_link
 
