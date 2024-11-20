@@ -76,6 +76,15 @@ def generate_launch_description():
         output='screen'
     )
 
+    twist_stamper = Node(
+        package='twist_stamper',
+        executable='twist_stamper',
+        parameters=[{'use_sim_time': True}],
+        remappings=[('/cmd_vel_in','/diff_cont/cmd_vel_unstamped'),
+                    ('/cmd_vel_out','/diff_cont/cmd_vel')],
+    )
+
+
     gz_image_bridge = Node(
         package="ros_gz_image",
         executable="image_bridge",
@@ -90,6 +99,7 @@ def generate_launch_description():
 
     return LaunchDescription([
         rsp,
+        twist_stamper,
         gz_sim,
         gz_create_robot,
         gz_param_bridge,
