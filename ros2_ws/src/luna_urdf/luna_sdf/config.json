@@ -1,8 +1,0 @@
-{
-  "documentId": "9aa45b0f99c5373068fc14bc",
-  "outputFormat": "sdf",
-  "packageName": "luna_urdf/luna_sdf",
-  "robotName": "lunabot",
-  "assemblyName": "Assembly 1",
-  "simplifySTLs": "all"
-}

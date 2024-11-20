@@ -1,9 +1,0 @@
-{
-  "documentId": "9aa45b0f99c5373068fc14bc",
-  "outputFormat": "urdf",
-  "packageName": "luna_urdf/luna_urdf",
-  "robotName": "lunabot",
-  "assemblyName": "Assembly 1",
-  "addDummyBaseLink": true,
-  "simplifySTLs": "all"
-}
