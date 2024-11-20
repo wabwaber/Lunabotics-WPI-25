@@ -13,6 +13,10 @@
         <color rgba="0.7 0.7 0.7 1" />
     </material>
 
+    <material name="green">
+        <color rgba="0.1 0.8 0.1 1" />
+    </material>
+
     <material name="black">
         <color rgba="0 0 0 1" />
     </material>
@@ -54,7 +58,7 @@
 
     <!-- REAR LEFT WHEEL POD ASSEMBLY -->
 
-    <joint name="rear_left_steer_joint" type="continuous">
+    <joint name="rear_left_steer_joint" type="fixed">
         <parent link="chassis" />
         <child link="rear_left_pod" />
         <origin xyz="0.2655 0.2539125 0.0894" rpy="0 0 3.14159265358979" />
@@ -108,7 +112,7 @@
 
     <!-- REAR RIGHT WHEEL POD ASSEMBLY -->
 
-    <joint name="rear_right_steer_joint" type="continuous">
+    <joint name="rear_right_steer_joint" type="fixed">
         <parent link="chassis" />
         <child link="rear_right_pod" />
         <origin xyz="-0.2655 0.2539125 0.0894" rpy="0 0 0" />
@@ -162,7 +166,7 @@
 
     <!-- FRONT LEFT WHEEL POD ASSEMBLY -->
 
-    <joint name="front_left_steer_joint" type="continuous">
+    <joint name="front_left_steer_joint" type="fixed">
         <parent link="chassis" />
         <child link="front_left_pod" />
         <origin xyz="0.2655 -0.2539125 0.0894" rpy="0 0 3.14159265358979" />
@@ -216,7 +220,7 @@
 
     <!-- FRONT RIGHT WHEEL POD ASSEMBLY -->
 
-    <joint name="front_right_steer_joint" type="continuous">
+    <joint name="front_right_steer_joint" type="fixed">
         <parent link="chassis" />
         <child link="front_right_pod" />
         <origin xyz="-0.2655 -0.2539125 0.0894" rpy="0 0 0" />

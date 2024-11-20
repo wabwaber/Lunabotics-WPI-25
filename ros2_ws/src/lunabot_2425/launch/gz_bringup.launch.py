@@ -38,10 +38,16 @@ def generate_launch_description():
         "gz_sim.launch.py"
     ))
 
+    gz_world_file = os.path.join(
+        get_package_share_directory(package_name),
+        "worlds",
+        "empty.world"
+    )
+
     gz_sim = IncludeLaunchDescription(
         gz_sim_source,
         launch_arguments={
-            'gz_args': "-r empty.sdf",
+            'gz_args': ["-r ", gz_world_file],
             'on_exit_shutdown': 'True'
         }.items(),
     )
@@ -56,7 +62,7 @@ def generate_launch_description():
         output="screen",
     )
 
-    gz_bridge = Node(
+    gz_param_bridge = Node(
         package='ros_gz_bridge',
         executable='parameter_bridge',
         parameters=[
@@ -70,9 +76,23 @@ def generate_launch_description():
         output='screen'
     )
 
+    gz_image_bridge = Node(
+        package="ros_gz_image",
+        executable="image_bridge",
+        arguments=["/camera/image_raw"]
+    )
+    
+    controller_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["diff_cont", "joint_broad"],
+    )
+
     return LaunchDescription([
         rsp,
         gz_sim,
         gz_create_robot,
-        gz_bridge
+        gz_param_bridge,
+        gz_image_bridge,
+        controller_spawner,
     ])
