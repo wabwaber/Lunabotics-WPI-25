@@ -80,8 +80,8 @@ def generate_launch_description():
         package='twist_stamper',
         executable='twist_stamper',
         parameters=[{'use_sim_time': True}],
-        remappings=[('/cmd_vel_in','/diff_cont/cmd_vel_unstamped'),
-                    ('/cmd_vel_out','/diff_cont/cmd_vel')],
+        remappings=[('/cmd_vel_in','/luna_cont/cmd_vel_unstamped'),
+                    ('/cmd_vel_out','/luna_cont/cmd_vel')],
     )
 
 
@@ -94,7 +94,7 @@ def generate_launch_description():
     controller_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["diff_cont", "joint_broad"],
+        arguments=["luna_cont", "joint_broad"],
     )
 
     return LaunchDescription([

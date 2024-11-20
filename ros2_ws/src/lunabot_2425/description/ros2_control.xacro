@@ -37,6 +37,39 @@
             <state_interface name="velocity"/>
             <state_interface name="position"/>
         </joint>
+
+        <joint name="rear_left_steer_joint">
+            <command_interface name="position">
+                <param name="min">-95</param>
+                <param name="max">95</param>
+            </command_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="position"/>
+        </joint>
+        <joint name="rear_right_steer_joint">
+            <command_interface name="position">
+                <param name="min">-95</param>
+                <param name="max">95</param>
+            </command_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="position"/>
+        </joint>
+        <joint name="front_left_steer_joint">
+            <command_interface name="position">
+                <param name="min">-95</param>
+                <param name="max">95</param>
+            </command_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="position"/>
+        </joint>
+        <joint name="front_right_steer_joint">
+            <command_interface name="position">
+                <param name="min">-95</param>
+                <param name="max">95</param>
+            </command_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="position"/>
+        </joint>
     </ros2_control>
 
     <gazebo>
