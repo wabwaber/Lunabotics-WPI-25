@@ -7,6 +7,7 @@
 <child link="body" />
 <origin rpy="0.0 0 0" xyz="0 0.5 0"/>
 </joint>
+
 <link name="body">
 <visual>
 <origin xyz="0 0 0" rpy="0 -0 0" />
@@ -366,8 +367,90 @@
         <state_interface name="effort" />
     </joint>
 </ros2_control>
+
+<gazebo reference="base_link">
+    <material>Gazebo/Black</material>
+</gazebo>
+
+<gazebo reference="body">
+    <material>Gazebo/Grey</material>
+</gazebo>
+
+<gazebo reference="wheelpod">
+    <material>Gazebo/Red</material>
+</gazebo>
+
+<gazebo reference="wheelpod_2">
+    <material>Gazebo/Red</material>
+</gazebo>
+
+<gazebo reference="wheelpod_3">
+    <material>Gazebo/Red</material>
+</gazebo>
+
+<gazebo reference="wheelpod_4">
+    <material>Gazebo/Red</material>
+</gazebo>
+
+<gazebo reference="wheel">
+    <material>Gazebo/Black</material>
+    <mu1>0.4</mu1>
+    <mu2>0.4</mu2>
+</gazebo>
+
+<gazebo reference="wheel_2">
+    <material>Gazebo/Black</material>
+    <mu1>0.4</mu1>
+    <mu2>0.4</mu2>
+</gazebo>
+
+<gazebo reference="wheel_3">
+    <material>Gazebo/Black</material>
+    <mu1>0.4</mu1>
+    <mu2>0.4</mu2>
+</gazebo>
+
+<gazebo reference="wheel_4">
+    <material>Gazebo/Black</material>
+    <mu1>0.4</mu1>
+    <mu2>0.4</mu2>
+</gazebo>
+
+<gazebo reference="drive_fl">
+    <provideFeedback>true</provideFeedback>
+</gazebo>
+
+<gazebo reference="drive_fr">
+    <provideFeedback>true</provideFeedback>
+</gazebo>
+
+<gazebo reference="drive_bl">
+    <provideFeedback>true</provideFeedback>
+</gazebo>
+
+<gazebo reference="drive_br">
+    <provideFeedback>true</provideFeedback>
+</gazebo>
+
+<gazebo reference="steer_fl">
+    <provideFeedback>true</provideFeedback>
+</gazebo>
+
+<gazebo reference="steer_fr">
+    <provideFeedback>true</provideFeedback>
+</gazebo>
+
+<gazebo reference="steer_bl">
+    <provideFeedback>true</provideFeedback>
+</gazebo>
+
+<gazebo reference="steer_br">
+    <provideFeedback>true</provideFeedback>
+</gazebo>
+
 <gazebo>
     <plugin name="gz_ros2_control::GazeboSimROS2ControlPlugin" filename="libgz_ros2_control-system">
+        <!-- <parameters>$(ros2 pkg prefix luna_urdf)/luna_control/controllers.yaml</parameters> -->
         <!-- <parameters>$(find luna_urdf)/luna_control/controllers.yaml</parameters> -->
         <parameters>/home/lunabot/git/Lunabotics-WPI-25/ros2_ws/src/luna_urdf/luna_control/controllers.yaml</parameters>
         <controller_manager_prefix_node_name>controller_manager</controller_manager_prefix_node_name>
