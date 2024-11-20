@@ -11,7 +11,7 @@ Hello and welcome to this document where the team will be updating the documenta
 - [Libraries Used](#libs-used)
 
 ### Section 2: Jetson Code
-- \{TODO}
+- [IMU data ros bag](#imu-data-bag)
 
 ### Section 3: Arduino Code
 - [Head.cpp](#head-cpp)
@@ -44,6 +44,9 @@ The Hardware referenced in this section is **ONLY** used for software related th
 
 ## <center>Jetson Code</center>
 
+<a id="imu-data-bag"></a>
+###IMU data ros bag
+If you intend on using the Realsense camera again, you may find the IMU data bag useful as it has around 2.5 hours of imu data on it. hopefully more later on but right now the Jetson is running off of a battery so it will have to make do for now
 
 ## <center>Arduino Code</center>
 In this section we will be going over each code file associated with the arduino mega and all its functions.
@@ -91,7 +94,7 @@ Ardy (Arduino) to motor is the primary handler for the drive train system. Which
 - PWM object for right side turn motor
 - CAN bus communication board object might be replaced with a different library
 
-After seeing all of these you may ask, why are you using PWM instead of the CAN bus that is obviously supporting 2 different sets of motors? well the motor controller that we have currently for the brushed turn motors requires a $500 board that is out of production and has no replacement. That is probably the reason why last years team did not use CAN bus exclusively. Again this is something that we want to fix but we would need funding of which would be not external. so we have limited options or we could use motors provided by Prof. Stafford.
+After seeing all of these you may ask, why are you using PWM instead of the CAN bus that is obviously supporting 2 different sets of motors? well the motor controller that we have currently for the brushed turn motors requires a $500 board that is out of production and has no replacement. That is probably the reason why last years team did not use CAN bus exclusively. Again this is something that we want to fix but we would need funding of which would not be external. so we have limited options or we could use motors offered by Prof. Stafford.
 
 The first function in this file is a set motors that takes in 4 integers representing the motor current value for each motor. This is also the function that the 2 input and 1 input versions send to, so I will not be talking more about those as they straight up just call this function. But it does the following steps
 1. constrain all values relative to the max motor current for the drive motors, in case they somehow got above the maximum or below the negative of the max.
