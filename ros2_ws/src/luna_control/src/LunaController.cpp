@@ -346,7 +346,7 @@ controller_interface::return_type LunaController::update(
   double right_back_pod_position = 0.0;
   double right_front_pod_position = 0.0;
 
-  // TODO: check all of this, i guarantee i screwed up signs
+  // this is correct for any combination of forward and angular velocity. Not trying strafe yet.
   if (angular_command == 0.0)
   {
     left_back_wheel_velocity = linear_command / wheel_radius;
@@ -375,22 +375,24 @@ controller_interface::return_type LunaController::update(
   }
   else
   {
-    const double icc = linear_command / angular_command; // y component?
-    const double theta_L = (M_PI / 2.0) - atan(((2*icc) + wheel_track) / wheel_base);
-    const double theta_R = (M_PI / 2.0) - atan(((2*icc) - wheel_track) / wheel_base);
-    const double R_L = wheel_base / (2 * cos((M_PI/2) - theta_L));
-    const double R_R = wheel_base / (2 * cos((M_PI/2) - theta_R));
-    const double v_L = linear_command * (R_L / icc) / wheel_radius;
-    const double v_R = linear_command * (R_R / icc) / wheel_radius;
+    const double icc = linear_command / angular_command;
+    
+    const double theta_L = -atan((wheel_base/2) / (icc - (wheel_track/2)));
+    const double theta_R = -atan((wheel_base/2) / (icc + (wheel_track/2)));
+    const double R_L = pow( pow(wheel_base/2,2)+pow(icc-(wheel_track/2),2), 0.5);
+    const double R_R = pow( pow(wheel_base/2,2)+pow(icc+(wheel_track/2),2), 0.5);;
+    
+    const double v_L = linear_command * abs(R_L / icc) / wheel_radius;
+    const double v_R = linear_command * abs(R_R / icc) / wheel_radius;
 
     left_back_wheel_velocity = v_L;
     left_front_wheel_velocity = v_L;
     right_back_wheel_velocity = v_R;
     right_front_wheel_velocity = v_R;
-    left_back_pod_position = -theta_L;
-    left_front_pod_position = theta_L;
-    right_back_pod_position = -theta_R;
-    right_front_pod_position = theta_R;
+    left_back_pod_position = theta_L;
+    left_front_pod_position = -theta_L;
+    right_back_pod_position = theta_R;
+    right_front_pod_position = -theta_R;
   }
 
   // Set wheels velocities
