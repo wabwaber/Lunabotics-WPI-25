@@ -24,33 +24,20 @@ def generate_launch_description():
     # Initialize Arguments
     gui = LaunchConfiguration("gui")
 
+    # get URDF file name
+    robot_description_filename = PathJoinSubstitution([FindPackageShare('luna_urdf'), 'luna_urdf', 'robot.urdf'])
+    
     # get content of URDF
     robot_description_content = Command(
         [
             PathJoinSubstitution([FindExecutable(name="cat")]),
             " ",
-            PathJoinSubstitution(
-                [FindPackageShare("luna_urdf"), "luna_urdf", "robot.urdf"]
-            )
+            robot_description_filename,
         ]
     )
-    urdf_robot_desc = {"robot_description": robot_description_content}
-
-    # sdf_file = PathJoinSubstitution([FindPackageShare('luna_urdf'), 'luna_sdf', 'robot.sdf'])
-    sdf_file = PathJoinSubstitution([FindPackageShare('luna_urdf'), 'luna_urdf', 'robot.urdf'])
-    # with open(sdf_file, 'r') as infp:
-    #     sdf_robot_desc = infp.read()
-
+    
     robot_controllers = PathJoinSubstitution([FindPackageShare("luna_urdf"), "luna_control", "controllers.yaml",])
     rviz_config_file = PathJoinSubstitution([FindPackageShare("lunabotdemo"), "demo.rviz"])
-
-    # control_manager_node = Node(
-    #     package="controller_manager",
-    #     executable="ros2_control_node",
-    #     parameters=[robot_controllers],
-    #     output="both",
-    #     remappings=[],
-    # )
 
     gazebo_launch = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([PathJoinSubstitution(
@@ -62,20 +49,10 @@ def generate_launch_description():
                 }.items(),
              )
 
-    # gazebo_spawn_lunabot = IncludeLaunchDescription(
-    #         PythonLaunchDescriptionSource([PathJoinSubstitution(
-    #             [FindPackageShare('ros_gz_sim'), 'launch', "gz_spawn_model.launch.py"])]),
-    #         launch_arguments={
-    #             'gz_args': ["world:=boxes"]
-    #             'world': 'boxes',
-    #             'file': [PathJoinSubstitution([FindPackageShare('luna_urdf'), 'luna_sdf', 'robot.sdf'])],
-    #             'name': 'lunabot',
-    #         }.items(),
-    #     )
     gazebo_spawn_lunabot = Node(
         package='ros_gz_sim',
         executable='create',
-        arguments=["-r -z 0.5", "-file", sdf_file],
+        arguments=["-file", robot_description_filename],
         output="screen",
     )
     
@@ -122,34 +99,14 @@ def generate_launch_description():
         arguments=["drive_ctrl"],
     )
 
-    # Delay rviz start after `joint_state_broadcaster`
-    delay_rviz_after_joint_state_broadcaster_spawner = RegisterEventHandler(
-        event_handler=OnProcessExit(
-            target_action=joint_broadcast_spawner_node,
-            on_exit=[rviz_node],
-        )
-    )
-
-    # Delay start of joint_state_broadcaster after `robot_controller`
-    # TODO(anyone): This is a workaround for flaky tests. Remove when fixed.
-    delay_joint_state_broadcaster_after_robot_controller_spawner = RegisterEventHandler(
-        event_handler=OnProcessExit(
-            target_action=drive_ctrl_spawner_node,
-            on_exit=[joint_broadcast_spawner_node],
-        )
-    )
-
     nodes = [
         rsp_node,
         gazebo_launch,
-        # control_manager_node,
         gazebo_spawn_lunabot,
         gazebo_bridge,
-        # drive_ctrl_spawner_node,
         rviz_node,
         joint_broadcast_spawner_node,
         drive_ctrl_spawner_node,
-        # delay_joint_state_broadcaster_after_robot_controller_spawner,
     ]
 
     return LaunchDescription(declared_arguments + nodes)

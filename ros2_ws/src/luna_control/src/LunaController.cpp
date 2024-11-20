@@ -179,6 +179,7 @@ controller_interface::return_type LunaController::update(
   if (age_of_last_command > cmd_vel_timeout_)
   {
     last_command_msg->twist.linear.x = 0.0;
+    last_command_msg->twist.linear.y = 0.0;
     last_command_msg->twist.angular.z = 0.0;
   }
 
@@ -188,6 +189,8 @@ controller_interface::return_type LunaController::update(
   double & linear_command = command.twist.linear.x;
   double & strafe_command = command.twist.linear.y;
   double & angular_command = command.twist.angular.z;
+
+  // RCLCPP_INFO(logger, "Linear command is %f", linear_command);
 
   previous_update_timestamp_ = time;
 
@@ -230,6 +233,9 @@ controller_interface::return_type LunaController::update(
       const double left_front_pod_feedback = registered_left_front_pod_handles_[index].feedback.get().get_value();
       const double right_back_pod_feedback = registered_right_back_pod_handles_[index].feedback.get().get_value();
       const double right_front_pod_feedback = registered_right_front_pod_handles_[index].feedback.get().get_value();
+
+
+      RCLCPP_INFO(logger, "Left back wheel feedback value (vel) is %f", left_back_wheel_feedback);
 
       if (std::isnan(left_back_pod_feedback) || std::isnan(left_front_pod_feedback) || std::isnan(right_back_pod_feedback) || std::isnan(right_front_pod_feedback))
       {
@@ -380,7 +386,7 @@ controller_interface::return_type LunaController::update(
     const double R_L = wheel_base / (2 * cos((M_PI/2) - theta_L));
     const double R_R = wheel_base / (2 * cos((M_PI/2) - theta_R));
     const double v_L = linear_command * (R_L / icc) / wheel_radius;
-    const double v_R = linear_command * (R_L / icc) / wheel_radius;
+    const double v_R = linear_command * (R_R / icc) / wheel_radius;
 
     left_back_wheel_velocity = v_L;
     left_front_wheel_velocity = v_L;
@@ -391,6 +397,8 @@ controller_interface::return_type LunaController::update(
     right_back_pod_position = -theta_R;
     right_front_pod_position = theta_R;
   }
+
+  // RCLCPP_INFO(logger, "Commanded wheel_lb velocity: %f", left_back_wheel_velocity);
 
   // Set wheels velocities
   // TODO: set wheel velocities to zero unless pod position is close enough to target

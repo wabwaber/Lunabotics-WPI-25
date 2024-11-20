@@ -14,6 +14,9 @@ drive_ctrl:
     publish_rate: 20.0
     base_frame_id: base_link
 
+    publish_limited_velocity: true
+    # open_loop: true
+
     left_back_wheel_names: ['drive_bl']
     left_front_wheel_names: ['drive_fl']
     right_back_wheel_names: ['drive_br']
