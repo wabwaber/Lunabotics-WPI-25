@@ -1,0 +1,68 @@
+[0.000000] (-) TimerEvent: {}
+[0.000832] (openvins_testing) JobQueued: {'identifier': 'openvins_testing', 'dependencies': OrderedDict()}
+[0.001171] (openvins_testing) JobStarted: {'identifier': 'openvins_testing'}
+[0.097567] (-) TimerEvent: {}
+[0.198476] (-) TimerEvent: {}
+[0.299127] (-) TimerEvent: {}
+[0.399854] (-) TimerEvent: {}
+[0.500493] (-) TimerEvent: {}
+[0.601179] (-) TimerEvent: {}
+[0.701818] (-) TimerEvent: {}
+[0.802454] (-) TimerEvent: {}
+[0.903121] (-) TimerEvent: {}
+[1.003877] (-) TimerEvent: {}
+[1.105071] (-) TimerEvent: {}
+[1.207375] (-) TimerEvent: {}
+[1.308259] (-) TimerEvent: {}
+[1.408843] (-) TimerEvent: {}
+[1.509434] (-) TimerEvent: {}
+[1.610062] (-) TimerEvent: {}
+[1.711063] (-) TimerEvent: {}
+[1.811690] (-) TimerEvent: {}
+[1.912292] (-) TimerEvent: {}
+[2.012932] (-) TimerEvent: {}
+[2.113564] (-) TimerEvent: {}
+[2.214204] (-) TimerEvent: {}
+[2.314867] (-) TimerEvent: {}
+[2.415558] (-) TimerEvent: {}
+[2.516188] (-) TimerEvent: {}
+[2.616862] (-) TimerEvent: {}
+[2.717561] (-) TimerEvent: {}
+[2.818320] (-) TimerEvent: {}
+[2.843715] (openvins_testing) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', 'setup.py', 'egg_info', '--egg-base', '../build/openvins_testing', 'build', '--build-base', '/home/jetson/luna/Lunabotics-WPI-25/Jetson/build/openvins_testing/build', 'install', '--record', '/home/jetson/luna/Lunabotics-WPI-25/Jetson/build/openvins_testing/install.log', '--single-version-externally-managed', 'install_data'], 'cwd': '/home/jetson/luna/Lunabotics-WPI-25/Jetson/openvins_testing', 'env': {'GJS_DEBUG_TOPICS': 'JS ERROR;JS LOG', 'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'jetson', 'SSH_AGENT_PID': '4828', 'XDG_SESSION_TYPE': 'x11', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/home/jetson/workspace/catkin_ws_ov/install/ov_msckf/lib:/home/jetson/workspace/catkin_ws_ov/install/ov_init/lib:/home/jetson/workspace/catkin_ws_ov/install/ov_eval/lib:/home/jetson/workspace/catkin_ws_ov/install/ov_core/lib:/opt/ros/galactic/opt/yaml_cpp_vendor/lib:/opt/ros/galactic/opt/rviz_ogre_vendor/lib:/opt/ros/galactic/lib/aarch64-linux-gnu:/opt/ros/galactic/lib', 'HOME': '/home/jetson', 'DESKTOP_SESSION': 'ubuntu', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'ROS_IP': '192.168.0.240', 'MANAGERPID': '4717', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'COLORTERM': 'truecolor', 'IM_CONFIG_PHASE': '1', 'COLCON_PREFIX_PATH': '/home/jetson/workspace/catkin_ws_ov/install', 'ROS_DISTRO': 'galactic', 'LOGNAME': 'jetson', 'JOURNAL_STREAM': '8:34417', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'jetson', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'ROS_LOCALHOST_ONLY': '0', 'WINDOWPATH': '2', 'PATH': '/opt/ros/galactic/bin:/home/jetson/.local/bin:/usr/local/cuda/bin:/home/jetson/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin', 'SESSION_MANAGER': 'local/jetson-desktop:@/tmp/.ICE-unix/4863,unix/jetson-desktop:/tmp/.ICE-unix/4863', 'INVOCATION_ID': '13d57a26a980458f98ac6cd2878c5385', 'XDG_MENU_PREFIX': 'gnome-', 'GNOME_TERMINAL_SCREEN': '/org/gnome/Terminal/screen/7cc7e101_bc05_464c_8108_f1f7a4480392', 'XDG_RUNTIME_DIR': '/run/user/1000', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/gdm/Xauthority', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:', 'GNOME_TERMINAL_SERVICE': ':1.83', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'AMENT_PREFIX_PATH': '/home/jetson/workspace/catkin_ws_ov/install/ov_msckf:/home/jetson/workspace/catkin_ws_ov/install/ov_init:/home/jetson/workspace/catkin_ws_ov/install/ov_eval:/home/jetson/workspace/catkin_ws_ov/install/ov_data:/home/jetson/workspace/catkin_ws_ov/install/ov_core:/opt/ros/galactic', 'SHELL': '/bin/bash', 'QT_ACCESSIBILITY': '1', 'ROS_MASTER_URI': 'http://192.168.0.4:11311', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'GPG_AGENT_INFO': '/run/user/1000/gnupg/S.gpg-agent:0:1', 'GJS_DEBUG_OUTPUT': 'stderr', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/jetson/luna/Lunabotics-WPI-25/Jetson/build/openvins_testing', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/jetson/luna/Lunabotics-WPI-25/Jetson/build/openvins_testing/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/jetson/luna/Lunabotics-WPI-25/Jetson/install/openvins_testing/lib/python3.8/site-packages:/opt/ros/galactic/lib/python3.8/site-packages', 'COLCON': '1', 'VTE_VERSION': '6003', 'CMAKE_PREFIX_PATH': '/home/jetson/workspace/catkin_ws_ov/install/ov_msckf:/home/jetson/workspace/catkin_ws_ov/install/ov_init:/home/jetson/workspace/catkin_ws_ov/install/ov_eval:/home/jetson/workspace/catkin_ws_ov/install/ov_data:/home/jetson/workspace/catkin_ws_ov/install/ov_core'}, 'shell': False}
+[2.918597] (-) TimerEvent: {}
+[3.019400] (-) TimerEvent: {}
+[3.120130] (-) TimerEvent: {}
+[3.220726] (-) TimerEvent: {}
+[3.321319] (-) TimerEvent: {}
+[3.421932] (-) TimerEvent: {}
+[3.522518] (-) TimerEvent: {}
+[3.623161] (-) TimerEvent: {}
+[3.723872] (-) TimerEvent: {}
+[3.824500] (-) TimerEvent: {}
+[3.833249] (openvins_testing) StdoutLine: {'line': b'running egg_info\n'}
+[3.835910] (openvins_testing) StdoutLine: {'line': b'writing ../build/openvins_testing/openvins_testing.egg-info/PKG-INFO\n'}
+[3.838004] (openvins_testing) StdoutLine: {'line': b'writing dependency_links to ../build/openvins_testing/openvins_testing.egg-info/dependency_links.txt\n'}
+[3.838709] (openvins_testing) StdoutLine: {'line': b'writing entry points to ../build/openvins_testing/openvins_testing.egg-info/entry_points.txt\n'}
+[3.839280] (openvins_testing) StdoutLine: {'line': b'writing requirements to ../build/openvins_testing/openvins_testing.egg-info/requires.txt\n'}
+[3.839831] (openvins_testing) StdoutLine: {'line': b'writing top-level names to ../build/openvins_testing/openvins_testing.egg-info/top_level.txt\n'}
+[3.924643] (-) TimerEvent: {}
+[4.004256] (openvins_testing) StdoutLine: {'line': b"reading manifest file '../build/openvins_testing/openvins_testing.egg-info/SOURCES.txt'\n"}
+[4.008164] (openvins_testing) StdoutLine: {'line': b"writing manifest file '../build/openvins_testing/openvins_testing.egg-info/SOURCES.txt'\n"}
+[4.009734] (openvins_testing) StdoutLine: {'line': b'running build\n'}
+[4.010212] (openvins_testing) StdoutLine: {'line': b'running build_py\n'}
+[4.010790] (openvins_testing) StdoutLine: {'line': b'running install\n'}
+[4.014121] (openvins_testing) StdoutLine: {'line': b'running install_lib\n'}
+[4.019248] (openvins_testing) StdoutLine: {'line': b'running install_data\n'}
+[4.020008] (openvins_testing) StdoutLine: {'line': b'copying launch/rvis_and_realsense.launch.py -> /home/jetson/luna/Lunabotics-WPI-25/Jetson/install/openvins_testing/share/openvins_testing\n'}
+[4.020665] (openvins_testing) StdoutLine: {'line': b'running install_egg_info\n'}
+[4.024779] (-) TimerEvent: {}
+[4.027373] (openvins_testing) StdoutLine: {'line': b"removing '/home/jetson/luna/Lunabotics-WPI-25/Jetson/install/openvins_testing/lib/python3.8/site-packages/openvins_testing-0.0.0-py3.8.egg-info' (and everything under it)\n"}
+[4.028720] (openvins_testing) StdoutLine: {'line': b'Copying ../build/openvins_testing/openvins_testing.egg-info to /home/jetson/luna/Lunabotics-WPI-25/Jetson/install/openvins_testing/lib/python3.8/site-packages/openvins_testing-0.0.0-py3.8.egg-info\n'}
+[4.032196] (openvins_testing) StdoutLine: {'line': b'running install_scripts\n'}
+[4.102480] (openvins_testing) StdoutLine: {'line': b"writing list of installed files to '/home/jetson/luna/Lunabotics-WPI-25/Jetson/build/openvins_testing/install.log'\n"}
+[4.125033] (-) TimerEvent: {}
+[4.204588] (openvins_testing) CommandEnded: {'returncode': 0}
+[4.225388] (-) TimerEvent: {}
+[4.249067] (openvins_testing) JobEnded: {'identifier': 'openvins_testing', 'rc': 0}
+[4.252257] (-) EventReactorShutdown: {}

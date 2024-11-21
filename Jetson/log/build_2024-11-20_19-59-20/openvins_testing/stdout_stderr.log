@@ -1,0 +1,19 @@
+running egg_info
+writing ../build/openvins_testing/openvins_testing.egg-info/PKG-INFO
+writing dependency_links to ../build/openvins_testing/openvins_testing.egg-info/dependency_links.txt
+writing entry points to ../build/openvins_testing/openvins_testing.egg-info/entry_points.txt
+writing requirements to ../build/openvins_testing/openvins_testing.egg-info/requires.txt
+writing top-level names to ../build/openvins_testing/openvins_testing.egg-info/top_level.txt
+reading manifest file '../build/openvins_testing/openvins_testing.egg-info/SOURCES.txt'
+writing manifest file '../build/openvins_testing/openvins_testing.egg-info/SOURCES.txt'
+running build
+running build_py
+running install
+running install_lib
+running install_data
+running install_egg_info
+removing '/home/jetson/luna/Lunabotics-WPI-25/Jetson/install/openvins_testing/lib/python3.8/site-packages/openvins_testing-0.0.0-py3.8.egg-info' (and everything under it)
+Copying ../build/openvins_testing/openvins_testing.egg-info to /home/jetson/luna/Lunabotics-WPI-25/Jetson/install/openvins_testing/lib/python3.8/site-packages/openvins_testing-0.0.0-py3.8.egg-info
+running install_scripts
+Installing bob_node script to /home/jetson/luna/Lunabotics-WPI-25/Jetson/install/openvins_testing/lib/openvins_testing
+writing list of installed files to '/home/jetson/luna/Lunabotics-WPI-25/Jetson/build/openvins_testing/install.log'

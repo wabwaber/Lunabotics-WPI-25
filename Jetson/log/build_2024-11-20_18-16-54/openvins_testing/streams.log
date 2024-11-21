@@ -1,0 +1,21 @@
+[2.841s] Invoking command in '/home/jetson/luna/Lunabotics-WPI-25/Jetson/openvins_testing': PYTHONPATH=/home/jetson/luna/Lunabotics-WPI-25/Jetson/build/openvins_testing/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/jetson/luna/Lunabotics-WPI-25/Jetson/install/openvins_testing/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base ../build/openvins_testing build --build-base /home/jetson/luna/Lunabotics-WPI-25/Jetson/build/openvins_testing/build install --record /home/jetson/luna/Lunabotics-WPI-25/Jetson/build/openvins_testing/install.log --single-version-externally-managed install_data
+[3.949s] running egg_info
+[3.953s] writing ../build/openvins_testing/openvins_testing.egg-info/PKG-INFO
+[3.953s] writing dependency_links to ../build/openvins_testing/openvins_testing.egg-info/dependency_links.txt
+[3.954s] writing entry points to ../build/openvins_testing/openvins_testing.egg-info/entry_points.txt
+[3.955s] writing requirements to ../build/openvins_testing/openvins_testing.egg-info/requires.txt
+[3.955s] writing top-level names to ../build/openvins_testing/openvins_testing.egg-info/top_level.txt
+[4.130s] reading manifest file '../build/openvins_testing/openvins_testing.egg-info/SOURCES.txt'
+[4.142s] writing manifest file '../build/openvins_testing/openvins_testing.egg-info/SOURCES.txt'
+[4.144s] running build
+[4.145s] running build_py
+[4.147s] running install
+[4.148s] running install_lib
+[4.153s] running install_data
+[4.154s] copying launch/rvis_and_realsense.launch.py -> /home/jetson/luna/Lunabotics-WPI-25/Jetson/install/openvins_testing/share/openvins_testing
+[4.154s] running install_egg_info
+[4.168s] removing '/home/jetson/luna/Lunabotics-WPI-25/Jetson/install/openvins_testing/lib/python3.8/site-packages/openvins_testing-0.0.0-py3.8.egg-info' (and everything under it)
+[4.169s] Copying ../build/openvins_testing/openvins_testing.egg-info to /home/jetson/luna/Lunabotics-WPI-25/Jetson/install/openvins_testing/lib/python3.8/site-packages/openvins_testing-0.0.0-py3.8.egg-info
+[4.173s] running install_scripts
+[4.254s] writing list of installed files to '/home/jetson/luna/Lunabotics-WPI-25/Jetson/build/openvins_testing/install.log'
+[4.355s] Invoked command in '/home/jetson/luna/Lunabotics-WPI-25/Jetson/openvins_testing' returned '0': PYTHONPATH=/home/jetson/luna/Lunabotics-WPI-25/Jetson/build/openvins_testing/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/jetson/luna/Lunabotics-WPI-25/Jetson/install/openvins_testing/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base ../build/openvins_testing build --build-base /home/jetson/luna/Lunabotics-WPI-25/Jetson/build/openvins_testing/build install --record /home/jetson/luna/Lunabotics-WPI-25/Jetson/build/openvins_testing/install.log --single-version-externally-managed install_data
