@@ -89,10 +89,10 @@ private:
   double wheel_radius_;
 
   // Previous wheel position/state [rad]:
-  double left_back_wheel_old_pos_;
-  double left_front_wheel_old_pos_;
-  double right_back_wheel_old_pos_;
-  double right_front_wheel_old_pos_;
+  double left_back_wheel_old_vel_;
+  double left_front_wheel_old_vel_;
+  double right_back_wheel_old_vel_;
+  double right_front_wheel_old_vel_;
   double left_back_pod_old_pos_;
   double left_front_pod_old_pos_;
   double right_back_pod_old_pos_;

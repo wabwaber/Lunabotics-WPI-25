@@ -35,10 +35,10 @@ Odometry::Odometry(size_t velocity_rolling_window_size)
   wheel_track_(0.0),
   wheel_base_(0.0),
   wheel_radius_(0.0),
-  left_back_wheel_old_pos_(0.0),
-  left_front_wheel_old_pos_(0.0),
-  right_back_wheel_old_pos_(0.0),
-  right_front_wheel_old_pos_(0.0),
+  left_back_wheel_old_vel_(0.0),
+  left_front_wheel_old_vel_(0.0),
+  right_back_wheel_old_vel_(0.0),
+  right_front_wheel_old_vel_(0.0),
   left_back_pod_old_pos_(0.0),
   left_front_pod_old_pos_(0.0),
   right_back_pod_old_pos_(0.0),
@@ -96,10 +96,10 @@ bool Odometry::update(double left_back_pod_pos, double left_front_pod_pos, doubl
   integrateExact(linear, angular, strafe);
 
   // Update old position with current:
-  left_back_wheel_old_pos_ = left_back_wheel_vel;
-  left_front_wheel_old_pos_ = left_front_wheel_vel;
-  right_back_wheel_old_pos_ = right_back_wheel_vel;
-  right_front_wheel_old_pos_ = right_front_wheel_vel;
+  left_back_wheel_old_vel_ = left_back_wheel_vel;
+  left_front_wheel_old_vel_ = left_front_wheel_vel;
+  right_back_wheel_old_vel_ = right_back_wheel_vel;
+  right_front_wheel_old_vel_ = right_front_wheel_vel;
   left_back_pod_old_pos_ = left_back_pod_pos;
   left_front_pod_old_pos_ = left_front_pod_pos;
   right_back_pod_old_pos_ = right_back_pod_pos;
