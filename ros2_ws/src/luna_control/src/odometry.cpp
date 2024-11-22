@@ -66,28 +66,30 @@ bool Odometry::update(double left_back_pod_pos, double left_front_pod_pos, doubl
     return false;  // Interval too small to integrate with
   }
 
-  // use Jacobian math to get an estimate of the robot's velocity
-  // TODO: check this math is actually correct, because it's probably got some signs wrong at least
-  
-  const double fl_linear_component = left_back_wheel_vel * cos(left_back_pod_pos) / 4;
-  const double bl_linear_component = left_front_wheel_vel * cos(left_front_pod_pos) / 4;
-  const double fr_linear_component = right_back_wheel_vel * cos(right_back_pod_pos) / 4;
-  const double br_linear_component = right_front_wheel_vel * cos(right_front_pod_pos) / 4;
+  // Estimate the robot's velocity
 
-  const double fl_strafe_component = left_back_wheel_vel * sin(left_back_pod_pos) / 4;
-  const double bl_strafe_component = left_front_wheel_vel * sin(left_front_pod_pos) / 4;
-  const double fr_strafe_component = right_back_wheel_vel * sin(right_back_pod_pos) / 4;
-  const double br_strafe_component = right_front_wheel_vel * sin(right_front_pod_pos) / 4;
+  const double fl_linear_component = left_front_wheel_vel * wheel_radius_ * cos(left_front_pod_pos) / 4;
+  const double bl_linear_component = left_back_wheel_vel * wheel_radius_ * cos(left_back_pod_pos) / 4;
+  const double fr_linear_component = right_front_wheel_vel * wheel_radius_ * cos(right_front_pod_pos) / 4;
+  const double br_linear_component = right_back_wheel_vel * wheel_radius_ * cos(right_back_pod_pos) / 4;
 
-  const double theta_kin_offset_1q = atan2(wheel_base_/2, wheel_track_/2); // first quadrant version (we'll use all four via offsets)
+  const double fl_strafe_component = left_front_wheel_vel * wheel_radius_ * sin(left_front_pod_pos) / 4;
+  const double bl_strafe_component = left_back_wheel_vel * wheel_radius_ * sin(left_back_pod_pos) / 4;
+  const double fr_strafe_component = right_front_wheel_vel * wheel_radius_ * sin(right_front_pod_pos) / 4;
+  const double br_strafe_component = right_back_wheel_vel * wheel_radius_ * sin(right_back_pod_pos) / 4;
+
+  const double theta_kin_offset_fr = atan2(wheel_base_/2, wheel_track_/2);
+  const double theta_kin_offset_fl = theta_kin_offset_fr + M_PI_2;
+  const double theta_kin_offset_bl = theta_kin_offset_fr - M_PI;
+  const double theta_kin_offset_br = theta_kin_offset_fr - M_PI_2;
   const double wheel_kin_radius = sqrt(pow(wheel_base_/2,2) + pow(wheel_track_/2,2));
 
-  const double fl_angular_component = left_back_wheel_vel * cos(left_back_pod_pos - theta_kin_offset_1q - M_PI_2) / (wheel_kin_radius * 4);
-  const double bl_angular_component = left_front_wheel_vel * cos(left_front_pod_pos - theta_kin_offset_1q + 0.0) / (wheel_kin_radius * 4);
-  const double fr_angular_component = right_back_wheel_vel * cos(right_back_pod_pos - theta_kin_offset_1q + M_PI_2) / (wheel_kin_radius * 4);
-  const double br_angular_component = right_front_wheel_vel * cos(right_front_pod_pos - theta_kin_offset_1q - M_PI) / (wheel_kin_radius * 4);
+  const double fl_angular_component = left_front_wheel_vel * wheel_radius_ * cos(left_front_pod_pos - theta_kin_offset_fl) / (wheel_kin_radius * 4);
+  const double bl_angular_component = left_back_wheel_vel * wheel_radius_ * cos(left_back_pod_pos - theta_kin_offset_bl) / (wheel_kin_radius * 4);
+  const double fr_angular_component = right_front_wheel_vel * wheel_radius_ * cos(right_front_pod_pos - theta_kin_offset_fr) / (wheel_kin_radius * 4);
+  const double br_angular_component = right_back_wheel_vel * wheel_radius_ * cos(right_back_pod_pos - theta_kin_offset_br) / (wheel_kin_radius * 4);
 
-  // Compute linear and angular diff:
+  // Compute deltas from velocity
   const double linear = (fl_linear_component + bl_linear_component + fr_linear_component + br_linear_component) * dt;
   const double strafe = (fl_strafe_component + bl_strafe_component + fr_strafe_component + br_strafe_component) * dt;
   const double angular = (fl_angular_component + bl_angular_component + fr_angular_component + br_angular_component) * dt;
@@ -157,8 +159,8 @@ void Odometry::integrateRungeKutta2(double linear, double angular, double strafe
 {
   const double direction = heading_ + angular * 0.5;
 
-  /// Runge-Kutta 2nd order integration:
-  // TODO: double check this math, i think it's probably wrong
+  /// Runge-Kutta 2nd order integration
+  // used when angular is near zero
   x_ += (linear * cos(direction)) + (strafe * cos(direction - (M_PI/2)));
   y_ += (linear * sin(direction)) + (strafe * sin(direction - (M_PI/2)));
   heading_ += angular;
@@ -166,20 +168,21 @@ void Odometry::integrateRungeKutta2(double linear, double angular, double strafe
 
 void Odometry::integrateExact(double linear, double angular, double strafe)
 {
+  // all params are deltas - NOT velocities
   if (fabs(angular) < 1e-6)
   {
     integrateRungeKutta2(linear, angular, strafe);
   }
   else
   {
-    /// Exact integration (should solve problems when angular is zero):
-    // TODO: double check this math, i think it's probably wrong
-    const double heading_old = heading_;
-    const double r = linear / angular;
-    const double r_new = r + strafe;
+    const double r_0 = linear / angular;
+    const double r_1 = r_0 + strafe;
+    const double icc_x = x_ - (r_0 * cos(heading_ - M_PI_2));
+    const double icc_y = y_ - (r_0 * sin(heading_ - M_PI_2));
+
     heading_ += angular;
-    x_ += (r_new * sin(heading_)) - (r * sin(heading_old));
-    y_ += (-r_new * cos(heading_)) - (r * cos(heading_old));
+    x_ = icc_x + (r_1 * cos(heading_ - M_PI_2));
+    y_ = icc_y + (r_1 * sin(heading_ - M_PI_2));
   }
 }
 
