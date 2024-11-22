@@ -1,3 +1,6 @@
 [submodule "ros2_ws/src/mining_arena_gazebo"]
 	path = ros2_ws/src/mining_arena_gazebo
 	url = git@github.com:PurdueLunabotics/mining_arena_gazebo.git
+[submodule "ros2_ws/src/twist_stamper"]
+	path = ros2_ws/src/twist_stamper
+	url = git@github.com:joshnewans/twist_stamper.git
