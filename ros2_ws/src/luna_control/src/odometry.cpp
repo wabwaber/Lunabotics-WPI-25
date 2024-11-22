@@ -139,8 +139,7 @@ void Odometry::resetOdometry()
   heading_ = 0.0;
 }
 
-void Odometry::setWheelParams(
-  double wheel_track, double wheel_base, double wheel_radius)
+void Odometry::setWheelParams(double wheel_track, double wheel_base, double wheel_radius)
 {
   wheel_track_ = wheel_track;
   wheel_base_ = wheel_base;
