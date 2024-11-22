@@ -1,0 +1,3 @@
+[submodule "ros2_ws/src/mining_arena_gazebo"]
+	path = ros2_ws/src/mining_arena_gazebo
+	url = git@github.com:PurdueLunabotics/mining_arena_gazebo.git
