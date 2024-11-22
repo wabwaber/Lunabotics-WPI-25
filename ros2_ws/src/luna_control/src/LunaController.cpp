@@ -619,10 +619,10 @@ namespace luna_controller
         configure_pod_segment("right_front", params_.right_front_pod_names, registered_right_front_pod_handles_);
 
     if (
-        left_back_wheel_result == controller_interface::CallbackReturn::ERROR ||
-        left_front_wheel_result == controller_interface::CallbackReturn::ERROR ||
-        right_back_wheel_result == controller_interface::CallbackReturn::ERROR ||
-        right_front_wheel_result == controller_interface::CallbackReturn::ERROR)
+        left_back_pod_result == controller_interface::CallbackReturn::ERROR ||
+        left_front_pod_result == controller_interface::CallbackReturn::ERROR ||
+        right_back_pod_result == controller_interface::CallbackReturn::ERROR ||
+        right_front_pod_result == controller_interface::CallbackReturn::ERROR)
 
     {
       return controller_interface::CallbackReturn::ERROR;
