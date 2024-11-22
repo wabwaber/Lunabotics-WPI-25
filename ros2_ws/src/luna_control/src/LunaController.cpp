@@ -439,7 +439,6 @@ namespace luna_controller
     const double wheel_base = params_.wheel_base;
     const double wheel_radius = params_.wheel_radius;
 
-    // TODO: update odometry functions when i update the odometry class
     odometry_.setWheelParams(wheel_track, wheel_base, wheel_radius);
     odometry_.setVelocityRollingWindowSize(params_.velocity_rolling_window_size);
 
