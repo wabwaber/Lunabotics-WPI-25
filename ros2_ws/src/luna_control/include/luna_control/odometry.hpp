@@ -39,72 +39,72 @@
 
 namespace luna_controller
 {
-class Odometry
-{
-public:
-  explicit Odometry(size_t velocity_rolling_window_size = 10);
+  class Odometry
+  {
+  public:
+    explicit Odometry(size_t velocity_rolling_window_size = 10);
 
-  void init(const rclcpp::Time & time);
-  bool update(double left_back_pod_pos, double left_front_pod_pos, double right_back_pod_pos, double right_front_pod_pos, double left_back_wheel_vel, double left_front_wheel_vel, double right_back_wheel_vel, double right_front_wheel_vel, const rclcpp::Time & time);
-  void updateOpenLoop(double linear, double angular, double strafe, const rclcpp::Time & time);
-  void resetOdometry();
+    void init(const rclcpp::Time &time);
+    bool update(double left_back_pod_pos, double left_front_pod_pos, double right_back_pod_pos, double right_front_pod_pos, double left_back_wheel_vel, double left_front_wheel_vel, double right_back_wheel_vel, double right_front_wheel_vel, const rclcpp::Time &time);
+    void updateOpenLoop(double linear, double angular, double strafe, const rclcpp::Time &time);
+    void resetOdometry();
 
-  double getX() const { return x_; }
-  double getY() const { return y_; }
-  double getHeading() const { return heading_; }
-  double getLinear() const { return linear_; }
-  double getAngular() const { return angular_; }
+    double getX() const { return x_; }
+    double getY() const { return y_; }
+    double getHeading() const { return heading_; }
+    double getLinear() const { return linear_; }
+    double getAngular() const { return angular_; }
 
-  void setWheelParams(double wheel_track, double wheel_base, double wheel_radius);
-  void setVelocityRollingWindowSize(size_t velocity_rolling_window_size);
+    void setWheelParams(double wheel_track, double wheel_base, double wheel_radius);
+    void setVelocityRollingWindowSize(size_t velocity_rolling_window_size);
 
-private:
+  private:
 // \note The versions conditioning is added here to support the source-compatibility with Humble
 #if RCPPUTILS_VERSION_MAJOR >= 2 && RCPPUTILS_VERSION_MINOR >= 6
-  using RollingMeanAccumulator = rcpputils::RollingMeanAccumulator<double>;
+    using RollingMeanAccumulator = rcpputils::RollingMeanAccumulator<double>;
 #else
-  using RollingMeanAccumulator = rcppmath::RollingMeanAccumulator<double>;
+    using RollingMeanAccumulator = rcppmath::RollingMeanAccumulator<double>;
 #endif
 
-  void integrateRungeKutta2(double linear, double angular, double strafe);
-  void integrateExact(double linear, double angular, double strafe);
-  void resetAccumulators();
+    void integrateRungeKutta2(double linear, double angular, double strafe);
+    void integrateExact(double linear, double angular, double strafe);
+    void resetAccumulators();
 
-  // Current timestamp:
-  rclcpp::Time timestamp_;
+    // Current timestamp:
+    rclcpp::Time timestamp_;
 
-  // Current pose:
-  double x_;        //   [m]
-  double y_;        //   [m]
-  double heading_;  // [rad]
+    // Current pose:
+    double x_;       //   [m]
+    double y_;       //   [m]
+    double heading_; // [rad]
 
-  // Current velocity:
-  double linear_;   //   [m/s]
-  double strafe_;   //   [m/s]
-  double angular_;  // [rad/s]
+    // Current velocity:
+    double linear_;  //   [m/s]
+    double strafe_;  //   [m/s]
+    double angular_; // [rad/s]
 
-  // Wheel kinematic parameters [m]:
-  double wheel_track_;
-  double wheel_base_;
-  double wheel_radius_;
+    // Wheel kinematic parameters [m]:
+    double wheel_track_;
+    double wheel_base_;
+    double wheel_radius_;
 
-  // Previous wheel position/state [rad]:
-  double left_back_wheel_old_vel_;
-  double left_front_wheel_old_vel_;
-  double right_back_wheel_old_vel_;
-  double right_front_wheel_old_vel_;
-  double left_back_pod_old_pos_;
-  double left_front_pod_old_pos_;
-  double right_back_pod_old_pos_;
-  double right_front_pod_old_pos_;
+    // Previous wheel position/state [rad]:
+    double left_back_wheel_old_vel_;
+    double left_front_wheel_old_vel_;
+    double right_back_wheel_old_vel_;
+    double right_front_wheel_old_vel_;
+    double left_back_pod_old_pos_;
+    double left_front_pod_old_pos_;
+    double right_back_pod_old_pos_;
+    double right_front_pod_old_pos_;
 
-  // Rolling mean accumulators for the linear and angular velocities:
-  size_t velocity_rolling_window_size_;
-  RollingMeanAccumulator linear_accumulator_;
-  RollingMeanAccumulator strafe_accumulator_;
-  RollingMeanAccumulator angular_accumulator_;
-};
+    // Rolling mean accumulators for the linear and angular velocities:
+    size_t velocity_rolling_window_size_;
+    RollingMeanAccumulator linear_accumulator_;
+    RollingMeanAccumulator strafe_accumulator_;
+    RollingMeanAccumulator angular_accumulator_;
+  };
 
-}  // namespace diff_drive_controller
+} // namespace diff_drive_controller
 
-#endif  // LUNA_CONTROL__ODOMETRY_HPP_
+#endif // LUNA_CONTROL__ODOMETRY_HPP_
