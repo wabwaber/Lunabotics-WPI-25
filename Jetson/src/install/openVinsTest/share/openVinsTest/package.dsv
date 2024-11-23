@@ -1,0 +1,8 @@
+source;ros_domain_id.txt
+source;share/openVinsTest/hook/pythonpath.ps1
+source;share/openVinsTest/hook/pythonpath.dsv
+source;share/openVinsTest/hook/pythonpath.sh
+source;ros_domain_id.txt
+source;share/openVinsTest/hook/ament_prefix_path.ps1
+source;share/openVinsTest/hook/ament_prefix_path.dsv
+source;share/openVinsTest/hook/ament_prefix_path.sh

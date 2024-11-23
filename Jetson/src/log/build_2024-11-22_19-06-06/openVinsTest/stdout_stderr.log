@@ -1,0 +1,19 @@
+running egg_info
+writing ../build/openVinsTest/openVinsTest.egg-info/PKG-INFO
+writing dependency_links to ../build/openVinsTest/openVinsTest.egg-info/dependency_links.txt
+writing entry points to ../build/openVinsTest/openVinsTest.egg-info/entry_points.txt
+writing requirements to ../build/openVinsTest/openVinsTest.egg-info/requires.txt
+writing top-level names to ../build/openVinsTest/openVinsTest.egg-info/top_level.txt
+reading manifest file '../build/openVinsTest/openVinsTest.egg-info/SOURCES.txt'
+writing manifest file '../build/openVinsTest/openVinsTest.egg-info/SOURCES.txt'
+running build
+running build_py
+running install
+running install_lib
+running install_data
+running install_egg_info
+removing '/home/jetson/luna/Lunabotics-WPI-25/Jetson/src/install/openVinsTest/lib/python3.8/site-packages/openVinsTest-0.0.0-py3.8.egg-info' (and everything under it)
+Copying ../build/openVinsTest/openVinsTest.egg-info to /home/jetson/luna/Lunabotics-WPI-25/Jetson/src/install/openVinsTest/lib/python3.8/site-packages/openVinsTest-0.0.0-py3.8.egg-info
+running install_scripts
+Installing bob script to /home/jetson/luna/Lunabotics-WPI-25/Jetson/src/install/openVinsTest/lib/openVinsTest
+writing list of installed files to '/home/jetson/luna/Lunabotics-WPI-25/Jetson/src/build/openVinsTest/install.log'

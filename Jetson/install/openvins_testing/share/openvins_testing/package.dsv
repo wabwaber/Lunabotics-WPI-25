@@ -1,6 +1,0 @@
-source;share/openvins_testing/hook/pythonpath.ps1
-source;share/openvins_testing/hook/pythonpath.dsv
-source;share/openvins_testing/hook/pythonpath.sh
-source;share/openvins_testing/hook/ament_prefix_path.ps1
-source;share/openvins_testing/hook/ament_prefix_path.dsv
-source;share/openvins_testing/hook/ament_prefix_path.sh

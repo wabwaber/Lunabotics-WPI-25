@@ -1,0 +1,112 @@
+[0.951s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'build', '--packages-select', 'openVinsTest']
+[0.951s] DEBUG:colcon:Parsed command line arguments: Namespace(allow_overriding=[], ament_cmake_args=None, base_paths=['.'], bazel_args=None, bazel_task=None, build_base='build', catkin_cmake_args=None, catkin_skip_building_tests=False, cmake_args=None, cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, cmake_target=None, cmake_target_skip_unavailable=False, continue_on_error=False, event_handlers=None, executor='parallel', ignore_user_meta=False, install_base='install', log_base=None, log_level=None, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0x7f96a42910>>, merge_install=False, metas=['./colcon.meta'], mixin=None, mixin_files=None, mixin_verb=('build',), packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_end=None, packages_ignore=None, packages_ignore_regex=None, packages_select=['openVinsTest'], packages_select_build_failed=False, packages_select_by_dep=None, packages_select_regex=None, packages_select_test_failures=False, packages_skip=None, packages_skip_build_finished=False, packages_skip_by_dep=None, packages_skip_regex=None, packages_skip_test_passed=False, packages_skip_up_to=None, packages_start=None, packages_up_to=None, packages_up_to_regex=None, parallel_workers=4, paths=None, symlink_install=False, test_result_base=None, verb_extension=<colcon_core.verb.build.BuildVerb object at 0x7f96a42910>, verb_name='build', verb_parser=<colcon_alias.argument_parser.alias.AliasArgumentDecorator object at 0x7f968a75e0>)
+[1.763s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[1.763s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[1.764s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[1.764s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[1.764s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) discover
+[1.764s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[1.764s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/home/jetson/luna/Lunabotics-WPI-25/Jetson'
+[1.765s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ignore', 'ignore_ament_install']
+[1.765s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore'
+[1.765s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore_ament_install'
+[1.766s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_pkg']
+[1.766s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_pkg'
+[1.766s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_meta']
+[1.766s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_meta'
+[1.766s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ros']
+[1.766s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ros'
+[1.777s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['bazel', 'cmake', 'python']
+[1.777s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'bazel'
+[1.777s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'cmake'
+[1.778s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python'
+[1.778s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['python_setup_py']
+[1.778s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python_setup_py'
+[1.778s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extensions ['ignore', 'ignore_ament_install']
+[1.779s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extension 'ignore'
+[1.779s] Level 1:colcon.colcon_core.package_identification:_identify(build) ignored
+[1.780s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extensions ['ignore', 'ignore_ament_install']
+[1.780s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extension 'ignore'
+[1.780s] Level 1:colcon.colcon_core.package_identification:_identify(install) ignored
+[1.781s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extensions ['ignore', 'ignore_ament_install']
+[1.781s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extension 'ignore'
+[1.781s] Level 1:colcon.colcon_core.package_identification:_identify(log) ignored
+[1.781s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['ignore', 'ignore_ament_install']
+[1.782s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ignore'
+[1.782s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ignore_ament_install'
+[1.782s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['colcon_pkg']
+[1.782s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'colcon_pkg'
+[1.782s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['colcon_meta']
+[1.783s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'colcon_meta'
+[1.783s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['ros']
+[1.783s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ros'
+[1.783s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['bazel', 'cmake', 'python']
+[1.783s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'bazel'
+[1.784s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'cmake'
+[1.784s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'python'
+[1.784s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['python_setup_py']
+[1.784s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'python_setup_py'
+[1.784s] Level 1:colcon.colcon_core.package_identification:_identify(src/openVinsTest) by extensions ['ignore', 'ignore_ament_install']
+[1.785s] Level 1:colcon.colcon_core.package_identification:_identify(src/openVinsTest) by extension 'ignore'
+[1.785s] Level 1:colcon.colcon_core.package_identification:_identify(src/openVinsTest) by extension 'ignore_ament_install'
+[1.785s] Level 1:colcon.colcon_core.package_identification:_identify(src/openVinsTest) by extensions ['colcon_pkg']
+[1.785s] Level 1:colcon.colcon_core.package_identification:_identify(src/openVinsTest) by extension 'colcon_pkg'
+[1.785s] Level 1:colcon.colcon_core.package_identification:_identify(src/openVinsTest) by extensions ['colcon_meta']
+[1.786s] Level 1:colcon.colcon_core.package_identification:_identify(src/openVinsTest) by extension 'colcon_meta'
+[1.786s] Level 1:colcon.colcon_core.package_identification:_identify(src/openVinsTest) by extensions ['ros']
+[1.786s] Level 1:colcon.colcon_core.package_identification:_identify(src/openVinsTest) by extension 'ros'
+[1.796s] DEBUG:colcon.colcon_core.package_identification:Package 'src/openVinsTest' with type 'ros.ament_python' and name 'openVinsTest'
+[1.796s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
+[1.796s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) discover
+[1.796s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) using defaults
+[1.796s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) discover
+[1.796s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) using defaults
+[1.915s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) check parameters
+[1.916s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) discover
+[1.924s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 5 installed packages in /home/jetson/workspace/catkin_ws_ov/install
+[1.931s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 273 installed packages in /opt/ros/galactic
+[1.940s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) using defaults
+[2.279s] Level 5:colcon.colcon_core.verb:set package 'openVinsTest' build argument 'bazel_args' from command line to 'None'
+[2.280s] Level 5:colcon.colcon_core.verb:set package 'openVinsTest' build argument 'bazel_task' from command line to 'None'
+[2.280s] Level 5:colcon.colcon_core.verb:set package 'openVinsTest' build argument 'cmake_args' from command line to 'None'
+[2.280s] Level 5:colcon.colcon_core.verb:set package 'openVinsTest' build argument 'cmake_target' from command line to 'None'
+[2.280s] Level 5:colcon.colcon_core.verb:set package 'openVinsTest' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[2.280s] Level 5:colcon.colcon_core.verb:set package 'openVinsTest' build argument 'cmake_clean_cache' from command line to 'False'
+[2.280s] Level 5:colcon.colcon_core.verb:set package 'openVinsTest' build argument 'cmake_clean_first' from command line to 'False'
+[2.280s] Level 5:colcon.colcon_core.verb:set package 'openVinsTest' build argument 'cmake_force_configure' from command line to 'False'
+[2.280s] Level 5:colcon.colcon_core.verb:set package 'openVinsTest' build argument 'ament_cmake_args' from command line to 'None'
+[2.281s] Level 5:colcon.colcon_core.verb:set package 'openVinsTest' build argument 'catkin_cmake_args' from command line to 'None'
+[2.281s] Level 5:colcon.colcon_core.verb:set package 'openVinsTest' build argument 'catkin_skip_building_tests' from command line to 'False'
+[2.281s] DEBUG:colcon.colcon_core.verb:Building package 'openVinsTest' with the following arguments: {'ament_cmake_args': None, 'bazel_args': None, 'bazel_task': None, 'build_base': '/home/jetson/luna/Lunabotics-WPI-25/Jetson/build/openVinsTest', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/jetson/luna/Lunabotics-WPI-25/Jetson/install/openVinsTest', 'merge_install': False, 'path': '/home/jetson/luna/Lunabotics-WPI-25/Jetson/src/openVinsTest', 'symlink_install': False, 'test_result_base': None}
+[2.282s] INFO:colcon.colcon_core.executor:Executing jobs using 'parallel' executor
+[2.286s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete
+[2.287s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/home/jetson/luna/Lunabotics-WPI-25/Jetson/src/openVinsTest' with build type 'ament_python'
+[2.287s] Level 1:colcon.colcon_core.shell:create_environment_hook('openVinsTest', 'ament_prefix_path')
+[2.296s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_core.shell.bat': Not used on non-Windows systems
+[2.302s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/jetson/luna/Lunabotics-WPI-25/Jetson/install/openVinsTest/share/openVinsTest/hook/ament_prefix_path.ps1'
+[2.305s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/jetson/luna/Lunabotics-WPI-25/Jetson/install/openVinsTest/share/openVinsTest/hook/ament_prefix_path.dsv'
+[2.307s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/jetson/luna/Lunabotics-WPI-25/Jetson/install/openVinsTest/share/openVinsTest/hook/ament_prefix_path.sh'
+[2.311s] DEBUG:colcon.colcon_ros_domain_id_coordinator.shell.ros_domain_id:Allocated ROS_DOMAIN_ID=36 for '/home/jetson/luna/Lunabotics-WPI-25/Jetson/build/openVinsTest'
+[2.312s] INFO:colcon.colcon_core.shell:Skip shell extension 'ros_domain_id' for command environment: 
+[2.312s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[2.312s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[3.793s] DEBUG:colcon.colcon_ros_domain_id_coordinator.shell.ros_domain_id:Released ROS_DOMAIN_ID=36 for '/home/jetson/luna/Lunabotics-WPI-25/Jetson/build/openVinsTest'
+[3.801s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:closing loop
+[3.801s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:loop closed
+[3.802s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete finished with 'Command '['/usr/bin/python3', '-c', 'import sys;from contextlib import suppress;exec("with suppress(ImportError):    from setuptools.extern.packaging.specifiers    import SpecifierSet");exec("with suppress(ImportError):    from packaging.specifiers import SpecifierSet");from distutils.core import run_setup;dist = run_setup(    \'setup.py\', script_args=(\'--dry-run\',), stop_after=\'config\');skip_keys = (\'cmdclass\', \'distclass\', \'ext_modules\', \'metadata\');data = {    key: value for key, value in dist.__dict__.items()     if (        not key.startswith(\'_\') and         not callable(value) and         key not in skip_keys and         key not in dist.display_option_names    )};data[\'metadata\'] = {    k: v for k, v in dist.metadata.__dict__.items()     if k not in (\'license_files\', \'provides_extras\')};sys.stdout.buffer.write(repr(data).encode(\'utf-8\'))']' returned non-zero exit status 1.'
+[3.802s] DEBUG:colcon.colcon_core.event_reactor:joining thread
+[3.824s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.terminal_notifier': Not used on non-Darwin systems
+[3.825s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.win32': Not used on non-Windows systems
+[3.825s] INFO:colcon.colcon_notification.desktop_notification:Sending desktop notification using 'notify2'
+[3.888s] DEBUG:colcon.colcon_core.event_reactor:joined thread
+[3.890s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/jetson/luna/Lunabotics-WPI-25/Jetson/install/local_setup.ps1'
+[3.894s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/jetson/luna/Lunabotics-WPI-25/Jetson/install/_local_setup_util_ps1.py'
+[3.901s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/jetson/luna/Lunabotics-WPI-25/Jetson/install/setup.ps1'
+[3.907s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/jetson/luna/Lunabotics-WPI-25/Jetson/install/local_setup.sh'
+[3.910s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/jetson/luna/Lunabotics-WPI-25/Jetson/install/_local_setup_util_sh.py'
+[3.913s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/jetson/luna/Lunabotics-WPI-25/Jetson/install/setup.sh'
+[3.919s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/jetson/luna/Lunabotics-WPI-25/Jetson/install/local_setup.bash'
+[3.921s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/jetson/luna/Lunabotics-WPI-25/Jetson/install/setup.bash'
+[3.927s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/jetson/luna/Lunabotics-WPI-25/Jetson/install/local_setup.zsh'
+[3.930s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/jetson/luna/Lunabotics-WPI-25/Jetson/install/setup.zsh'
+[3.936s] INFO:colcon.colcon_core.shell:Creating '/home/jetson/luna/Lunabotics-WPI-25/Jetson/install/spawn_shell.bash'

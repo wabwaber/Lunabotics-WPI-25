@@ -1,0 +1,3 @@
+[0.000000] (-) TimerEvent: {}
+[0.000699] (-) JobUnselected: {'identifier': 'openVinsTest'}
+[0.002099] (-) EventReactorShutdown: {}
