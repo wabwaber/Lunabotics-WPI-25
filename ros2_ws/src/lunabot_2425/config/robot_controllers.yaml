@@ -31,6 +31,8 @@ luna_cont:
     wheel_base: 0.508 # double check
     wheel_radius: 0.1
 
+    allowed_steer_pod_driving_angle: 0.78539816339
+
     linear.x.has_velocity_limits: true
     linear.x.has_acceleration_limits: true
     linear.x.max_velocity: 2.0
