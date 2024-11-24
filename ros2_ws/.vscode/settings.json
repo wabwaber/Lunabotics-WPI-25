@@ -1,5 +1,7 @@
 {
     "files.associations": {
+        "*.xacro": "xml",
+        "*.world": "xml",
         "*.tcc": "cpp",
         "vector": "cpp",
         "cmath": "cpp"
