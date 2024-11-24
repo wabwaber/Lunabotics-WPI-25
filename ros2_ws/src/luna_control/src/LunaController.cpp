@@ -197,21 +197,23 @@ namespace luna_controller
     const double wheel_radius = params_.wheel_radius;
     const double wheel_base = params_.wheel_base;
 
+    // Keep track of wheel and pod feedback
+    double left_back_wheel_feedback_mean = 0.0;
+    double left_front_wheel_feedback_mean = 0.0;
+    double right_back_wheel_feedback_mean = 0.0;
+    double right_front_wheel_feedback_mean = 0.0;
+
+    double left_back_pod_feedback_mean = 0.0;
+    double left_front_pod_feedback_mean = 0.0;
+    double right_back_pod_feedback_mean = 0.0;
+    double right_front_pod_feedback_mean = 0.0;
+
     if (params_.open_loop)
     {
       odometry_.updateOpenLoop(linear_command, angular_command, strafe_command, time);
     }
     else
     {
-      double left_back_wheel_feedback_mean = 0.0;
-      double left_front_wheel_feedback_mean = 0.0;
-      double right_back_wheel_feedback_mean = 0.0;
-      double right_front_wheel_feedback_mean = 0.0;
-
-      double left_back_pod_feedback_mean = 0.0;
-      double left_front_pod_feedback_mean = 0.0;
-      double right_back_pod_feedback_mean = 0.0;
-      double right_front_pod_feedback_mean = 0.0;
       for (size_t index = 0; index < static_cast<size_t>(wheels_per_side_); ++index)
       {
         const double left_back_wheel_feedback = registered_left_back_wheel_handles_[index].feedback.get().get_value();
@@ -396,15 +398,33 @@ namespace luna_controller
       right_front_pod_position = -theta_R;
     }
 
-    // Set wheels velocities
-    // TODO: set wheel velocities to zero unless pod position is close enough to target
-    // requires some review of feedback, but those variables are already set in this context
+    const double left_back_pod_delta = abs(left_back_pod_position - left_back_pod_feedback_mean);
+    const double left_front_pod_delta = abs(left_front_pod_position - left_front_pod_feedback_mean);
+    const double right_back_pod_delta = abs(right_back_pod_position - right_back_pod_feedback_mean);
+    const double right_front_pod_delta = abs(right_front_pod_position - right_front_pod_feedback_mean);
+    const bool allow_wheel_movement = (
+      left_back_pod_delta < params_.allowed_steer_pod_driving_angle &&
+      left_front_pod_delta < params_.allowed_steer_pod_driving_angle &&
+      right_back_pod_delta < params_.allowed_steer_pod_driving_angle &&
+      right_front_pod_delta < params_.allowed_steer_pod_driving_angle
+    );
+
+    // Set wheel / steering pod targets
     for (size_t index = 0; index < static_cast<size_t>(wheels_per_side_); ++index)
     {
-      registered_left_back_wheel_handles_[index].velocity.get().set_value(left_back_wheel_velocity);
-      registered_left_front_wheel_handles_[index].velocity.get().set_value(left_front_wheel_velocity);
-      registered_right_back_wheel_handles_[index].velocity.get().set_value(right_back_wheel_velocity);
-      registered_right_front_wheel_handles_[index].velocity.get().set_value(right_front_wheel_velocity);
+      if (allow_wheel_movement) 
+      {
+        registered_left_back_wheel_handles_[index].velocity.get().set_value(left_back_wheel_velocity);
+        registered_left_front_wheel_handles_[index].velocity.get().set_value(left_front_wheel_velocity);
+        registered_right_back_wheel_handles_[index].velocity.get().set_value(right_back_wheel_velocity);
+        registered_right_front_wheel_handles_[index].velocity.get().set_value(right_front_wheel_velocity);
+      } else 
+      {
+        registered_left_back_wheel_handles_[index].velocity.get().set_value(0.0);
+        registered_left_front_wheel_handles_[index].velocity.get().set_value(0.0);
+        registered_right_back_wheel_handles_[index].velocity.get().set_value(0.0);
+        registered_right_front_wheel_handles_[index].velocity.get().set_value(0.0);
+      }
 
       registered_left_back_pod_handles_[index].position.get().set_value(left_back_pod_position);
       registered_left_front_pod_handles_[index].position.get().set_value(left_front_pod_position);

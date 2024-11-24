@@ -87,6 +87,14 @@ luna_controller:
       gt<>: [0.0]
     }
   }
+  allowed_steer_pod_driving_angle: {
+    type: double,
+    default_value: 0.78539816339,
+    description: "When all of the steering pods re this close to the target steering angle, the drive wheels are allowed to spin. If any steering pod is outside of +- this angle of their target, the robot will remain stationary. Angle measured in radians.",
+    validation: {
+      gt<>: [0.0]
+    }
+  }
   tf_frame_prefix_enable: {
     type: bool,
     default_value: true,
