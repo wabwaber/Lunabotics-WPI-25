@@ -348,8 +348,18 @@ namespace luna_controller
     double right_back_pod_position = 0.0;
     double right_front_pod_position = 0.0;
 
-    // this is correct for any combination of forward and angular velocity. Not trying strafe yet.
-    if (angular_command == 0.0)
+    if (angular_command == 0.0 && linear_command == 0.0 && strafe_command != 0.0) {
+      left_back_wheel_velocity = strafe_command / wheel_radius;
+      left_front_wheel_velocity = -strafe_command / wheel_radius;
+      right_back_wheel_velocity = -strafe_command / wheel_radius;
+      right_front_wheel_velocity = strafe_command / wheel_radius;
+
+      left_back_pod_position = M_PI_2;
+      left_front_pod_position = -M_PI_2;
+      right_back_pod_position = -M_PI_2;
+      right_front_pod_position = M_PI_2;
+    }
+    else if (angular_command == 0.0)
     {
       left_back_wheel_velocity = linear_command / wheel_radius;
       left_front_wheel_velocity = linear_command / wheel_radius;

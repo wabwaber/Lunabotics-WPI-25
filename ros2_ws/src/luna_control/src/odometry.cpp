@@ -161,8 +161,8 @@ namespace luna_controller
 
     /// Runge-Kutta 2nd order integration
     // used when angular is near zero
-    x_ += (linear * cos(direction)) + (strafe * cos(direction - (M_PI / 2)));
-    y_ += (linear * sin(direction)) + (strafe * sin(direction - (M_PI / 2)));
+    x_ += (linear * cos(direction)) - (strafe * cos(direction - (M_PI / 2)));
+    y_ += (linear * sin(direction)) - (strafe * sin(direction - (M_PI / 2)));
     heading_ += angular;
   }
 
