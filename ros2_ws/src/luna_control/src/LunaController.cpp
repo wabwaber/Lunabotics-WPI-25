@@ -393,7 +393,6 @@ namespace luna_controller
       const double theta_R = -atan((wheel_base / 2) / (icc + (wheel_track / 2)));
       const double R_L = pow(pow(wheel_base / 2, 2) + pow(icc - (wheel_track / 2), 2), 0.5);
       const double R_R = pow(pow(wheel_base / 2, 2) + pow(icc + (wheel_track / 2), 2), 0.5);
-      ;
 
       const double v_L = linear_command * abs(R_L / icc) / wheel_radius;
       const double v_R = linear_command * abs(R_R / icc) / wheel_radius;
