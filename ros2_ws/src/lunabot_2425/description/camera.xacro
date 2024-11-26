@@ -35,6 +35,7 @@
             <visualize>true</visualize>
             <update_rate>15</update_rate>
             <topic>camera/image_raw</topic>
+            <gz_frame_id>camera_link</gz_frame_id>
         </sensor>
     </gazebo>
 
