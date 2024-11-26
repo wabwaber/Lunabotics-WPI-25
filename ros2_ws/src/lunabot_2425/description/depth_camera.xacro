@@ -22,8 +22,8 @@
             <camera>
                 <horizontal_fov>1.05</horizontal_fov>
                 <image>
-                    <width>424</width>
-                    <height>240</height>
+                    <width>640</width>
+                    <height>480</height>
                     <format>R_FLOAT32</format>
                 </image>
                 <clip>
