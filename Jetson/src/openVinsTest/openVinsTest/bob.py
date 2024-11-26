@@ -1,6 +1,6 @@
 #this is bob
 #his job is to take one publishers stuff
-#and put it into a subcribers mailbox
+#and put it into a subscribers mailbox
 #he profits from this by being the middle man and reselling the publishers work at a markup
 #bob sucks
 #but the publisher refuses to change his ways
@@ -10,11 +10,7 @@ import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import Imu
 from sensor_msgs.msg import Image
-from rclpy.node import QoSOverridingOptions
-from rclpy.qos import QoSPolicyKind
-from rclpy.qos import QoSPolicyEnum
 from rclpy.qos import QoSProfile
-from rclpy.qos import qos_profile_sensor_data
 from rclpy.qos import ReliabilityPolicy
 from rclpy.qos import HistoryPolicy
 

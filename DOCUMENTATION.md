@@ -12,6 +12,7 @@ Hello and welcome to this document where the team will be updating the documenta
 
 ### Section 2: Jetson Code
 - [IMU data ros bag](#imu-data-bag)
+- [OpenVINSTest](#openVinsTest-pkg)
 
 ### Section 3: Arduino Code
 - [Head.cpp](#head-cpp)
@@ -39,14 +40,38 @@ The Hardware referenced in this section is **ONLY** used for software related th
 ### Libraries Used
 - ROS2 Galactic (Ubuntu 20.04)
 - OpenVINS [Home Page](https://docs.openvins.com/)
-- inputs python lib [git](https://github.com/zeth/inputs)- ROS2 Humble maybe jazzy it really depends on how the jetson gets setup
-
+- inputs python lib [git](https://github.com/zeth/inputs)
 
 ## <center>Jetson Code</center>
 
 <a id="imu-data-bag"></a>
-###IMU data ros bag
+### IMU data ros bag
 If you intend on using the Realsense camera again, you may find the IMU data bag useful as it has around 2.5 hours of imu data on it. hopefully more later on but right now the Jetson is running off of a battery so it will have to make do for now
+
+<a id="openVinsTest-pkg"></a>
+### OpenVINS Test Package
+This is a package that contains a few different things however they are all in service of providing a test environment for OpenVINS or open visual inertial navigation system. There are 3 files that I will be covering in the following subsections [bob.py](#bob-py), [setup.py](#setup-py), and [rvis_and_realsense.launch.py](#rvis-real-launch-py)
+<a id="bob-py"></a>
+### bob.py
+The purpose of this file is metaphorically explained in the file itself at the top. But in reality though I made this because we needed to remap the output topic from the realsense camera to the OpenVINS camera input topic. You would think ROS2 has this capability at runtime, not even in this outdated version but in the most recent but no it doesn't or if it does I did not find it online. So instead I spent my time, around a week, making my own node to do this for me, and thats how bob.py was formed.
+    
+Moving into the actual code, it starts with the required imports then we come across a class called bob, which is a ros2 node class. For the most part this information was taken from the 'Tutorials->Beginner:Client Libaries->Writing a simple publisher and subscriber (python)' page in the ros2 galactic documentation.the key part to all of this though is overriding the default quality of service profile. Firstly at the time of writing there is no documentation on how to do this at least I did not find it maybe on the 16th page of google I would have found it but I did not go past the 15th. Instead there is [this](#overriding-qos-settings) to explain the finer details and how its structured. But firstly I made a QoS profile to hold the changes, which in this case its changing the reliability to best effort the history is there only because the library would reject the profile if it wasn't.
+[TODO fill this outfully -matt]: #
+
+
+<a id="overriding-qos-settings"></a>
+### Overriding Quality of Service Settings ROS2
+[TODO -matt]: #
+
+<a id="setup-py"></a>
+### setup.py
+[TODO -matt]: #
+
+
+<a id="rvis-real-launch-py"></a>
+### rvis_and_realsense.launch.py
+[TODO -matt]: #
+
 
 ## <center>Arduino Code</center>
 In this section we will be going over each code file associated with the arduino mega and all its functions.
