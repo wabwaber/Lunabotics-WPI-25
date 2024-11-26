@@ -40,7 +40,6 @@ def generate_launch_description():
             package="realsense2_camera", #installed via realsense ros wrapper
             executable="realsense2_camera_node", #node found within the lib folder of the ros install
             name="camera"#, #name of node
-            #remappings=nodeRemaps
         ),
         Node(
             package="openVinsTest",
@@ -48,15 +47,6 @@ def generate_launch_description():
             executable="bob",
             name="bob_node"
         ),
-        # Node(
-        #     package="turtlesim",
-        #     executable="mimic",
-        #     name="mimic",
-        #     remappings=[
-        #         ("/color/image_raw", "/cam0/image_raw"),
-        #         ("/imu", "/imu0")
-        #     ]
-        # ),
         Node(
             package="rviz2",
             namespace="",

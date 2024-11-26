@@ -14,33 +14,31 @@ from rclpy.node import QoSOverridingOptions
 from rclpy.qos import QoSPolicyKind
 from rclpy.qos import QoSPolicyEnum
 from rclpy.qos import QoSProfile
+from rclpy.qos import qos_profile_sensor_data
+from rclpy.qos import ReliabilityPolicy
+from rclpy.qos import HistoryPolicy
 
 #taken from and modified from the Tutorials->Beginner:Client Libaries->Writing a simple publisher and subscriber (python)
 #any else you see here that isnt in there I and I am not kidding here. I read through the libraries code because there wasn't documentation on the stuff
-class bob(Node): #QoSPolicyEnum(RELIABILITY)
+class bob(Node):
     def __init__(self):
         super().__init__('bob_node')
-        override = QoSPolicyKind(4)
-        option = QoSOverridingOptions([override])
-        a = QoSProfile()
-        a.reliability(4, "best_effort")
-
+        QoSOverride = QoSProfile(reliability=ReliabilityPolicy.BEST_EFFORT, history=HistoryPolicy.KEEP_ALL)
+    
         self.IMU_Subscription = self.create_subscription(
             Imu,
             '/imu',
             self.IMU_callback,
-            10,
-            qos_profile=a,
-            qos_overriding_options=QoSOverridingOptions([QoSPolicyKind(4)])
+            10
         )
+        self.IMU_Subscription.qos_profile = QoSOverride
         self.Cam_Subscription = self.create_subscription(
             Image,
-            '/color/image_raw',
+            '/infra1/image_rect_raw',
             self.cam_callback,
-            10,
-            qos_profile=a,
-            qos_overriding_options=QoSOverridingOptions([QoSPolicyKind(4)])
+            10
         )
+        self.Cam_Subscription.qos_profile = QoSOverride
         self.IMU_publisher = self.create_publisher(
             Imu,
             "/imu0",
