@@ -32,7 +32,7 @@
                 </clip>
             </camera>
             <always_on>1</always_on>
-            <update_rate>10</update_rate>
+            <update_rate>15</update_rate>
             <visualize>true</visualize>
             <topic>depth_camera/image</topic>
             <gz_frame_id>depth_camera_link</gz_frame_id>
