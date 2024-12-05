@@ -1,5 +1,5 @@
 # WPI Lunabotics MQP Code Documentation
-Hello and welcome to this document where the team will be updating the documentation as we go along. This document is structured with a table of contents that should have links to jump to the appropriate section making searching easy!
+Hello and welcome to this document where the team will be updating the documentation as we go along. This document is structured with a table of contents that should have links to jump to the appropriate section to make searching easy!
 
 [psst hey you,  markdown by default doesn't support tabs so you have to use 4 non-blank special characters (&nbsp; or use %20 as that is the unicode character) to get around it. also for the table of contents use lists for each section]: #
 
@@ -53,11 +53,11 @@ If you intend on using the Realsense camera again, you may find the IMU data bag
 This is a package that contains a few different things however they are all in service of providing a test environment for OpenVINS or open visual inertial navigation system. There are 3 files that I will be covering in the following subsections [bob.py](#bob-py), [setup.py](#setup-py), and [rvis_and_realsense.launch.py](#rvis-real-launch-py)
 <a id="bob-py"></a>
 ### bob.py
-The purpose of this file is metaphorically explained in the file itself at the top. But in reality though I made this because we needed to remap the output topic from the realsense camera to the OpenVINS camera input topic. You would think ROS2 has this capability at runtime, not even in this outdated version but in the most recent but no it doesn't or if it does I did not find it online. So instead I spent my time, around a week, making my own node to do this for me, and thats how bob.py was formed.
-    
-Moving into the actual code, it starts with the required imports then we come across a class called bob, which is a ros2 node class. For the most part this information was taken from the 'Tutorials->Beginner:Client Libaries->Writing a simple publisher and subscriber (python)' page in the ros2 galactic documentation.the key part to all of this though is overriding the default quality of service profile. Firstly at the time of writing there is no documentation on how to do this at least I did not find it maybe on the 16th page of google I would have found it but I did not go past the 15th. Instead there is [this](#overriding-qos-settings) to explain the finer details and how its structured. But firstly I made a QoS profile to hold the changes, which in this case its changing the reliability to best effort the history is there only because the library would reject the profile if it wasn't.
-[TODO fill this outfully -matt]: #
+The purpose of this file is explained in a metaphor at the top of the file. But in reality though I made this because we needed to remap the output topic from the realsense camera to the OpenVINS camera input topic. You would think ROS2 has this capability at runtime, not even in this outdated version but in the most recent but no it doesn't or if it does I did not find it online or in their documentation. So instead I spent my time, around a week, making my own node to do this for me, and thats how bob.py was formed.
 
+Moving into the actual code, it starts with the required imports then we come across a class called bob, which is a ros2 node class. For the most part this information was taken from the 'Tutorials->Beginner:Client Libaries->Writing a simple publisher and subscriber (python)' page in the ros2 galactic documentation.the key part to all of this though is overriding the default quality of service profile. Firstly at the time of writing there is no documentation on how to do this at least I did not find it maybe on the 16th page of google I would have found it but I did not go past the 15th. Instead there is [this](#overriding-qos-settings) to explain the finer details and how its structured. First I made a QoS profile to hold the changes that I wanted to make, which in this case its changing the reliability to best effort the history is there only because the library would reject the profile if it wasn't.
+
+[TODO fill this outfully -matt]: #
 
 <a id="overriding-qos-settings"></a>
 ### Overriding Quality of Service Settings ROS2
@@ -71,7 +71,6 @@ Moving into the actual code, it starts with the required imports then we come ac
 <a id="rvis-real-launch-py"></a>
 ### rvis_and_realsense.launch.py
 [TODO -matt]: #
-
 
 ## <center>Arduino Code</center>
 In this section we will be going over each code file associated with the arduino mega and all its functions.
@@ -94,7 +93,7 @@ Void loop(), again does what it says on the box. But the current loop is this:
 3. this then allows us to convert each given value from the token to a float and put it into an array called map that is the current input mapping of the controls
 4. Lastly it sets the drive motors to the requested amount by multiplying the given input by the multiplier, as a reminder the multiplier is 2 times the max motor current. where the input given via serial or the python script is between -0.5 and 0.5
 
-In an ideal world the loop would also handle the logic for turning, by passing it off to another cpp file to do either point turning or the spline math then having it return the required wheel values. The current commented stuff handles just point turning where the right joy stick's x axis handles the wheel turning with the effort being just 100 * the input. 
+In an ideal world the loop would also handle the logic for turning, by passing it off to another cpp file to do either point turning or the spline math then having it return the required wheel values. The current commented out code handles just point turning where the right joy stick's x axis handles the wheel turning with the effort being just 100 * the input. 
 
 <a id="ardy-to-mot-cpp"></a> [Updated 11/12/2024]:#
 ### ArdyToMot.cpp
