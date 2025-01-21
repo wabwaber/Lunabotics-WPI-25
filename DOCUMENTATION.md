@@ -61,7 +61,16 @@ Moving into the actual code, it starts with the required imports then we come ac
 
 <a id="overriding-qos-settings"></a>
 ### Overriding Quality of Service Settings ROS2
-[TODO -matt]: #
+The code block below shows all that is needed in order to override a QoS setting(s). The first set of lines are just imports and an initializer for the profile that is written during the overwrite. In the initializer you put the policy you want to change in lower case then using the enum from rclpy for the policy you want to change. 
+
+#### NOTE: It is REQUIRED to have the history policy, it will not work otherwise. 
+```python
+from rclpy.qos import QoSProfile
+from rclpy.qos import ReliabilityPolicy
+from rclpy.qos import HistoryPolicy
+QoSOverride = QoSProfile(reliability=ReliabilityPolicy.BEST_EFFORT, history=HistoryPolicy.KEEP_ALL)
+self.created_Subscription.qos_profile = QoSOverride
+```
 
 <a id="setup-py"></a>
 ### setup.py

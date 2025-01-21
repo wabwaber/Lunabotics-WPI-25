@@ -19,22 +19,31 @@ from rclpy.qos import ReliabilityPolicy
 from rclpy.qos import HistoryPolicy
 
 #taken from and modified from the Tutorials->Beginner:Client Libaries->Writing a simple publisher and subscriber (python)
-#any else you see here that isnt in there, and I am not kidding here. I read through the libraries code because there wasn't documentation on the stuff
+#any else you see here that isnt in there, and I am not kidding here. I read through the libraries code because there wasn't documentation on it
 class bob(Node):
+
+    currGyroReading : Imu
+    previousCombinedReading : Imu 
+
     def __init__(self):
         super().__init__('bob_node')
         QoSOverride = QoSProfile(reliability=ReliabilityPolicy.BEST_EFFORT, history=HistoryPolicy.KEEP_ALL)
     
-        self.IMU_Subscription = self.create_subscription(
+        #used to be one now it is two because the IMU topic doesn't output anything and instead it comes from the two topics below.
+        self.accel_Subscription = self.create_subscription(
             Imu,
-            '/imu',
-            self.IMU_callback,
+            "/accel/sample",
+            self.accel_callback,
             10
         )
-        self.IMU_Subscription = self.create_subscription(
-            
+        self.gyro_Subscription = self.create_subscription(
+            Imu,
+            "/gyro/sample",
+            self.gyro_callback,
+            10
         )
-        self.IMU_Subscription.qos_profile = QoSOverride
+        self.accel_Subscription.qos_profile = QoSOverride
+        self.gyro_Subscription.qos_profile = QoSOverride
         self.Cam_Subscription = self.create_subscription(
             Image,
             '/infra1/image_rect_raw',
@@ -57,6 +66,17 @@ class bob(Node):
         self.IMU_publisher.publish(msg)
     def cam_callback(self, msg):
         self.cam_publisher.publish(msg)
+    def gyro_callback(self, msg):
+        self.currGyroReading = msg.data
+    def accel_callback(self, msg : Imu):
+        # If the current acceleration reading and the gyroscope reading time stamps are in the past or at the current time stamp.
+        if self.previousCombinedReading.header.stamp < msg.header.stamp and self.currGyroReading.header.stamp <= msg.header.stamp:
+            #add the gyroscope readings to the acceleration IMU message
+            msg.angular_velocity.x = self.currGyroReading.angular_velocity.x
+            msg.angular_velocity.y = self.currGyroReading.angular_velocity.y
+            msg.angular_velocity.z = self.currGyroReading.angular_velocity.z
+            self.IMU_publisher.publish(msg) #then send the modified message to the publisher to publish to the correct topic via the IMU publisher
+
 def main(args=None):
     rclpy.init(args=args)
     theBob = bob()
