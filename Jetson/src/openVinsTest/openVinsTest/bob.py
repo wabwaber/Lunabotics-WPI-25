@@ -6,6 +6,10 @@
 #but the publisher refuses to change his ways
 #so bob continues to profit
 
+#Bob now has other uses, I wrote the above lines back in B-term its now C-term and I am using Bob as a more purposful middleman.
+#put simply Bob now recives one newspaper from one publisher and two from another and bob interleaves them together to provide one newspaper to the end user
+#(I am combining the acceleration and velocity readings into one.)
+
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import Imu
@@ -15,7 +19,7 @@ from rclpy.qos import ReliabilityPolicy
 from rclpy.qos import HistoryPolicy
 
 #taken from and modified from the Tutorials->Beginner:Client Libaries->Writing a simple publisher and subscriber (python)
-#any else you see here that isnt in there I and I am not kidding here. I read through the libraries code because there wasn't documentation on the stuff
+#any else you see here that isnt in there, and I am not kidding here. I read through the libraries code because there wasn't documentation on the stuff
 class bob(Node):
     def __init__(self):
         super().__init__('bob_node')
@@ -26,6 +30,9 @@ class bob(Node):
             '/imu',
             self.IMU_callback,
             10
+        )
+        self.IMU_Subscription = self.create_subscription(
+            
         )
         self.IMU_Subscription.qos_profile = QoSOverride
         self.Cam_Subscription = self.create_subscription(

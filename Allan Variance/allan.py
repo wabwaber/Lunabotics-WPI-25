@@ -7,6 +7,11 @@ from rosbags.typesys import Stores, get_typestore
 import rclpy
 from random import randrange as randydandy
 typeStore = get_typestore(Stores.ROS2_GALACTIC)
+import argparse
+from rclpy.serialization import deserialize_message
+from rosidl_runtime_py.utilities import get_message
+from std_msgs.msg import String
+import rosbag2_py
 
 class cluster():
     def __init__(self, point: list):
