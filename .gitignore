@@ -16,6 +16,7 @@ msg/_*.py
 build_isolated/
 devel_isolated/
 log/*
+# put here by Matthew C.
 log/build_*
 Jetson/install/*
 Jetson/log/*

@@ -12,24 +12,21 @@
 
 import rclpy as rp
 from rclpy.node import Node
-import rclpy.qos
 from sensor_msgs.msg import Imu
 from sensor_msgs.msg import Image
 from rclpy.executors import ExternalShutdownException
 from rclpy.qos import QoSProfile
 from rclpy.qos import ReliabilityPolicy
 from rclpy.qos import HistoryPolicy
-from rclpy import qos_overriding_options
-from rclpy.qos_overriding_options import QoSOverridingOptions
-from rclpy.qos_overriding_options import QoSPolicyKind
 
-currGyroReading : Imu = None
+#currGyroReading : Imu = None
 previousCombinedReading : Imu = None
 
 #taken from and modified from the Tutorials->Beginner:Client Libaries->Writing a simple publisher and subscriber (python)
 #any else you see here that isnt in there, and I am not kidding here. I read through the libraries code because there wasn't documentation on it
 class bob(Node):
-
+    currGyroReading : Imu = None
+    isGyroSet = False
 
     def __init__(self):
         #sleep(30.0) #DEBUG sleep for 30 seconds
@@ -37,22 +34,22 @@ class bob(Node):
       #DEBUG#  self.get_logger().info(str(QoSOverridingOptions({QoSPolicyKind.RELIABILITY : ReliabilityPolicy.BEST_EFFORT}).policy_kinds))
     
         #used to be one now it is two because the IMU topic doesn't output anything and instead it comes from the two topics below.
-        self.accel_Subscription = self.create_subscription(
-            Imu,
-            "/camera/camera/accel/sample",
-            self.accel_callback,
-            QoSProfile(history=HistoryPolicy.KEEP_ALL, reliability=ReliabilityPolicy.BEST_EFFORT)
-        )
+        # self.accel_Subscription = self.create_subscription(
+        #     Imu,
+        #     "/camera/camera/accel/sample",
+        #     self.accel_callback,
+        #     QoSProfile(history=HistoryPolicy.KEEP_ALL, reliability=ReliabilityPolicy.BEST_EFFORT)
+        # )
         #self.accel_Subscription.qos_profile.reliability = ReliabilityPolicy.BEST_EFFORT
         #self.get_logger().info(str(self.accel_Subscription.qos_profile.reliability))
         #self.accel_Subscription
         
-        self.gyro_Subscription = self.create_subscription(
-            Imu,
-            "/camera/camera/gyro/sample",
-            self.gyro_callback,
-            QoSProfile(history=HistoryPolicy.KEEP_ALL, reliability=ReliabilityPolicy.BEST_EFFORT)
-        )
+        # self.gyro_Subscription = self.create_subscription(
+        #     Imu,
+        #     "/camera/camera/gyro/sample",
+        #     self.gyro_callback,
+        #     QoSProfile(history=HistoryPolicy.KEEP_ALL, reliability=ReliabilityPolicy.BEST_EFFORT)
+        # )
         #self.accel_Subscription.qos_profile = QoSOverride
         #self.gyro_Subscription.qos_profile = QoSOverride
         self.Cam_Subscription = self.create_subscription(
@@ -62,11 +59,11 @@ class bob(Node):
             10
         )
         #self.Cam_Subscription.qos_profile = QoSOverride
-        self.IMU_publisher = self.create_publisher(
-            Imu,
-            "/imu0",
-            10
-        )
+        # self.IMU_publisher = self.create_publisher(
+        #     Imu,
+        #     "/imu0",
+        #     10
+        # )
         self.cam_publisher = self.create_publisher(
             Image,
             "/cam0/image_raw",
@@ -75,23 +72,33 @@ class bob(Node):
     #end of init
     def IMU_callback(self, msg):
         self.IMU_publisher.publish(msg)
-        self.get_logger().info("=========================RECIEVED IMU DATA=========================")
+        self.get_logger().info("=========================RECIEVED IMU DATA=========================") #DEBUG
     def cam_callback(self, msg):
         self.cam_publisher.publish(msg)
     def gyro_callback(self, msg):
         self.currGyroReading = msg
-        self.get_logger().info("=========================GYRO READING=========================")
+        self.isGyroSet = True
+
+        
     def accel_callback(self, msg : Imu):
         # If the current acceleration reading and the gyroscope reading time stamps are in the past or at the current time stamp.
-        self.get_logger().info("=========================Acceleration READING=========================")
+        #self.get_logger().info("=========================Acceleration READING=========================")
         if previousCombinedReading == None:
-            return #return early
-        if previousCombinedReading.header.stamp < msg.header.stamp:
+            if not self.isGyroSet:
+                msg.angular_velocity.x = 0.0
+                msg.angular_velocity.y = 0.0
+                msg.angular_velocity.z = 0.0
+                self.get_logger().info("Gyro reading not set!")
+            else:
+                msg.angular_velocity.x = self.currGyroReading.angular_velocity.x
+                msg.angular_velocity.y = self.currGyroReading.angular_velocity.y
+                msg.angular_velocity.z = self.currGyroReading.angular_velocity.z
+        elif previousCombinedReading.header.stamp < msg.header.stamp:
             #add the gyroscope readings to the acceleration IMU message
-            msg.angular_velocity.x = currGyroReading.angular_velocity.x
-            msg.angular_velocity.y = currGyroReading.angular_velocity.y
-            msg.angular_velocity.z = currGyroReading.angular_velocity.z
-            self.IMU_publisher.publish(msg) #then send the modified message to the publisher to publish to the correct topic via the IMU publisher
+            msg.angular_velocity.x = self.currGyroReading.angular_velocity.x
+            msg.angular_velocity.y = self.currGyroReading.angular_velocity.y
+            msg.angular_velocity.z = self.currGyroReading.angular_velocity.z
+        self.IMU_publisher.publish(msg) #then send the modified message to the publisher to publish to the correct topic via the IMU publisher
 
 def main(args=None):
     try:
@@ -100,9 +107,7 @@ def main(args=None):
         #QoSOverride = QoSProfile(reliability=ReliabilityPolicy(2), history=HistoryPolicy(2))
         #theBob.accel_Subscription.qos_profile = QoSOverride
         #theBob.get_logger().info(str(theBob.accel_Subscription.qos_profile))
-        #theBob.gyro_Subscription.qos_profile = QoSOverride
-        theBob.get_logger().info(str(theBob.accel_Subscription.qos_profile.reliability))
-        
+        #theBob.gyro_Subscription.qos_profile = QoSOverride        
         #theBob.get_logger().info("==QOS Realibility Policy : " + str(theBob.get_subscriptions_info_by_topic.__getattribute__()))
         theBob.get_logger().info("============================BOB LIVES============================")
         rp.spin(theBob)

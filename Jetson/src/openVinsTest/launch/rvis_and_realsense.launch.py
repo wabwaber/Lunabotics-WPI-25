@@ -12,15 +12,6 @@ import os
 openvins_msckf_launch_path = "/catkin_ws/open_vins/ov_msckf/launch"
 realsense_launch_path="/opt/ros/humble/share/realsense2_camera/launch"
 
-"""  enable_accel
-  enable_color
-  enable_depth
-  enable_gyro
-  enable_infra
-  enable_infra1
-  enable_rgbd
-  enable_sync"""
-
 def generate_launch_description():
     realsense_openvins = GroupAction(
         [
@@ -36,22 +27,25 @@ def generate_launch_description():
                 PythonLaunchDescriptionSource(
                     os.path.join(realsense_launch_path, "rs_launch.py")
                 ),
-                launch_arguments={
-                    #'initial_reset': 'true',
+                launch_arguments={ #NOTE you can either have the IMU or the Cameras enabled at a time if running on a USB 2.1 port
                     'enable_accel': 'true',
                     'enable_gyro': 'true',
+                    'unite_imu_method': '2',
                     'enable_color': 'true',
                     'enable_infra': 'true',
-                    'enable_infra1': 'true',
+                    'colorizer.enable': 'true',
+                    'hole_filling_filter.enable': 'true',
+                    'enable_sync': 'true', #syncs the images publish times (TESTING)
+                    'align_depth': 'true',
+                    'align_depth.enable': 'true',
                     'enable_rgbd': 'true',
                     'pointcould.enable': 'true',
-                    'unite_imu_method': '1',
-                    #'device_type': 'd455',
-                    #'serial_no': '213622253386',
+                    'device_type': 'd455',
+                    'initial_reset': 'true',
+                    #'serial_no': 213622253386, #commented out because of a contradictory error, go ahead and uncomment it if you want to see why
                 }.items(),
             )
         ])
-
 
     #bob has been made instead
     #and no you don't wanna know
@@ -65,33 +59,20 @@ def generate_launch_description():
     /cam1/image_raw [sensor_msgs/msg/Image]
     /imu0 [sensor_msgs/msg/Imu]
     """
-    
 
     ld = LaunchDescription([
-        # Node( #realsense camera node
-        #     package="realsense2_camera", #installed via realsense ros wrapper
-        #     executable="realsense2_camera_node", #node found within the lib folder of the ros install
-        #     name="camera", #name of 
-        #     parameters=[{
-        #         'gyro_fps' : 100,
-        #         'accel_fps': 100,
-        #         'pointcloud.enable' : True#,
-        #         #'accel_qos': 'BEST_EFFORT',
-        #         #'gyro_qos': 'BEST_EFFORT'
-        #     }]
-        # ),
         Node(
             package="openVinsTest",
             namespace="",
             executable="bob",
             name="bob_node"
-        )#,
-        # Node(
-        #     package="rviz2",
-        #     namespace="",
-        #     executable="rviz2",
-        #     name="rviz2"
-        # )
+        ),
+        Node(
+            package="rviz2",
+            namespace="",
+            executable="rviz2",
+            name="rviz2"
+        )
     ])
     ld.add_action(realsense_openvins)
     ld.add_action(realsense_launch)
