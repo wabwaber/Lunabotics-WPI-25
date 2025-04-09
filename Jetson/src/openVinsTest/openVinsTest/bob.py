@@ -52,18 +52,24 @@ class bob(Node):
         # )
         #self.accel_Subscription.qos_profile = QoSOverride
         #self.gyro_Subscription.qos_profile = QoSOverride
+        self.imu_subscription = self.create_subscription(
+            Imu,
+            "/camera/camera/imu",
+            self.IMU_callback,
+            QoSProfile(history=HistoryPolicy.KEEP_ALL, reliability=ReliabilityPolicy.BEST_EFFORT)
+        )
         self.Cam_Subscription = self.create_subscription(
             Image,
             '/camera/camera/color/image_raw',
             self.cam_callback,
-            10
+            10 #10 here is the default QoS profile see above subscription if you want to change it
         )
         #self.Cam_Subscription.qos_profile = QoSOverride
-        # self.IMU_publisher = self.create_publisher(
-        #     Imu,
-        #     "/imu0",
-        #     10
-        # )
+        self.IMU_publisher = self.create_publisher(
+            Imu,
+            "/imu0",
+            10
+        )
         self.cam_publisher = self.create_publisher(
             Image,
             "/cam0/image_raw",
@@ -71,14 +77,12 @@ class bob(Node):
         )
     #end of init
     def IMU_callback(self, msg):
-        self.IMU_publisher.publish(msg)
-        self.get_logger().info("=========================RECIEVED IMU DATA=========================") #DEBUG
+        self.IMU_publisher.publish(msg) #publish the imu data
     def cam_callback(self, msg):
         self.cam_publisher.publish(msg)
     def gyro_callback(self, msg):
         self.currGyroReading = msg
         self.isGyroSet = True
-
         
     def accel_callback(self, msg : Imu):
         # If the current acceleration reading and the gyroscope reading time stamps are in the past or at the current time stamp.

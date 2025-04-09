@@ -11,7 +11,7 @@ from rosbags.typesys import Stores, get_types_from_msg, get_typestore
 
 typestore = get_typestore(Stores.LATEST)
 imuMsg = typestore.types["sensor_msgs/Imu"]
-bagpath = Path("/home/cmdwiz/imudata2") #raw path to bag on system
+bagpath = Path("/home/cmdwiz/kalibr/data/imuCalibration/fullImu") #raw path to bag on system
 
 def getNextTwoVelocity():
     currTotal = 0

@@ -1,0 +1,14 @@
+# - Config file for the motor_comm package
+# It defines the following variables
+#  motor_comm_INCLUDE_DIRS - include directories for FooBar
+#  motor_comm_LIBRARIES    - libraries to link against
+#  motor_comm_EXECUTABLE   - the bar executable
+
+set(motor_comm_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
+
+# Our library dependencies (contains definitions for IMPORTED targets)
+include("${motor_comm_DIR}/export_motor_comm.cmake")
+
+# These are IMPORTED targets created by motor_commTargets.cmake
+
+

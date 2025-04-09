@@ -19,6 +19,10 @@ Hello and welcome to this document where the team will be updating the documenta
 - [ArdyToMot.cpp](#ardy-to-mot-cpp)
 - [Talon.cpp](#talon-cpp)
 
+### Section 4: Raspberry Pi Code
+- [Motor Communication Package](#motor_comm-pkg)
+- [CAN Bus Motor Package]
+
 
 ## <center>Code Overview</center>
 In this section we will be going over the broad strokes of how the code works as well as going over any related hardware or libraries. This will more than likely be a rehash of what is stated in the report. Maybe with a bit more depth as we can give as much detail as we want here!
@@ -34,13 +38,15 @@ The Hardware referenced in this section is **ONLY** used for software related th
 - Jetson Nano rev B01 [Manual](https://developer.download.nvidia.com/assets/embedded/secure/jetson/Nano/docs/NV_Jetson_Nano_Developer_Kit_User_Guide.pdf?IFNW4ZTb-H-qYxZfoi7MTdCb20kbF8c9X2fca6M_PHDMt3bN4nDS0O5v_YtL6nXPZ7so32MXn9XYN_yw6IorOUe1wHIc4w2p8Bj2606b13DIBbh9X-bvaFndv4VpX0S1I2eYV-A5hXi5UoYGkO1nUn-79RYcBsnZylgshBB9uHjuoHZCgeuOyjN7uXG6h7McgNw=&t=eyJscyI6IndlYnNpdGUiLCJsc2QiOiJkZXZlbG9wZXIubnZpZGlhLmNvbS9lbWJlZGRlZC1jb21wdXRpbmcifQ==)
 - Arduino Mega 2560 Rev3 [Manual](https://docs.arduino.cc/resources/datasheets/A000067-datasheet.pdf)
 - Intel Realsense D455 [Manual](https://www.intel.com/content/dam/support/us/en/documents/emerging-technologies/intel-realsense-technology/Intel-RealSense-D400-Series-Datasheet.pdf)
-
+- Raspberry Pi 3 rev B01 [Datasheet](https://datasheets.raspberrypi.com/rpi3/raspberry-pi-3-b-plus-product-brief.pdf)
 
 <a id="libs-used"></a>
 ### Libraries Used
-- ROS2 Galactic (Ubuntu 20.04)
+- ROS2 Humble, galactic (Ubuntu 20.04)
+- Docker [Home Page] (https://www.docker.com/)
 - OpenVINS [Home Page](https://docs.openvins.com/)
 - inputs python lib [git](https://github.com/zeth/inputs)
+- Raspberry PI I2C library [git](https://github.com/besp9510/pi_i2c)
 
 ## <center>Jetson Code</center>
 
@@ -82,6 +88,8 @@ self.created_Subscription.qos_profile = QoSOverride
 [TODO -matt]: #
 
 ## <center>Arduino Code</center>
+Clarification: We did not use an Arduino Mega for the final robot it was instead replaced with a raspberry Pi. Sam has the explaination as to why so this section was written prior to that decision being made. I am leaving it here as useful documentation should you need uses for that code in the repo. If not go to [Section 4](#section-4-raspberry-pi-code)
+
 In this section we will be going over each code file associated with the arduino mega and all its functions.
 
 [Updated 11/12/2024]: #
@@ -138,6 +146,9 @@ The first function in this file is a set motors that takes in 4 integers represe
 
 The last set of functions are either redundant, talked about earlier, or not implemented.
 
-<a id="talon-cpp"></a> [Updated: 11/12/2024]:#
-### Talon.cpp
+
+## Section 4: 
+
+<a id="motor_comm-pkg"></a> 
+### motor_comm-pkg
 

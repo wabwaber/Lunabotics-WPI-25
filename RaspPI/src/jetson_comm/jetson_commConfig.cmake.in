@@ -1,0 +1,14 @@
+# - Config file for the jetson_comm package
+# It defines the following variables
+#  jetson_comm_INCLUDE_DIRS - include directories for FooBar
+#  jetson_comm_LIBRARIES    - libraries to link against
+#  jetson_comm_EXECUTABLE   - the bar executable
+
+set(jetson_comm_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
+
+# Our library dependencies (contains definitions for IMPORTED targets)
+include("${jetson_comm_DIR}/export_jetson_comm.cmake")
+
+# These are IMPORTED targets created by jetson_commTargets.cmake
+
+

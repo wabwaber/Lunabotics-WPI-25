@@ -1,0 +1,49 @@
+<ros2_control name="arduino_mega" type="system">
+    <hardware>
+        <plugin>arduino_communication/src/arduino_connections</plugin>
+        <param name="drive_motors_top_speed">10</param>
+    </hardware>
+    <joint name="front_left_drive">
+        <command_interface name="distance"/>
+        <command_interface name="max_speed"/>
+        <state_interface name="position">
+            <param name="initial_value">0.0</param>
+        </state_interface>
+    </joint>
+    <joint name="front_right_drive">
+        <command_interface name="distance"/>
+        <state_interface name="distance">
+            <param name="initial_value">0.0</param>
+        </state_interface>
+    </joint>
+    <joint name="back_left_drive">
+        <command_interface name="distance"/>
+        <state_interface name="distance">
+            <param name="initial_value">0.0</param>
+        </state_interface>
+    </joint>
+    <joint name="back_right_drive">
+        <command_interface name="distance"/>
+        <state_interface name="distance">
+            <param name="initial_value">0.0</param>
+        </state_interface>
+    </joint>
+    <joint name="left_turn">
+        <command_interface name="angle">
+            <param name="min">-95</param>
+            <param name="max">95</param>
+        </command_interface>
+        <state_interface name="angle">
+            <param name="initial_value">0.0</param>
+        </state_interface>
+    </joint>
+    <joint name="right_turn">
+        <command_interface name="angle">
+            <param name="min">-95</param>
+            <param name="max">95</param>
+        </command_interface>
+        <state_interface name="angle">
+            <param name="initial_value">0.0</param>
+        </state_interface>
+    </joint>
+</ros2_control>

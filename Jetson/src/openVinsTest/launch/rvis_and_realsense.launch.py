@@ -8,7 +8,6 @@ from launch.actions import IncludeLaunchDescription
 import os
 #from launch_ros.remap_rule_type import SomeRemapRule
 
-
 openvins_msckf_launch_path = "/catkin_ws/open_vins/ov_msckf/launch"
 realsense_launch_path="/opt/ros/humble/share/realsense2_camera/launch"
 
@@ -18,7 +17,13 @@ def generate_launch_description():
             IncludeLaunchDescription( #openvins
                 PythonLaunchDescriptionSource(
                     os.path.join(openvins_msckf_launch_path, "subscribe.launch.py")
-                )
+                ),
+                launch_arguments={
+                    #'euroc_mav': 'rpng_aruco',
+                    'rviz_enable': 'true',
+                    'config': 'D445-mqp',
+                    #'save_total_state': 'true',
+                }.items(),
             )
         ]
     )
@@ -27,21 +32,22 @@ def generate_launch_description():
                 PythonLaunchDescriptionSource(
                     os.path.join(realsense_launch_path, "rs_launch.py")
                 ),
-                launch_arguments={ #NOTE you can either have the IMU or the Cameras enabled at a time if running on a USB 2.1 port
+                launch_arguments={ #NOTE you can either have the IMU or the Cameras enabled at a time if running on a USB 2.1 port however the cable that is currently being used for the realsense is a 3.2 cable so things should be all good
                     'enable_accel': 'true',
                     'enable_gyro': 'true',
+                    'accel_fps': '200', 
                     'unite_imu_method': '2',
                     'enable_color': 'true',
                     'enable_infra': 'true',
                     'colorizer.enable': 'true',
-                    'hole_filling_filter.enable': 'true',
+                    'hole_filling_filter.enable': 'false',
                     'enable_sync': 'true', #syncs the images publish times (TESTING)
                     'align_depth': 'true',
                     'align_depth.enable': 'true',
                     'enable_rgbd': 'true',
-                    'pointcould.enable': 'true',
+                    #'pointcloud.enable': 'true',
                     'device_type': 'd455',
-                    'initial_reset': 'true',
+                    #'initial_reset': 'true',
                     #'serial_no': 213622253386, #commented out because of a contradictory error, go ahead and uncomment it if you want to see why
                 }.items(),
             )
@@ -60,6 +66,7 @@ def generate_launch_description():
     /imu0 [sensor_msgs/msg/Imu]
     """
 
+    #Rvis is launched by OpenVINS see launch arguments above on or near line 24
     ld = LaunchDescription([
         Node(
             package="openVinsTest",
@@ -74,10 +81,9 @@ def generate_launch_description():
             name="rviz2"
         )
     ])
-    ld.add_action(realsense_openvins)
+    #ld.add_action(realsense_openvins)
     ld.add_action(realsense_launch)
     return ld
-#DEBUG: Commented out lines 82, 83 and 59->68
 
 """
 Below is a full list of realsense_camera parameters (taken from ros2 param list with the node running):
