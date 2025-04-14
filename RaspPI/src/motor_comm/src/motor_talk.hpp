@@ -43,11 +43,11 @@ Talon PWMRight;
 
 //All references of direction are from the robots POV IE where is the camera (realsense) pointing
 //used for motor speed setting, 0 for CAN bus, 1 for PWM 
-enum motorType {DRIVE_FL = 0, DRIVE_FR = 0, DRIVE_BL=0, DRIVE_BR=0, TURN_LEFT=1, TURN_RIGHT=1, DEPOSIT=1, INTAKE_VERT=1, INTAKE_RUN=1};
-enum motors {DRIVE_FRONT_LEFT, DRIVE_FRONT_RIGHT, DRIVE_BACK_LEFT, DRIVE_BACK_RIGHT, DEPOSIT, END_OF_LIST}; //this enum exists so there is a precompile list of motors to use and can be referenced by other blocks of code also END_OF_LIST is there for iterators
-class MotorCommunicator{
+//enum motorType {DRIVE_FL = 0, DRIVE_FR = 0, DRIVE_BL=0, DRIVE_BR=0, TURN_LEFT=1, TURN_RIGHT=1, DEPOSIT=1, INTAKE_VERT=1, INTAKE_RUN=1};
+class MotorController{
     public:
-        MotorCommunicator();
+        enum motors {LEFT_TURN, RIGHT_TURN, INTAKE_VERTICAL, INTAKE_RUN, DEPOSIT, END_OF_LIST}; //this enum exists so there is a precompile list of motors to use and can be referenced by other blocks of code also END_OF_LIST is there for iterators
+        MotorController();
         bool setSpeed(motors toChange, uint16_t givenSpeed);    //returns a bool, true for set success, false for failure or error
         uint16_t getSetSpeed(motors motor);   //returns the set speed, requires the name for the motor
         uint16_t getSpeed(motors motor);     //returns current speed,  ^

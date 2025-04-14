@@ -1,0 +1,2 @@
+int16 up_down_distance
+int16 rotation_speed

@@ -21,7 +21,8 @@ Hello and welcome to this document where the team will be updating the documenta
 
 ### Section 4: Raspberry Pi Code
 - [Motor Communication Package](#motor_comm-pkg)
-- [CAN Bus Motor Package]
+- [CAN Bus Motor Package]()
+- [List Of ROS Topics]()
 
 
 ## <center>Code Overview</center>
@@ -152,3 +153,10 @@ The last set of functions are either redundant, talked about earlier, or not imp
 <a id="motor_comm-pkg"></a> 
 ### motor_comm-pkg
 
+<a id="list-of_ros-topics">
+### List of ROS Topics
+Below is the master list of all ROS topics that exist on the Raspberry PI, mostly for my reference but who knows maybe you need it too.
+- /mooncake/encoders
+- /mooncake/encoder_request
+- /mooncake/turn_readout
+- 

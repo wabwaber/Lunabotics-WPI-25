@@ -28,12 +28,13 @@
 #define I2C_CLOCK_BUS_5 23
 
 //these are all subject to change depending on how sam ends up wiring the robot
-enum encoder {INTAKE_ROTATE=0, INTAKE_VERTICAL=1, TURN_LEFT=2, TURN_RIGHT=3, DEPOSIT=4};
 
- class EncoderReader{
+class EncoderReader{
     public:
+        enum encoder {INTAKE_ROTATE=0, INTAKE_VERTICAL=1, TURN_LEFT=2, TURN_RIGHT=3, DEPOSIT=4};
         EncoderReader();
-        int getAngle(encoder get);
+        float getAngle(encoder get);
+        encoder convertNumToEn(int toConvert);
     private:
         bool initalizeI2C();
         float* currAngle;
@@ -43,6 +44,7 @@ enum encoder {INTAKE_ROTATE=0, INTAKE_VERTICAL=1, TURN_LEFT=2, TURN_RIGHT=3, DEP
         //okay this is interesting as when it scans it will add a 1 to the addresses (index of array) if there is a device at that indexes (addresses) location
         int* addressBook = (int*) calloc(127, sizeof(int*));
         int** I2CBusses = (int**) calloc(6, sizeof(int*));
+        float* startAngle;
 };
 
 /*

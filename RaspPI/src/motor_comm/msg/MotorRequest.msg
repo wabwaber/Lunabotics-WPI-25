@@ -10,4 +10,4 @@ int32 bl_drive
 int32 br_drive
 int32 fr_drive
 int32 intake_run
-int32 intake_vertical_pos
+int32 intake_vertical_effort

@@ -11,4 +11,4 @@ bool open_deposit false
 bool has_intake_run 
 bool has_intake_vertical
 int32 intake_run
-int32 intake_vertical_pos
+int32 intake_vertical_effort

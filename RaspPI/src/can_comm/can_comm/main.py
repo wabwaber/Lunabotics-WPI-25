@@ -10,15 +10,17 @@ can.rc['interface'] = 'socketcan'
 can.rc['channel'] = 'vcan0'
 can.rc['bitrate'] = 500000
 
+#https://python-can.readthedocs.io/en/stable/
+
 bus = can.Bus()
 
 """ This entire node and package exists to communicate with the CAN bus motors
 this is because the firmware being used only has a python library. The latency won't be great in terms of requests to action times."""
 class motor(Enum):
     DRIVE_FRONT_LEFT = 0 
-    DRIVE_FRONT_RIGHT = 1 
-    DRIVE_BACK_LEFT = 2 
-    DRIVE_BACK_RIGHT = 3
+    DRIVE_BACK_LEFT = 1 
+    DRIVE_BACK_RIGHT = 2
+    DRIVE_FRONT_RIGHT = 3 
 
 BASE_CURRENT = 10
 SPEED_KP = 750
@@ -43,22 +45,37 @@ class CAN_motor(Node):
     curr_speeds = [0, 0, 0, 0]
     displacements = [0, 0, 0, 0]
     sums = [0, 0, 0, 0]
-
+    loopCount = 0
+    loopUntilLog = 5
+    motor_temps = [0, 0, 0, 0]
 
     def __init__(self):
         super().__init__('can_motor_communicator')
-        self.speedPub = self.create_publisher(SpeedReturn, '/mooncake/motor_speed')
-        self.requestSub = self.create_subscription(MotorRequest, '/mooncake/can_motor_requests')
-        
+        self.speedPub = self.create_publisher(SpeedReturn, '/mooncake/motor_speed', 10)
+        self.requestSub = self.create_subscription(MotorRequest, '/mooncake/can_motor_requests', self.motor_req_callback, 10)
+        self.loopTimer = self.create_timer(0.05, self.timer_callback)
 
-    def motor_req_callback(self):
-        None #TODO
+    def motor_req_callback(self, msg : MotorRequest):
+        if msg.has_drive:
+            self.requested_speeds = [msg.fl_drive, msg.bl_drive, msg.br_drive, msg.fr_drive]
     
     def timer_callback(self):
-        None #TODO
-    
-
-    
+        self.doPID() #do the PID
+        if self.loopCount >= self.loopUntilLog:
+            self.loopCount = 0 #reset loop count
+            self.get_logger().info("Speeds are " + self.curr_speeds)
+            msg = SpeedReturn()
+            msg.fl_drive = self.curr_speeds[0]
+            msg.bl_drive = self.curr_speeds[1]
+            msg.br_drive = self.curr_speeds[2]
+            msg.fr_drive = self.curr_speeds[3]
+            msg.location = "drive_motors"
+            msg.fl_temp = self.motor_temps[0]
+            msg.bl_temp = self.motor_temps[1]
+            msg.br_temp = self.motor_temps[2]
+            msg.fr_temp = self.motor_temps[3]
+            self.speedPub.publish()
+        
     def doPID(self):
         newCurrent = []
         for x in motor:
@@ -75,7 +92,7 @@ class CAN_motor(Node):
         self.set_currents(newCurrent)
     
     def getSpeeds(self): #get all speeds and return
-        listOSpeeds = [] #TODO
+        listOSpeeds = [None, None, None, None]
         #the ENUM is the ID for the motor
         #reading is 0x200 + ID (ID being the motor controller ID {setting ID in the datasheet}, ONLY for IDs 1-4)
         #0x1FF + ID for IDs 5-8
@@ -87,13 +104,18 @@ class CAN_motor(Node):
                 msgFromController : can.Message = bus.recv(timeout=RECIEVE_TIMEOUT)
                 self.curr_speeds[msgFromController.arbitration_id - self.can_id] = ((msgFromController.data[2] & 0x0F) << 8) | msgFromController.data[3] #DO WE NEED TO USE BITWISE & 0x0F HERE?
                 listOSpeeds.append(self.curr_speeds[msgFromController.arbitration_id - self.can_id])
+                self.motor_temps[msgFromController.arbitration_id - self.can_id] = msgFromController[6]
             except can.exceptions.CanOperationError or can.exceptions.CanTimeoutError:
                 #we should never get here but if we do
                 return self.getSpeeds() #call the function again          
         return listOSpeeds
     
     def getSpeed(self, motor : motor):# get speed of one specific motor
-        speed = 0 #TODO
+        bus.set_filters([{"can_id": self.can_id + motor, "can_mask": 0x1FFFFF00}]) #get only messages from the motor we are interested in
+        msg = bus.recv(timeout=RECIEVE_TIMEOUT) #wait for the message
+        speed = ((msg.data[2] & 0x0F) << 8) | msg.data[3] #get the number
+        bus.set_filters(filters=None) #reset filters
+        return speed #and return
         
     #sets the motor currents, changing the requested one and leaving the rest the same
     #we are also having to send out all the currents because the CAN controllers will take their section of data from the list and use that
@@ -105,12 +127,12 @@ class CAN_motor(Node):
             data=[
                 bytes(self.set_currents[motor.DRIVE_FRONT_LEFT] / self.can_conversion_factor),
                 bytes(self.set_currents[motor.DRIVE_FRONT_LEFT] % self.can_conversion_factor),
-                bytes(self.set_currents[motor.DRIVE_FRONT_RIGHT] / self.can_conversion_factor),
-                bytes(self.set_currents[motor.DRIVE_FRONT_RIGHT] % self.can_conversion_factor),
+                bytes(self.set_currents[motor.DRIVE_BACK_LEFT] / self.can_conversion_factor),
+                bytes(self.set_currents[motor.DRIVE_BACK_LEFT] % self.can_conversion_factor),
                 bytes(self.set_currents[motor.DRIVE_BACK_RIGHT] / self.can_conversion_factor),
                 bytes(self.set_currents[motor.DRIVE_BACK_RIGHT] % self.can_conversion_factor),
-                bytes(self.set_currents[motor.DRIVE_BACK_LEFT] / self.can_conversion_factor),
-                bytes(self.set_currents[motor.DRIVE_BACK_LEFT] % self.can_conversion_factor)
+                bytes(self.set_currents[motor.DRIVE_FRONT_RIGHT] / self.can_conversion_factor),
+                bytes(self.set_currents[motor.DRIVE_FRONT_RIGHT] % self.can_conversion_factor)
             ])
         bus.send(msg=msg) #send the message
         
@@ -126,12 +148,12 @@ class CAN_motor(Node):
                 data=[
                     bytes(self.set_currents[motor.DRIVE_FRONT_LEFT] / self.can_conversion_factor),
                     bytes(self.set_currents[motor.DRIVE_FRONT_LEFT] % self.can_conversion_factor),
-                    bytes(self.set_currents[motor.DRIVE_FRONT_RIGHT] / self.can_conversion_factor),
-                    bytes(self.set_currents[motor.DRIVE_FRONT_RIGHT] % self.can_conversion_factor),
+                    bytes(self.set_currents[motor.DRIVE_BACK_LEFT] / self.can_conversion_factor),
+                    bytes(self.set_currents[motor.DRIVE_BACK_LEFT] % self.can_conversion_factor),
                     bytes(self.set_currents[motor.DRIVE_BACK_RIGHT] / self.can_conversion_factor),
                     bytes(self.set_currents[motor.DRIVE_BACK_RIGHT] % self.can_conversion_factor),
-                    bytes(self.set_currents[motor.DRIVE_BACK_LEFT] / self.can_conversion_factor),
-                    bytes(self.set_currents[motor.DRIVE_BACK_LEFT] % self.can_conversion_factor)
+                    bytes(self.set_currents[motor.DRIVE_FRONT_RIGHT] / self.can_conversion_factor),
+                    bytes(self.set_currents[motor.DRIVE_FRONT_RIGHT] % self.can_conversion_factor)
                 ]
                 )
             )

@@ -1,1 +1,1 @@
-string encoder
+int16 encoder

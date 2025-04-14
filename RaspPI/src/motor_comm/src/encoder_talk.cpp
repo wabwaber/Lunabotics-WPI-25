@@ -12,7 +12,7 @@ EncoderReader::EncoderReader(){
 /*
 Gets the encoder angle reading based on the given enum, see .hpp for valid values
 */
-int EncoderReader::getAngle(encoder encoderToGet){
+float EncoderReader::getAngle(encoder encoderToGet){
     float angle = -1.0;
 
     //the writing part of last years code was for the multiplexers (ignore this if you don't know what it means because it doesn't apply anymore)
@@ -65,4 +65,8 @@ bool EncoderReader::initalizeI2C(){
     }
 
     return pass;
+}
+
+encoder EncoderReader::convertNumToEn(int toConvert){
+    return (encoder) toConvert;
 }
