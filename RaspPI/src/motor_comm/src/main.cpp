@@ -18,7 +18,6 @@
 #include <cstdio>
 #include <chrono>
 
-
 using namespace std::chrono_literals;
 
 /*
@@ -44,9 +43,12 @@ class motorCommunicator : public rclcpp::Node{
             turnPub = this->create_publisher<motor_comm::msg::TurnRead>("/mooncake/turn_readout", 10);
             motorRequestSub = this->create_subscription<motor_comm::msg::MotorRequest>("/mooncake/motor_request", 10, std::bind(&motorCommunicator::set_motor, this));
             realAllSub = this->create_subscription<motor_comm::msg::ReadAllEncodersRequest>("/mooncake/updateSpeeds", 10, std::bind(&motorCommunicator::call_to_read_all, this));
-            for(int currMotor = motors.LEFT_TURN; currMotor != motors.END_OF_LIST; currMotor++){
-                float currAng = encoders.getAngle(encoders.convertNumToEn(currMotor));
-                
+            for(int iter = encoders.INTAKE_ROTATE; iter <= encoders.DEPOSIT; iter++){
+                float currAng = encoders.getAngle(encoders.convertNumToEn(iter));
+                int64_t timeStamp = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+                auto currMapEntry = lastReads.find(encoders.convertNumToEn(iter)); //since its the first we can assume that there isn't already a mapping to this
+                currMapEntry->second[0] = currAng;
+                currMapEntry->second[1] = timeStamp;
             }
         }
     private:
@@ -62,25 +64,30 @@ class motorCommunicator : public rclcpp::Node{
             //via a ROS2 topic,
             //message contains the request of the encoder locaiton so read it and send it
             float readAngle = encoders.getAngle(encoders.convertNumToEn(msg.encoder));
+            int64_t timestamp = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
             if(readAngle != -1){
                 //if we get an acutal reading
                 motor_comm::msg::EncoderRead newMsg; //create a new message
                 newMsg.encoder_location = msg.encoder; //add in the encoders location
                 newMsg.angle = readAngle; //add the angle read in from the encodeer
+                newMsg.timestamp = timestamp;
                 readPublisher->publish(newMsg); //publish the message
             }else{
                 return;
             }
         }
-        void call_to_read_all(motor_comm::msg::ReadAllEncodersRequest &msg){
+        //doesnt need to take in a message as the message is just acting as a request to read all motors
+        void call_to_read_all(){
             //TODO
             //read in all encoders then calculate the speeds
-
+            float* speeds = (float*) calloc(5, sizeof(float)); //no segfaults here
             for(int iter = encoders.INTAKE_ROTATE; iter <= encoders.DEPOSIT; iter++){
                 float currMotAng = encoders.getAngle(encoders.convertNumToEn(iter)); //gets the angle for the current motor, duh
-                int64_t microDiff = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count(); //gets the number of microseconds since the epoc (its a large number but should give us the percision needed (if not then floating errors as to blame and switch this to miliseconds instead))
-                
+                int64_t microDiff = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count() - lastReads.at(encoders.convertNumToEn(iter))[1]; //gets the number of microseconds since the epoc (its a large number but should give us the percision needed (if not then floating errors as to blame and switch this to miliseconds instead))
+                float speed = (currMotAng - lastReads.find(encoders.convertNumToEn(iter))->second[0])/ (microDiff * (1/1000000)); //in degrees per second (hopefully)
+                speeds[iter] = speed; //update array
             }
+            
         }
         void set_motor(motor_comm::msg::MotorRequest &msg){
             if(msg.has_turn){
@@ -98,7 +105,7 @@ class motorCommunicator : public rclcpp::Node{
             }
         }
         MotorController motors;
-        std::unordered_map<MotorController::motors, int64_t[2]> lastReads; //a map of the motors and for each one an array containing the last encoder read, and the time that read was taken
+        std::unordered_map<EncoderReader::encoder, int64_t[2]> lastReads; //a map of the motors and for each one an array containing the last encoder read, and the time that read was taken
         EncoderReader encoders;
         size_t count_;
         rclcpp::TimerBase::SharedPtr timer_;
@@ -107,7 +114,7 @@ class motorCommunicator : public rclcpp::Node{
         rclcpp::Publisher<motor_comm::msg::TurnRead>::SharedPtr turnPub;
         rclcpp::Subscription<motor_comm::msg::MotorRequest>::SharedPtr motorRequestSub;
         rclcpp::Subscription<motor_comm::msg::ReadAllEncodersRequest>::SharedPtr realAllSub;
-
+        std::unordered_map<EncoderReader::encoder, float> speeds;
 };
 
 int main(int argc, char** argv){

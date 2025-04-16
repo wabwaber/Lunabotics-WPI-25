@@ -15,12 +15,13 @@
 
 //states taken from last years code
 enum state {
-    DISABLED = 0, //drive train doesnt do anything
+    DISABLED = 0, //drivetrain doesnt do anything
     DRIVE = 1, //Drive straight/dont move turn motors during this state
     POINT_TURN = 2, //rotate wheels and move all drive motors at same speed
     ICC_TURN = 3, //arc/spline movement, ICC stands for instaneous center of curvature
     LEFT_WHEEL_RECOVERY = 4,
     RIGHT_WHEEL_RECOVERY = 5,
+    RECOVERY = 6
 };
 state currState;
 state prevState;

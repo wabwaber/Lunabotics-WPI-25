@@ -13,6 +13,7 @@ class robotController: public rclcpp::Node{
         */
         robotController() : Node("robot_controller"), count_(0){
             motorPub_ = this->create_publisher<motor_comm::msg::MotorRequest>("/mooncake/driveMotor", 10);
+            
             encoderSub_ = this->create_subscription<motor_comm::msg::EncoderRead>("/mooncake/encoders", 10, std::bind(encoder_read_ready));
             jetsonCommandSub_ = this->create_subscription<drivetrain_controller::msg::JetsonDrivetrainCommand>("/mooncake/driveCommand", 10, std::bind(command_callback));
             loopTimer_ = this->create_wall_timer(100ms, std::bind(loopCallback, this));
@@ -23,7 +24,8 @@ class robotController: public rclcpp::Node{
         bool waitingOnCommand = true;
         void encoder_read_ready(){
             //TODO
-
+            //we have one encoder reading in so we should calculate the speed that it is running at
+            
         }
 
         void command_callback(const drivetrain_controller::msg::JetsonDrivetrainCommand &msg) const{
@@ -73,6 +75,8 @@ class robotController: public rclcpp::Node{
                 case LEFT_WHEEL_RECOVERY:
                 break;
                 case RIGHT_WHEEL_RECOVERY:
+                break;
+                case RECOVERY:
                 break;
                 default: //if we ever end up here something has gone terribly wrong and we should disable the robot to be safe
                     currState = DISABLED; //set current state to DISABLED
