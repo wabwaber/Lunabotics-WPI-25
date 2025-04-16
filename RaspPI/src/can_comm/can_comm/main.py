@@ -60,8 +60,8 @@ class CAN_motor(Node):
             self.requested_speeds = [msg.fl_drive, msg.bl_drive, msg.br_drive, msg.fr_drive]
     
     def timer_callback(self):
-        self.doPID() #do the PID
-        if self.loopCount >= self.loopUntilLog:
+        self.doPID() #do the PID (happens 20 times a second)
+        if self.loopCount >= self.loopUntilLog: #will do the following every quarter of a second 4 times per second
             self.loopCount = 0 #reset loop count
             self.get_logger().info("Speeds are " + self.curr_speeds)
             msg = SpeedReturn()
@@ -75,7 +75,8 @@ class CAN_motor(Node):
             msg.br_temp = self.motor_temps[2]
             msg.fr_temp = self.motor_temps[3]
             self.speedPub.publish()
-        
+
+    #does the PID loop things, if you don't know what that is it essentialy changes the motors 'effort' relative to a goal. PID stands for Proportional Intergal Derivative as well. if you are a pure CS student reading this I would reccomend asking one of the RBE majors.
     def doPID(self):
         newCurrent = []
         for x in motor:
@@ -110,6 +111,7 @@ class CAN_motor(Node):
                 return self.getSpeeds() #call the function again          
         return listOSpeeds
     
+    #as a side note to anyone looking at the code, this funciton is not great as it has the chance to block for 5 seconds. Idealy it would be handled as the information came in but the library doesnt seem to handle that kind of funcitonality :(
     def getSpeed(self, motor : motor):# get speed of one specific motor
         bus.set_filters([{"can_id": self.can_id + motor, "can_mask": 0x1FFFFF00}]) #get only messages from the motor we are interested in
         msg = bus.recv(timeout=RECIEVE_TIMEOUT) #wait for the message

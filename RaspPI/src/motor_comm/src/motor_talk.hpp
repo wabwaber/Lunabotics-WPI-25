@@ -53,10 +53,12 @@ class MotorController{
         uint16_t getSpeed(motors motor);     //returns current speed,  ^
         uint16_t getPrevSpeed(motors motor);//returns the previous speed,^
         void update(); //PID loop for motors reaching their requested speed
-
+        std::unordered_map<motors, time_t> lastReadTime;
+        void MotorController::updateCurrSpeeds();
     private:
         //all un ordered hashmaps as there are a lot of motors. the string takes the exact same name as the Enum at the top not using it though as its values are the same between
         std::unordered_map<motors, uint16_t> currSpeed;        //in RPM and refering to the motor speed not output shaft.
         std::unordered_map<motors, uint16_t> prevSpeed;       //^
         std::unordered_map<motors, uint16_t> requestedSpeed; //^
+        
 };

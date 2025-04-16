@@ -67,6 +67,6 @@ bool EncoderReader::initalizeI2C(){
     return pass;
 }
 
-encoder EncoderReader::convertNumToEn(int toConvert){
+EncoderReader::encoder EncoderReader::convertNumToEn(int toConvert){
     return (encoder) toConvert;
 }

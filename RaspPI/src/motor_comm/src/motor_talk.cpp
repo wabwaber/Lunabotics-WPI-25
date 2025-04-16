@@ -34,6 +34,21 @@ uint16_t MotorController::getPrevSpeed(motors motor){
 void MotorController::update(){
     for(int iter = LEFT_TURN; iter != END_OF_LIST; iter++){ //I know I should be using a switch here but because I don't want to add another switch case each time a new motor is added I just use value undefined enum to iterate through each motor
         //do the PID updates here
-        
+
+        /* yoiked from the CAN bus PID
+        newCurrent = []
+        for x in motor:
+            self.errors[x] = self.requested_speeds[x] - self.curr_speeds[x]
+            self.sums[x] = min(MAX_SPEED_SUM, max(-MAX_SPEED_SUM, self.sums[x] + self.errors[x])) #basically constrains the value between the MAX and MIN currents set above,
+            if self.requested_speeds[x] == 0:
+                newCurrent.append(0)
+                self.sums[x] = 0
+            elif self.requested_speeds > 0:
+                newCurrent.append(BASE_CURRENT + SPEED_KP * self.errors[x] + SPEED_KI * self.sums[x])
+            else:
+                newCurrent.append(-BASE_CURRENT + SPEED_KP * self.errors[x] + SPEED_KI * self.sums[x])
+        self.prevErrors = deepcopy(self.errors)
+        self.set_currents(newCurrent)
+        */   
     }
 }
