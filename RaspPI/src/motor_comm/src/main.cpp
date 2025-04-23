@@ -52,7 +52,6 @@ class motorCommunicator : public rclcpp::Node{
             }
         }
     private:
-    
         void turn_encoder_timer_readout(){
             //read in turning encoders and publish them
             motor_comm::msg::TurnRead msg;

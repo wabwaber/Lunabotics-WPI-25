@@ -67,12 +67,14 @@ class bob(Node):
         #self.Cam_Subscription.qos_profile = QoSOverride
         self.IMU_publisher = self.create_publisher(
             Imu,
-            "/imu0",
+            #"/imu0",
+            "/d455/imu",
             10
         )
         self.cam_publisher = self.create_publisher(
             Image,
-            "/cam0/image_raw",
+            "/d455/color/image_raw",
+            #"/cam0/image_raw",
             10
         )
     #end of init

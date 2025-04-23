@@ -46,10 +46,9 @@ int main(int argc, char** argv){
     executor.add_node(node);
     executor.spin();
 
-    viz->visualize_final();
-    rclcpp::shutdown();
-    return EXIT_SUCCESS
+    viz->visualize_final();//cleanup visualization
+    rclcpp::shutdown(); //ros shutdown
+    return EXIT_SUCCESS //return 0
     //end of OpenVINS code
-
 
 }

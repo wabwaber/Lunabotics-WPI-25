@@ -10,6 +10,7 @@ import os
 
 openvins_msckf_launch_path = "/catkin_ws/open_vins/ov_msckf/launch"
 realsense_launch_path="/opt/ros/humble/share/realsense2_camera/launch"
+openvins_config_path = "/catkin_ws/Lunabotics-WPI-25/Jetson/src/openVinsTest/estimator_config.yaml"
 
 def generate_launch_description():
     realsense_openvins = GroupAction(
@@ -19,9 +20,12 @@ def generate_launch_description():
                     os.path.join(openvins_msckf_launch_path, "subscribe.launch.py")
                 ),
                 launch_arguments={
-                    #'euroc_mav': 'rpng_aruco',
+                    #'verbosity': 'ALL',
+                    'config': 'rs_d455',
+                    #'config_path': '/catkin_ws/Lunabotics-WPI-25/Jetson/src/openVinsTest/estimator_config.yaml',
                     'rviz_enable': 'true',
-                    'config': 'D445-mqp',
+                    #'max_cameras': '1',
+                    #'use_stereo': 'false',
                     #'save_total_state': 'true',
                 }.items(),
             )
@@ -73,16 +77,16 @@ def generate_launch_description():
             namespace="",
             executable="bob",
             name="bob_node"
-        ),
-        Node(
-            package="rviz2",
-            namespace="",
-            executable="rviz2",
-            name="rviz2"
         )
+        # Node(
+        #     package="rviz2",
+        #     namespace="",
+        #     executable="rviz2",
+        #     name="rviz2"
+        # )
     ])
-    #ld.add_action(realsense_openvins)
     ld.add_action(realsense_launch)
+    ld.add_action(realsense_openvins)
     return ld
 
 """
