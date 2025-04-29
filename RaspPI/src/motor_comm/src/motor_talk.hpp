@@ -21,6 +21,10 @@
 
 #define MAX_TURN_VAL 1.5708 //taken from last years code
 #define MAX_MOTOR_SPEED_DRIVE 12000
+#define MAX_SPEED_SUM 50
+#define KP 33
+#define KI 0.6
+#define MAX_ERROR 1000
 
 static const uint8_t CAN_CS = 41; //SPI Chip Select pin
 static const uint8_t CAN_SI = 37; //SPI Data input pin
@@ -53,12 +57,17 @@ class MotorController{
         uint16_t getSpeed(motors motor);     //returns current speed,  ^
         uint16_t getPrevSpeed(motors motor);//returns the previous speed,^
         void update(); //PID loop for motors reaching their requested speed
-        std::unordered_map<motors, time_t> lastReadTime;
         void MotorController::updateCurrSpeeds();
+        ~MotorController(); //deconstructor (to free the allocated memeory in listOfMotors)
     private:
         //all un ordered hashmaps as there are a lot of motors. the string takes the exact same name as the Enum at the top not using it though as its values are the same between
         std::unordered_map<motors, uint16_t> currSpeed;        //in RPM and refering to the motor speed not output shaft.
         std::unordered_map<motors, uint16_t> prevSpeed;       //^
-        std::unordered_map<motors, uint16_t> requestedSpeed; //^
-        
+        std::unordered_map<motors, uint16_t> requestedEffort; //^
+        Talon* listOfMotors = (Talon*) calloc(sizeof(Talon), 5); //create a list of the Talon motor classes, setting all to 0 at the start in order to avoid erroneous data
+        std::map<motors, Talon, EncoderReader> motorsAndEncoders;
+        std::unordered_map<motors, time_t> lastReadTime;
+        double* errors = (double*) calloc(sizeof(double), 5);
+        long* sums = (long*) calloc(sizeof(long), 5);
+
 };

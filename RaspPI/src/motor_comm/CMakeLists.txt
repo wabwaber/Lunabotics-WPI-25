@@ -15,6 +15,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/ReadAllEncodersRequest.msg"
   "msg/TurnRead.msg"
   "msg/IntakeRequest.msg"
+  "msg/AllEncoderReads.msg"
 )
 
 if(BUILD_TESTING)

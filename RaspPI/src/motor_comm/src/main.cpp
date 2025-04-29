@@ -13,6 +13,7 @@
 #include "motor_comm/msg/read_all_encoders_request.hpp"
 #include "motor_comm/msg/motor_request.hpp"
 #include "./motor_talk.hpp"
+#include "motor_comm/msg/all_encoder_reads.hpp"
 //the two below are form a raspberry pi forum post https://forums.raspberrypi.com/viewtopic.php?t=377582
 #include <unistd.h>
 #include <cstdio>
@@ -34,7 +35,7 @@ PWM for two turning motors
 
 class motorCommunicator : public rclcpp::Node{
     public:
-        motorCommunicator() 
+        motorCommunicator()
         : Node("motor_communicator"), count_(0)
         {
             readPublisher = this->create_publisher<motor_comm::msg::EncoderRead>("/mooncake/encoders", 10); //publisher that will publish either all encoder counts or just one
@@ -43,6 +44,7 @@ class motorCommunicator : public rclcpp::Node{
             turnPub = this->create_publisher<motor_comm::msg::TurnRead>("/mooncake/turn_readout", 10);
             motorRequestSub = this->create_subscription<motor_comm::msg::MotorRequest>("/mooncake/motor_request", 10, std::bind(&motorCommunicator::set_motor, this));
             realAllSub = this->create_subscription<motor_comm::msg::ReadAllEncodersRequest>("/mooncake/updateSpeeds", 10, std::bind(&motorCommunicator::call_to_read_all, this));
+            
             for(int iter = encoders.INTAKE_ROTATE; iter <= encoders.DEPOSIT; iter++){
                 float currAng = encoders.getAngle(encoders.convertNumToEn(iter));
                 int64_t timeStamp = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
@@ -71,13 +73,13 @@ class motorCommunicator : public rclcpp::Node{
                 newMsg.angle = readAngle; //add the angle read in from the encodeer
                 newMsg.timestamp = timestamp;
                 readPublisher->publish(newMsg); //publish the message
-            }else{
+            }else{ //otherwise call again and hope it works
+                call_to_read(msg);
                 return;
             }
         }
         //doesnt need to take in a message as the message is just acting as a request to read all motors
         void call_to_read_all(){
-            //TODO
             //read in all encoders then calculate the speeds
             float* speeds = (float*) calloc(5, sizeof(float)); //no segfaults here
             for(int iter = encoders.INTAKE_ROTATE; iter <= encoders.DEPOSIT; iter++){
@@ -86,7 +88,8 @@ class motorCommunicator : public rclcpp::Node{
                 float speed = (currMotAng - lastReads.find(encoders.convertNumToEn(iter))->second[0])/ (microDiff * (1/1000000)); //in degrees per second (hopefully)
                 speeds[iter] = speed; //update array
             }
-            
+
+
         }
         void set_motor(motor_comm::msg::MotorRequest &msg){
             if(msg.has_turn){
@@ -114,6 +117,7 @@ class motorCommunicator : public rclcpp::Node{
         rclcpp::Subscription<motor_comm::msg::MotorRequest>::SharedPtr motorRequestSub;
         rclcpp::Subscription<motor_comm::msg::ReadAllEncodersRequest>::SharedPtr realAllSub;
         std::unordered_map<EncoderReader::encoder, float> speeds;
+        rclcpp::Publisher<motor_comm::msg::AllEncoderReads>::SharedPtr motorSpeedsPub;
 };
 
 int main(int argc, char** argv){

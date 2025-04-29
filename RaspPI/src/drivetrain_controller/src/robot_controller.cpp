@@ -13,19 +13,41 @@ class robotController: public rclcpp::Node{
         */
         robotController() : Node("robot_controller"), count_(0){
             motorPub_ = this->create_publisher<motor_comm::msg::MotorRequest>("/mooncake/driveMotor", 10);
-            
+            canSub_ = this->create_subscription<motor_comm::msg::SpeedReturn>("/mooncake/motor_speed", 10, std::bind(update_speeds_callback));
             encoderSub_ = this->create_subscription<motor_comm::msg::EncoderRead>("/mooncake/encoders", 10, std::bind(encoder_read_ready));
             jetsonCommandSub_ = this->create_subscription<drivetrain_controller::msg::JetsonDrivetrainCommand>("/mooncake/driveCommand", 10, std::bind(command_callback));
             loopTimer_ = this->create_wall_timer(100ms, std::bind(loopCallback, this));
+            currState = DISABLED;
+            canMotorSpeeds[0] = 0;
+            canMotorSpeeds[1] = 0;
+            canMotorSpeeds[2] = 0;
+            canMotorSpeeds[3] = 0;
+            left_turn_setpoint = 0;
+            right_turn_setpoint = 0;
+            left_turn_angle = 0;
+            right_turn_angle = 0;
+            turn_motor_effort = 0;
+            target_drive_speed = 0;
+            pose_step_x = 0;
+            pose_step_y = 0;
+            pose_step_theta = 0;
         };
 
     private:
         bool waitingOnEncoder = false;
         bool waitingOnCommand = true;
         void encoder_read_ready(){
+
             //TODO
             //we have one encoder reading in so we should calculate the speed that it is running at
             
+        }
+
+        void update_speeds_callback(motor_comm::msg::SpeedReturn &msg){
+            canMotorSpeeds[0] = msg.fl_drive;
+            canMotorSpeeds[1] = msg.bl_drive;
+            canMotorSpeeds[2] = msg.br_drive;
+            canMotorSpeeds[3] = msg.fr_drive;
         }
 
         void command_callback(const drivetrain_controller::msg::JetsonDrivetrainCommand &msg) const{
@@ -42,7 +64,7 @@ class robotController: public rclcpp::Node{
             if(currState == DISABLED){
                 auto msg = motor_comm::msg::MotorRequest(); //create the message (it defaults to false and 0s)
                 //so we set all the has' to true in order to have the motor communicator read in the values
-                msg.oprn_deposit = false;
+                msg.open_deposit = false;
                 msg.has_drive = true;
                 msg.has_intake_run = true;
                 msg.has_intake_vertical = true;
@@ -63,8 +85,24 @@ class robotController: public rclcpp::Node{
         }
 
         void loopCallback(){
+
+
+
             switch(currState){
                 case DISABLED:
+                    motor_comm::msg::MotorRequest mesg;
+                    mesg.bl_drive = 0;
+                    mesg.br_drive = 0;
+                    mesg.fl_drive = 0;
+                    mesg.fr_drive = 0;
+                    mesg.intake_run = 0;
+                    mesg.intake_vertical_effort = 0;
+                    mesg.has_drive = true;
+                    mesg.has_intake_run = true;
+                    mesg.has_intake_vertical = true;
+                    mesg.left_wheel_pod_turn = -1;
+                    mesg.right_wheel_pod_turn = -1;
+                    motorPub_->publish(mesg);
                 break;
                 case DRIVE:
                 break;
@@ -90,6 +128,8 @@ class robotController: public rclcpp::Node{
     rclcpp::Subscription<drivetrain_controller::msg::JetsonDrivetrainCommand>::SharedPtr jetsonCommandSub_;
     rclcpp::TimerBase::SharedPtr loopTimer_;
     size_t count_;
+    rclcpp::Publisher<motor_comm::msg::MotorRequest>::SharedPtr canPub_;
+    rclcpp::Subscription<motor_comm::msg::SpeedReturn>::SharedPtr canSub_;
        
 };
 int main(int argc, char** argv){

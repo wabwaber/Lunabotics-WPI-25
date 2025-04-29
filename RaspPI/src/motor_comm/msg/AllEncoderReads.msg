@@ -1,0 +1,5 @@
+float32 intake_rotate
+float32 intake_vertical
+float32 turn_left
+float32 turn_right
+float32 deposit

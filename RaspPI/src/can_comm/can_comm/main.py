@@ -30,7 +30,7 @@ SPEED_KP = 750
 SPEED_KI = 42
 SPEED_SUMCAP = 380
 POS_KP = 0.05
-MAX_SPEED_SUM = 0
+MAX_SPEED_SUM = 380
 MAX_MOTOR_CURRENT = 16384
 RECIEVE_TIMEOUT = 5.0 #timeout to recieve a response (in seconds)
 MAX_ALLOWABLE_CURRENT_SLOPE = 0 #TODO
@@ -38,7 +38,7 @@ MAX_ALLOWABLE_CURRENT_SLOPE = 0 #TODO
 LOOP_TIMER_LENGTH = 0.005 #in seconds
 
 class CAN_motor(Node):
-    can_id = 0x200 #first 4 controllers use 0x1FF if using the last 4
+    can_id = 0x200 #first 4 controllers, use 0x1FF if using the last 4
     can_dlc = 8
     can_conversion_factor = 256
     set_currents = [0, 0, 0, 0]
@@ -181,7 +181,6 @@ class CAN_motor(Node):
             ])
         bus.send(msg=msg) #send the message
         
-    
     def setCurrents(self, currents : list):
         if len(currents) < 4: #check to ensure all currents are there
             return

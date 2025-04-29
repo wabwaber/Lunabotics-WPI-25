@@ -1,9 +1,7 @@
 #include "./Talon.h"
-#include <stdlib.h>
-#include <map>
 
-Talon::Talon() {}
-//Taken from last years code (2024)
+Talon::Talon(){}
+//Taken from last years code (2024), changed it to work with the slightly different servo.h but otherwise the same
 
 void Talon::init(int PWMPin, bool reverse){
     attached = false;
@@ -17,24 +15,23 @@ void Talon::setEffort24(int effort){
     if (reversed) {
         effort = -effort;
     }
-
+    //constrain the value between -100 and 100
     if (effort > 100) {
         effort = 100;
     } else if (effort < -100) {
         effort = -100;
     }
-    if(abs(effort) < 1){
-        if(attached){
-            PWMController.detach();
-            attached = false;
+    if(abs(effort) < 1){ //if we are given a decimal value that is less than one, it is a request to detach or we've hit our center for PID
+        if(attached){  //if we are currently attached
+            PWMController.detach(); //detach the controller
+            attached = false; //change the bool
         }
     }
-    else{
-        if(!attached){
-            PWMController.attach(pin);
-            attached = true;
+    else{ //otherwise
+        if(!attached){ //if we are not attached
+            PWMController.attach(pin); //attach
+            attached = true; //change bool
         }
-        effort = (int)map(effort,-100,100,0,180);
-        PWMController.write(effort);
+        PWMController.write(effort); //then write the effort to the motor (servo)
     }
 }

@@ -1,6 +1,6 @@
 bool has_turn
 bool has_drive
-bool oprn_deposit false
+bool open_deposit false
 bool has_intake_vertical
 bool has_intake_run
 float32 left_wheel_pod_turn

@@ -11,7 +11,16 @@
 #include "motor_comm/msg/encoder_read.hpp"
 #include "drivetrain_controller/msg/jetson_drivetrain_command.hpp"
 #include "motor_comm/msg/motor_request.hpp"
+#include "motor_comm/msg/speed_return.hpp"
 
+
+//TODO change these
+#define WHEEL_TRACK 0.0
+#define WHEEL_BASE 0.0
+#define WHEEL_RADIUS 0.0
+#define NUM_OF_WHEELS_PER_SIDE 2
+
+float ALLOWED_TURN_DRIVE_ANGLE = 3.1416;
 
 //states taken from last years code
 enum state {
@@ -23,6 +32,9 @@ enum state {
     RIGHT_WHEEL_RECOVERY = 5,
     RECOVERY = 6
 };
+
+
+//ultimatum@skibidy.dyn.wpi.edu Unfunded-Clover4-Stinging
 state currState;
 state prevState;
 
@@ -34,3 +46,15 @@ static std::unordered_map<std::string, state> const table = {
     {"ICC_TURN", state::LEFT_WHEEL_RECOVERY},
     {"RIGHT_WHEEL_RECOVERY", state::RIGHT_WHEEL_RECOVERY}
 };
+
+
+float left_turn_setpoint;
+float right_turn_setpoint;
+float left_turn_angle;
+float right_turn_angle;
+float turn_motor_effort;
+float target_drive_speed;
+float canMotorSpeeds[4];
+float pose_step_x;
+float pose_step_y;
+float pose_step_theta;
