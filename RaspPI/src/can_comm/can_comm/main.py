@@ -10,7 +10,7 @@ from enum import Enum
 from drivetrain_controller.msg import JetsonDrivetrainCommand
 
 can.rc['interface'] = 'socketcan'
-can.rc['channel'] = 'vcan0'
+can.rc['channel'] = 'can0'
 can.rc['bitrate'] = 500000
 
 #https://python-can.readthedocs.io/en/stable/
@@ -189,7 +189,8 @@ class CAN_motor(Node):
             bus.send(can.Message( #create and send this msg
                 arbitration_id=self.can_id,
                 dlc=self.can_dlc,
-                data=[
+                data=(
+                [
                     bytes(self.set_currents[motor.DRIVE_FRONT_LEFT] / self.can_conversion_factor),
                     bytes(self.set_currents[motor.DRIVE_FRONT_LEFT] % self.can_conversion_factor),
                     bytes(self.set_currents[motor.DRIVE_BACK_LEFT] / self.can_conversion_factor),
@@ -198,7 +199,8 @@ class CAN_motor(Node):
                     bytes(self.set_currents[motor.DRIVE_BACK_RIGHT] % self.can_conversion_factor),
                     bytes(self.set_currents[motor.DRIVE_FRONT_RIGHT] / self.can_conversion_factor),
                     bytes(self.set_currents[motor.DRIVE_FRONT_RIGHT] % self.can_conversion_factor)
-                ]
+                ])
+                
                 )
             )
 

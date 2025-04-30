@@ -2,6 +2,26 @@
 #include "motor_talk.hpp"
 
 MotorController::MotorController(){
+            //basic init for the PWM motors
+            PWMLeft = Talon();
+            PWMRight = Talon();
+            PWMIntakeRun = Talon();
+            PWMIntakeVerticalAndDesposit = Talon();
+            is_H_bridge_to_Despoit = false;
+            //actually initalize the pins for the motor controllers
+            PWMLeft.init(LEFT_TURN_PWM_PIN, false);
+            PWMRight.init(RIGHT_TURN_PWM_PIN, false);
+            PWMIntakeRun.init(INTAKE_RUN_PWM_PIN, false);
+            PWMIntakeVerticalAndDesposit.init(DEPOSIT_AND_VERTICAL_PWM_PIN, false);
+            //then add them to the list of motors
+            listOfMotors[0] = PWMLeft;
+            listOfMotors[1] = PWMRight;
+            listOfMotors[2] = PWMIntakeRun;
+            listOfMotors[3] = PWMIntakeVerticalAndDesposit; //the last two are the same as they are the Intake Vertical
+            listOfMotors[4] = PWMIntakeVerticalAndDesposit; //and Deposit motors repectivly
+            wiringPiSetupGpio(); //need to do this to get the GPIO pins available to change them
+            pinMode(DEPOSIT_VERTICAL_SWITCH_PIN, OUTPUT);
+            digitalWrite(DEPOSIT_VERTICAL_SWITCH_PIN, LOW); //set the switch pin to low by default
 }
 
 bool MotorController::setSpeed(motors toChange, uint16_t givenEffort){
@@ -51,6 +71,12 @@ void MotorController::update(){
         self.prevErrors = deepcopy(self.errors)
         self.set_currents(newCurrent)
         */   
+        if(iter == DEPOSIT){ //if we need to switch the switch pin over to the deposit
+            digitalWrite(DEPOSIT_VERTICAL_SWITCH_PIN, HIGH); //switch the pin over
+        }
+        else if(iter == VERTICAL_INTAKE){ //if we need to change the vertical motor
+            digitalWrite(DEPOSIT_VERTICAL_SWITCH_PIN, LOW); //ensure the pin is low to select it
+        }
         this->errors[iter] = this->requestedEffort.at(motors(iter)) - this->currSpeed.at(motors(iter));
         double sumError = this->sums[iter] + this->errors[iter];
         if(sumError < -MAX_SPEED_SUM){

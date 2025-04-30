@@ -52,6 +52,7 @@ class motorCommunicator : public rclcpp::Node{
                 currMapEntry->second[0] = currAng;
                 currMapEntry->second[1] = timeStamp;
             }
+            
         }
     private:
         void turn_encoder_timer_readout(){
@@ -117,6 +118,7 @@ class motorCommunicator : public rclcpp::Node{
         rclcpp::Subscription<motor_comm::msg::ReadAllEncodersRequest>::SharedPtr realAllSub;
         std::unordered_map<EncoderReader::encoder, float> speeds;
         rclcpp::Publisher<motor_comm::msg::AllEncoderReads>::SharedPtr motorSpeedsPub;
+        Talon BrushedMotors[4]; 
 };
 
 int main(int argc, char** argv){

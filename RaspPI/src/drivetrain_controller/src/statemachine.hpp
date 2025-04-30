@@ -20,7 +20,8 @@
 #define WHEEL_RADIUS 0.0
 #define NUM_OF_WHEELS_PER_SIDE 2
 
-float ALLOWED_TURN_DRIVE_ANGLE = 3.1416;
+float ALLOWED_TURN_DRIVE_ANGLE = 3.1416; //max ICC turn angle. taken from last years code
+
 
 //states taken from last years code
 enum state {
@@ -30,7 +31,8 @@ enum state {
     ICC_TURN = 3, //arc/spline movement, ICC stands for instaneous center of curvature
     LEFT_WHEEL_RECOVERY = 4,
     RIGHT_WHEEL_RECOVERY = 5,
-    RECOVERY = 6
+    RECOVERY = 6,
+    AUTO_COLLECTION = 7
 };
 
 
@@ -44,7 +46,10 @@ static std::unordered_map<std::string, state> const table = {
     {"DRIVE",state::DRIVE},
     {"POINT_TURN",state::POINT_TURN},
     {"ICC_TURN", state::LEFT_WHEEL_RECOVERY},
-    {"RIGHT_WHEEL_RECOVERY", state::RIGHT_WHEEL_RECOVERY}
+    {"RIGHT_WHEEL_RECOVERY", state::RIGHT_WHEEL_RECOVERY},
+    {"LEFT_WHEEL_RECOVERY", state::LEFT_WHEEL_RECOVERY},
+    {"AUTO_COLLECTION", state::AUTO_COLLECTION}
+
 };
 
 
@@ -53,8 +58,10 @@ float right_turn_setpoint;
 float left_turn_angle;
 float right_turn_angle;
 float turn_motor_effort;
-float target_drive_speed;
+float target_drive_speeds[4];
 float canMotorSpeeds[4];
+bool shouldIntakeBeDown;
+bool shouldIntakeBeRunning;
 float pose_step_x;
 float pose_step_y;
 float pose_step_theta;

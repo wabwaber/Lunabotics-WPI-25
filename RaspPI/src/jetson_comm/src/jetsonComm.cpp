@@ -30,9 +30,6 @@ void jetsonCommunicator::twist_handler(geometry_msgs::TwistStamped &msg){
     auto &linear_command = command.twist.linear.x;
     auto &strafe_command = command.twist.linear.y;
     auto &angular_command = command.twist.angular.z;
-    if(lastLoop != -1){
-        period = (time_t)time - lastLoop;
-    }
 
     
     double LF_feedback_mean = 0.0;
@@ -88,7 +85,7 @@ void jetsonCommunicator::twist_handler(geometry_msgs::TwistStamped &msg){
 
         auto &last_command = previous_commands.back.twist;
         auto &second_to_last_command = previous_commands.front.twist;
-        limiter_linear_.limit(linear_command, last_command.linear.x, second_to_last_command.linear.x, period.seconds());
+        //limiter_linear_.limit(linear_command, last_command.linear.x, second_to_last_command.linear.x, period.seconds());
         
         double LF_velocity = 0.0;
         double LB_velocity = 0.0;

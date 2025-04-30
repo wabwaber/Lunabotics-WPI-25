@@ -5,8 +5,9 @@ import can
 from enum import Enum
 
 can.rc['interface'] = 'socketcan'
-can.rc['channel'] = 'vcan0'
+can.rc['channel'] = 'can0'
 can.rc['bitrate'] = 500000
+can.interface = 'socketcan'
 
 bus = can.Bus()
 time = 5
@@ -22,7 +23,6 @@ def sendData(data : list):
 		bytes(data[3] / conversionfactor),
 		bytes(data[3] % conversionfactor)
         ]))
-
 
 class motor(Enum):
     DRIVE_FRONT_LEFT = 0 

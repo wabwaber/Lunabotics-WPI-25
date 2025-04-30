@@ -3,13 +3,17 @@
 #include "Talon.h"
 #include <unordered_map>
 #include <string>
+#include <wiringPi.h>
 
 //updates these pins as needed
-#define LEFT_TURN_PWM_PIN 4
-#define RIGHT_TURN_PWM_PIN 3
-#define DEPOSIT_PWM 5
-#define PLUNGE_PWM 7
+#define LEFT_TURN_PWM_PIN 12
+#define RIGHT_TURN_PWM_PIN 13
+#define INTAKE_RUN_PWM_PIN 18
+#define DEPOSIT_AND_VERTICAL_PWM_PIN 19
+#define DEPOSIT_VERTICAL_SWITCH_PIN 5
+#define VERTICAL_DISTANCE_SENSOR_PIN 6
 #define PLUNGE_MOTOR_EFFORT 30
+#define PLUNGE_MOTOR_TIMEOUT 10 //in seconds, the timeout period for the intake moving either up or down, after this timeout occurs the motor will reverse for half a second and then try again.
 
 //velocity loop PID parameters (from last years code)
 #define BASE_CURRENT 10
@@ -42,6 +46,9 @@ float turnSetAngleLeft;
 float turnSetAngleRight;
 Talon PWMLeft;
 Talon PWMRight;
+Talon PWMIntakeRun;
+Talon PWMIntakeVerticalAndDesposit;
+bool is_H_bridge_to_Despoit;
 // MCP2515 can;
 // CANMSG currmsg;
 
@@ -50,7 +57,7 @@ Talon PWMRight;
 //enum motorType {DRIVE_FL = 0, DRIVE_FR = 0, DRIVE_BL=0, DRIVE_BR=0, TURN_LEFT=1, TURN_RIGHT=1, DEPOSIT=1, INTAKE_VERT=1, INTAKE_RUN=1};
 class MotorController{
     public:
-        enum motors {LEFT_TURN, RIGHT_TURN, INTAKE_VERTICAL, INTAKE_RUN, DEPOSIT, END_OF_LIST}; //this enum exists so there is a precompile list of motors to use and can be referenced by other blocks of code also END_OF_LIST is there for iterators
+        enum motors {LEFT_TURN, RIGHT_TURN, INTAKE_RUN, VERTICAL_INTAKE, DEPOSIT, END_OF_LIST}; //this enum exists so there is a precompile list of motors to use and can be referenced by other blocks of code also END_OF_LIST is there for iterators
         MotorController();
         bool setSpeed(motors toChange, uint16_t givenSpeed);    //returns a bool, true for set success, false for failure or error
         uint16_t getSetSpeed(motors motor);   //returns the set speed, requires the name for the motor

@@ -27,10 +27,15 @@ class robotController: public rclcpp::Node{
             left_turn_angle = 0;
             right_turn_angle = 0;
             turn_motor_effort = 0;
-            target_drive_speed = 0;
+            target_drive_speeds[0] = 0;
+            target_drive_speeds[1] = 0;
+            target_drive_speeds[2] = 0;
+            target_drive_speeds[3] = 0;
             pose_step_x = 0;
             pose_step_y = 0;
             pose_step_theta = 0;
+            shouldIntakeBeDown = false;
+            shouldIntakeBeRunning = false;
         };
 
     private:
@@ -57,6 +62,27 @@ class robotController: public rclcpp::Node{
             if(newState != table.end()){
                 prevState = currState;
                 currState = newState->second;
+                if(currState != DISABLED){
+                    //skip if we are disabling the robot
+                    //also setting the turn points here as the currState will control which ones are actually used when the loop runs
+                    if(msg.has_turn){
+                        right_turn_setpoint = msg.right_wheel_pod_turn;
+                        left_turn_setpoint = msg.left_wheel_pod_turn;
+                    }
+                    if(msg.has_drive){
+                        target_drive_speeds[0] = msg.fl_drive;
+                        target_drive_speeds[1] = msg.bl_drive;
+                        target_drive_speeds[2] = msg.br_drive;
+                        target_drive_speeds[3] = msg.fr_drive;
+                    }
+                    if(msg.has_intake_run){
+                        
+                    }
+                    if(msg.has_intake_vertical){
+                        
+                    }
+                }
+
             }else{ //error occured during the find in the map
                 currState = DISABLED;  //disable robot
             }
@@ -85,12 +111,11 @@ class robotController: public rclcpp::Node{
         }
 
         void loopCallback(){
-
-
+            
+            motor_comm::msg::MotorRequest mesg;
 
             switch(currState){
                 case DISABLED:
-                    motor_comm::msg::MotorRequest mesg;
                     mesg.bl_drive = 0;
                     mesg.br_drive = 0;
                     mesg.fl_drive = 0;
@@ -104,17 +129,34 @@ class robotController: public rclcpp::Node{
                     mesg.right_wheel_pod_turn = -1;
                     motorPub_->publish(mesg);
                 break;
-                case DRIVE:
+                case DRIVE: //drive straight
+                    left_turn_setpoint = 0.0;
+                    right_turn_setpoint = 0.0;
+                    mesg.left_wheel_pod_turn = left_turn_setpoint;
+                    mesg.right_wheel_pod_turn = right_turn_setpoint;
+                    mesg.fl_drive = canMotorSpeeds[0];
+                    mesg.bl_drive = canMotorSpeeds[1];
+                    mesg.br_drive = canMotorSpeeds[2];
+                    mesg.fr_drive = canMotorSpeeds[3];
+                    mesg.has_drive = true;
+                    mesg.has_turn = true;
+                    motorPub_->publish(mesg);
                 break;
                 case POINT_TURN:
+                    left_turn_setpoint = M_PI_2;
+                    right_turn_setpoint = -M_PI_2;
+
                 break;
                 case ICC_TURN:
+
                 break;
                 case LEFT_WHEEL_RECOVERY:
                 break;
                 case RIGHT_WHEEL_RECOVERY:
                 break;
                 case RECOVERY:
+                break;
+                case AUTO_COLLECTION:
                 break;
                 default: //if we ever end up here something has gone terribly wrong and we should disable the robot to be safe
                     currState = DISABLED; //set current state to DISABLED
