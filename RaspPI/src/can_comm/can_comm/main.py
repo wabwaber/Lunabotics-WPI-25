@@ -63,7 +63,7 @@ class CAN_motor(Node):
     def __init__(self):
         super().__init__('can_motor_communicator')
         self.speedPub = self.create_publisher(SpeedReturn, '/mooncake/motor_speed', 10)
-        self.requestSub = self.create_subscription(MotorRequest, '/mooncake/can_motor_requests', self.motor_req_callback, 10)
+        self.requestSub = self.create_subscription(MotorRequest, '/mooncake/motor_request', self.motor_req_callback, 10)
         self.loopTimer = self.create_timer(0.05, self.timer_callback) #will run 20 times per second
         self.recoveryPub = self.create_publisher(JetsonDrivetrainCommand, '/mooncake/driveCommand', 10)
 
