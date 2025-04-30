@@ -5,11 +5,16 @@
 #include <string>
 #include <wiringPi.h>
 
+/*
+GPIO 18 Plunge
+GPIO 19 RSteer
+GPIO 13 Lsteer
+*/
+
 //updates these pins as needed
-#define LEFT_TURN_PWM_PIN 12
-#define RIGHT_TURN_PWM_PIN 13
-#define INTAKE_RUN_PWM_PIN 18
-#define DEPOSIT_AND_VERTICAL_PWM_PIN 19
+#define LEFT_TURN_PWM_PIN 13
+#define RIGHT_TURN_PWM_PIN 19
+#define DEPOSIT_AND_VERTICAL_PWM_PIN 18
 #define DEPOSIT_VERTICAL_SWITCH_PIN 5
 #define VERTICAL_DISTANCE_SENSOR_PIN 6
 #define PLUNGE_MOTOR_EFFORT 30

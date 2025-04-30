@@ -89,7 +89,6 @@ class motorCommunicator : public rclcpp::Node{
                 float speed = (currMotAng - lastReads.find(encoders.convertNumToEn(iter))->second[0])/ (microDiff * (1/1000000)); //in degrees per second (hopefully)
                 speeds[iter] = speed; //update array
             }
-            
         }
         void set_motor(motor_comm::msg::MotorRequest &msg){
             if(msg.has_turn){

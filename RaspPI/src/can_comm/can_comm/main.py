@@ -38,7 +38,7 @@ MAX_ALLOWABLE_CURRENT_SLOPE = 0 #TODO
 LOOP_TIMER_LENGTH = 0.005 #in seconds
 
 class CAN_motor(Node):
-    can_id = 0x200 #first 4 controllers, use 0x1FF if using the last 4
+    can_id = 0x200 #first 4 controllers, use 0x1FF if using the last 4 
     can_dlc = 8
     can_conversion_factor = 256
     set_currents = [0, 0, 0, 0]

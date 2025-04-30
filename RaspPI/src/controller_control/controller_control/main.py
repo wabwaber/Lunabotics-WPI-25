@@ -1,38 +1,24 @@
 from inputs import get_gamepad
 import threading
 import time
-import can
 from enum import Enum
 import rclpy
 from rclpy.node import Node
 #from drivetrain_controller.msg import JetsonDrivetrainCommand
 from motor_comm.msg import MotorRequest
 
-can.rc['interface'] = 'socketcan'
-can.rc['channel'] = 'can0'
-can.rc['bitrate'] = 500000
-can.interface = 'socketcan'
-
-bus = can.Bus()
-time = 5
-
-def sendData(data : list):
-	conversionfactor = 256
-	bus.send(can.Message(arbitration_id=0x200, dlc=8, data=[
-		bytes(data[0] / conversionfactor),
-		bytes(data[0] % conversionfactor),
-		bytes(data[1] / conversionfactor),
-		bytes(data[1] % conversionfactor),
-		bytes(data[2] / conversionfactor),
-		bytes(data[3] / conversionfactor),
-		bytes(data[3] % conversionfactor)
-        ]))
-
 class motor(Enum):
-    DRIVE_FRONT_LEFT = 0 
-    DRIVE_BACK_LEFT = 1 
-    DRIVE_BACK_RIGHT = 2
-    DRIVE_FRONT_RIGHT = 3 
+	DRIVE_FRONT_LEFT = 0 
+	DRIVE_BACK_LEFT = 1 
+	DRIVE_BACK_RIGHT = 2
+	DRIVE_FRONT_RIGHT = 3 
+
+class drive_mode(Enum):
+	STRAIGHT = 0
+	POINT_TURN = 1
+	ICC = 2
+	STOP = 3
+	
 
 class Logitech_DUEL_ACTION_CONTROLLER():
 	MAX_JOY_VAL = 255
@@ -106,7 +92,7 @@ class Logitech_DUEL_ACTION_CONTROLLER():
 					self.L_TRIG = event.state
 				elif event.code == 'BTN_BASE2':
 					self.R_TRIG = event.state
-                
+				
 	def readAll(self):
 		return [self.A, self.B, self.Y, self.X, self.start, self.back, self.UD_DPAD, self.U_DPAD, self.D_DPAD, self.LR_DPAD, self.R_DPAD, self.L_DPAD, self.L_BUMP, self.R_BUMP, self.L_TRIG, self.R_TRIG, self.L_JOY_X, self.L_JOY_Y, self.R_JOY_X, self.R_JOY_Y]
 	def readLetters(self):
@@ -127,17 +113,56 @@ class Logitech_DUEL_ACTION_CONTROLLER():
 MAX_MOTOR_CURRENT = 16864
 
 class control_controller_class(Node):
-    def __init__(self):
-        super().__init__('manual_controller_node')
-        self.canPub = self.create_publisher(MotorRequest, '/mooncake/motor_request')
-        timer_period = 0.1 #10 times per second
-        self.timer = self.create_timer(timer_period, self.timer_callback)
-        self.controller = Logitech_DUEL_ACTION_CONTROLLER()
-        self.previousVals = [0,0,0,0,] #first 4 are joysticks 
+	def __init__(self):
+		super().__init__('manual_controller_node')
+		self.canPub = self.create_publisher(MotorRequest, '/mooncake/motor_request')
+		timer_period = 0.1 #10 times per second
+		self.timer = self.create_timer(timer_period, self.timer_callback)
+		self.controller = Logitech_DUEL_ACTION_CONTROLLER()
+		self.currState = drive_mode.STRAIGHT
+		self.previousVals = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] #first 4 are joysticks 
 	
-    def timer_callback(self):
-        thing = 'do'
-        
+	def change_mode(self, input : list):
+		if input[0] > 0: #A
+			self.currState = drive_mode.STRAIGHT
+		elif input[1] > 0: #B
+			self.currState = drive_mode.POINT_TURN
+		elif input[2] > 0: #Y
+			self.currState = drive_mode.ICC
+		elif input[3] > 0: #X
+			self.currState = drive_mode.STOP
+
+	def timer_callback(self):
+		#pull controller data
+		#create motor Request message
+		#make sure to take the multiplier of MAX_MOTOR_CURRENT for the can bus motors
+		#send it
+		#indexes between 0 and 19 , 20 vals total
+		currentVals = self.controller.readAll()
+		msgToSend = MotorRequest()
+		if currentVals != self.previousVals: #if we have new values
+			LeftForwardMovement = currentVals[17]
+			LeftTurn = currentVals[16]
+			RightForwardMovement = currentVals[19]
+			RightTurn = currentVals[18]
+			self.change_mode(currentVals) #change the current drive mode
+			match self.currState:
+				case drive_mode.STRAIGHT:
+					#thing
+					msgToSend.has_drive = True
+					msgToSend.fl_drive = MAX_MOTOR_CURRENT * LeftForwardMovement
+				case drive_mode.POINT_TURN:
+					msgToSend.has_drive = True
+					#thing
+					msgToSend.fl_drive = MAX_MOTOR_CURRENT * LeftForwardMovement
+					msgToSend.bl_drive = MAX_MOTOR_CURRENT * LeftForwardMovement
+					msgToSend.br_drive = MAX_MOTOR_CURRENT * RightForwardMovement
+					msgToSend.fr_drive = MAX_MOTOR_CURRENT * RightForwardMovement
+					msgToSend.has_turn = True
+					msgToSend.left_wheel_pod_turn = 
+
+			
+		
 
 
 #main funciton here
@@ -175,7 +200,7 @@ if __name__ == '__main__':
 			else: #If we are doing a point turn
 				packet = [-speed, -speed, speed, speed, SideMovement, -SideMovement]
 		previous_Joy_Vals = joy #set the previous joy vals to the curr ones
-		sendData(packet)
+		#sendData(packet)
 		print(packet)
 		#send the packet (will be the same if the joy values are the same)
 
