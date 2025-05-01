@@ -1,7 +1,7 @@
 #pragma once
-
-#include "Arduino.h"
-#include "Servo.h"
+#include <Servo.h>
+#include <map>
+#include <stdlib.h>
 
 class Talon {
  public:
@@ -11,6 +11,7 @@ class Talon {
   void init(int, bool);
 
   void setEffort24(int); // Takes -100-100
+
 
  private:
     bool attached;

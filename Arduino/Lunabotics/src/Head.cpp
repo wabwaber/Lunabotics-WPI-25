@@ -1,12 +1,10 @@
-#include <Arduino.h>
-#include <ArdyToMot.h>
-#include <stdlib.h>
-#include <string.h>
+#include <Head.h>
+
 
 ArdyToMot DriveMotor;
 enum States : int {AllStop = 0, Drive = 1, TurnOnPoint = 2, TurnAroundPoint = 3};
 States currState;
-int mult = 2 * MAX_MOTOR_CURRENT_DRIVE;
+int mult = 2 * MAX_MOTOR_SPEED_DRIVE;
 bool isSerialReady = false;
 
 void setup() {
@@ -46,5 +44,5 @@ void loop() {
     DriveMotor.setTurn(0);//zero it out
   } */
 
-  DriveMotor.setMotors(mult*map[0], mult*map[1], mult*map[2], mult*map[3]); 
+  DriveMotor.setMotors(map[0], map[1], map[2], map[3]); 
 }

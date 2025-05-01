@@ -1,0 +1,3 @@
+string encoder_location
+float32 angle
+int64 timestamp

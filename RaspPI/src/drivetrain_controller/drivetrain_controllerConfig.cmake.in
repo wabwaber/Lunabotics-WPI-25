@@ -1,0 +1,14 @@
+# - Config file for the drivetrain_controller package
+# It defines the following variables
+#  drivetrain_controller_INCLUDE_DIRS - include directories for FooBar
+#  drivetrain_controller_LIBRARIES    - libraries to link against
+#  drivetrain_controller_EXECUTABLE   - the bar executable
+
+set(drivetrain_controller_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
+
+# Our library dependencies (contains definitions for IMPORTED targets)
+include("${drivetrain_controller_DIR}/export_drivetrain_controller.cmake")
+
+# These are IMPORTED targets created by drivetrain_controllerTargets.cmake
+
+
