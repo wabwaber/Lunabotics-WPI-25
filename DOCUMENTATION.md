@@ -21,8 +21,10 @@ Hello and welcome to this document where the team will be updating the documenta
 
 ### Section 4: Raspberry Pi Code
 - [Motor Communication Package](#motor_comm-pkg)
-- [CAN Bus Motor Package]()
-- [List Of ROS Topics]()
+- [CAN Bus Motor Package](#can_bus_comm)
+- [Controller Control Package](#controller_control_pkg)
+- [Drivetrain Control Package](#drivetrain_control_pkg)
+- [Jetson Communication Package](#jetson_control_pkg)
 
 
 ## <center>Code Overview</center>
@@ -44,10 +46,11 @@ The Hardware referenced in this section is **ONLY** used for software related th
 <a id="libs-used"></a>
 ### Libraries Used
 - ROS2 Humble, galactic (Ubuntu 20.04)
-- Docker [Home Page] (https://www.docker.com/)
+- Docker [Home Page](https://www.docker.com/)
 - OpenVINS [Home Page](https://docs.openvins.com/)
 - inputs python lib [git](https://github.com/zeth/inputs)
 - Raspberry PI I2C library [git](https://github.com/besp9510/pi_i2c)
+- Raspberry PI wiring library [git](https://github.com/WiringPi/WiringPi)
 
 ## <center>Jetson Code</center>
 
@@ -64,7 +67,6 @@ The purpose of this file is explained in a metaphor at the top of the file. But 
 
 Moving into the actual code, it starts with the required imports then we come across a class called bob, which is a ros2 node class. For the most part this information was taken from the 'Tutorials->Beginner:Client Libaries->Writing a simple publisher and subscriber (python)' page in the ros2 galactic documentation.the key part to all of this though is overriding the default quality of service profile. Firstly at the time of writing there is no documentation on how to do this at least I did not find it maybe on the 16th page of google I would have found it but I did not go past the 15th. Instead there is [this](#overriding-qos-settings) to explain the finer details and how its structured. First I made a QoS profile to hold the changes that I wanted to make, which in this case its changing the reliability to best effort the history is there only because the library would reject the profile if it wasn't.
 
-[TODO fill this outfully -matt]: #
 
 <a id="overriding-qos-settings"></a>
 ### Overriding Quality of Service Settings ROS2
@@ -78,18 +80,15 @@ from rclpy.qos import HistoryPolicy
 QoSOverride = QoSProfile(reliability=ReliabilityPolicy.BEST_EFFORT, history=HistoryPolicy.KEEP_ALL)
 self.created_Subscription.qos_profile = QoSOverride
 ```
-
-<a id="setup-py"></a>
-### setup.py
-[TODO -matt]: #
+As seen in the above code block, it is written in python however the C++ code still has the same basic idea, creaitng a QoS profile and then adding it to the created subscription.
 
 
 <a id="rvis-real-launch-py"></a>
 ### rvis_and_realsense.launch.py
-[TODO -matt]: #
+This does the launching of the three nodes needed to test openVins. Those nodes being bob node, ov_msckf (OpenVINS), and the realsense camera node. It also changes the QoS so that OpenVINS can use the Realsense's data. There is also a full list of the realsense node's parameters which can be set in either terminal or in this launch file, where we have the IMU data stiched together and the rates set to be the same at 200hz. You cannot turn the gyroscope's rate down only up.
 
 ## <center>Arduino Code</center>
-Clarification: We did not use an Arduino Mega for the final robot it was instead replaced with a raspberry Pi. Sam has the explaination as to why so this section was written prior to that decision being made. I am leaving it here as useful documentation should you need uses for that code in the repo. If not go to [Section 4](#section-4-raspberry-pi-code)
+Clarification: We did not use an Arduino Mega for the final robot it was instead replaced with a Raspberry Pi. Sam has the explaination as to why so this section was written prior to that decision being made. I am leaving it here as useful documentation should you need uses for that code in the repo. If not go to [Section 4](#section-4-raspberry-pi-code), however there is a good bit of information that is in this section that is still useful, hence why it remains.
 
 In this section we will be going over each code file associated with the arduino mega and all its functions.
 
@@ -148,15 +147,39 @@ The first function in this file is a set motors that takes in 4 integers represe
 The last set of functions are either redundant, talked about earlier, or not implemented.
 
 
-## Section 4: 
+## <center> Raspberry PI Code </center>
+This section covers code written for the Raspberry PI. You may also notice its writing is of lower quality as this is written 3 hours before the project is due.
 
 <a id="motor_comm-pkg"></a> 
-### motor_comm-pkg
+### Motor Communication Package
+This package handles the brushed motors, which use a PWM signal sent to the Talon motor controllers. If you look into it however, the Talons also support CAN. But in order to get that working the Talons require a configuration tool that costs $500 so we opted to not use that. Hence this package existing. 
 
-<a id="list-of_ros-topics">
-### List of ROS Topics
-Below is the master list of all ROS topics that exist on the Raspberry PI, mostly for my reference but who knows maybe you need it too.
-- /mooncake/encoders
-- /mooncake/encoder_request
-- /mooncake/turn_readout
-- 
+Talon.cpp is the abstraction for the Talon motor controllers with a few basic functions and variables attached to the class instance. Motor_talk.cpp then takes this to another abstraction level where it can handle the PID controls for the motors, this is done through retrieving motor speeds from encoder_talk.cpp which abstracts the encoders, so rather than just getting the counts from this it calculates the speed, in degrees per second. 
+
+Something you are probably wondering is why I put so many layers of abstraction between the drivetrain and the motors, well this is to, hopefully, assist you with reusing the code for the new robot. ideally you would not reuse this package though and would convert all the motors to CAN bus motors. But if not then do keep in mind that this code was not tested on the hardware so there will be issues.
+
+<a id="can_bus_comm"></a>
+### CAN Bus Motor Communication Package
+
+This package is written in python as the CAN bus controller only has a library for python so this package exists, otherwise I would have integrated it into the motor_comm package. It is also not below the motor_comm node instead it is beside it in terms of the information transmission stack. The only other thing of interest is that it will also publish the motors speed, using the messages that the C620s send out which is something last years team didn't do and instead using encoders.
+
+<a id="controller_control_pkg"></a>
+### Controller Control Package
+
+Written on the day of the CDR, so its ability to work is dubious at best. But the idea is that this runs along with the other motor communicators in order to manually control the drivetrain using the Logitech game controller. I would reccomend not using this package as there are quite a few things that need to be done to get it working, here is a list:
+- ROS topics need to be setup for all motors
+- Turning based on controller input
+- Not reading all controller inputs instead creating a different function that will only pull those that are going to be used
+- Setup the excavator controls
+- Remove the while true loop from the main function area as it is not needed
+- Make a launch file to launch the node
+
+This list is not all encompassing and there are almost certainly things that I have missed. If you still want to use this as a basis then I would reccomend taking just the class for the logitech controller as that code is something I am somewhat proud of.
+
+<a id="drivetrain_control_pkg"></a>
+### Drivetrain Control Package
+In short this whole package is just for the drivetrain controller. and only has two code files, one for the state machine and another for the header file which has a lot of variables and imports. Again there are holes in this as well, like the encoders not being read in as I was informed that the encoders were not going to be setup so I pivoted away from making sure those were programmed in. The state machine itself has some holes in it, this is because when I would start working on it I would think of a lower level system that had to be made so I would go make that, or I would be told that something in a lower level system that I had made has changed and needs to be changed.
+
+<a id="jetson_control_pkg"></a>
+### Jetson Communication Package
+There are two major points in this package that need to be done, the first is getting it sending out the jetson command requests, and setup the WI-FI as that was something decided on the same day as the CDR so needless to say I did not have the time to set it up. A lot of the code that is written in this package is from Sam's github [link](https://github.com/thesamrooney/luna_control/blob/master/src/LunaController.cpp). 
